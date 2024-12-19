@@ -1,0 +1,51 @@
+name: ESLint and TypeScript Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - branchname
+
+jobs:
+  eslint-and-ts-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the PR
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      # Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.14.2"
+
+      # Restore cached dependencies
+      - name: Restore cached dependencies
+        id: cache-restore
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            .vite
+          key: npm-${{ hashFiles('package-lock.json') }}
+
+      # Install dependencies if not cached
+      - name: Install dependencies
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: npm ci
+
+      # Run ESLint to check for issues
+      - name: Run ESLint
+        run: npm run lint
+
+      # Perform TypeScript type checking
+      - name: Run TypeScript Check
+        run: npx tsc --noEmit
+
+      # Verify the build process
+      - name: Verify Build
+        run: npm run build
