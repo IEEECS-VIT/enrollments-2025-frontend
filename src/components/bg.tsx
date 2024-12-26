@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
-import {
-  type Container,
-  type ISourceOptions,
-  MoveDirection,
-  OutMode,
-} from "@tsparticles/engine";
+import { type Container, type ISourceOptions, MoveDirection, OutMode } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim"; 
 
 const Bg = () => {
@@ -74,7 +69,7 @@ const Bg = () => {
           value: 200, // Number of particles
         },
         opacity: {
-          value: {min:1,max:1}, // Make particles slightly transparent
+          value: { min: 1, max: 1 }, // Make particles slightly transparent
         },
         shape: {
           type: ["square"], // Random shapes for confetti
@@ -94,13 +89,13 @@ const Bg = () => {
 
   if (init) {
     return (
-        <div className="absolute inset-0 z-1">
-            <Particles
-                id="tsparticles"
-                particlesLoaded={particlesLoaded}
-                options={options}
-            />
-        </div>
+      <div className="absolute inset-0 z-10">
+        <Particles
+          id="tsparticles"
+          particlesLoaded={particlesLoaded}
+          options={options}
+        />
+      </div>
     );
   }
 
