@@ -40,41 +40,56 @@ export default function Technical() {
         </div>
 
         <div
-          className="flex flex-col flex-nowrap sm:flex-row sm:flex-wrap justify-center items-center w-full mt-[6vh]"
-          onKeyDown={handleKeyNavigation}
-          tabIndex={0}
-        >
-          {['WEB', 'IOT', 'APP', 'AI/ML', 'RND'].map((label, index) => (
-            <div
-              key={index}
-              className={`basis-1/3 flex flex-col items-center cursor-pointer sm:p-4 rounded-lg transition-transform duration-300 ${
-                index >= 3 ? 'basis-1/2' : ''
-              } transform ${hoveredIndex === index ? 'scale-110' : 'scale-100'}`}
-              onClick={() => handleClick(index)}
-              onMouseEnter={() => handleHover(index)}
-              onMouseLeave={handleLeave}
-            >
-              <img
-                className="h-[5.5vh] sm:h-[12.5vh]"
-                src={index === 0 ? '/computer.svg' : index === 1 ? '/drone.svg' : index === 2 ? '/App.svg' : index === 3 ? '/AI.svg' : '/book.svg'}
-                alt={label}
-              />
-               <p
-                className={`text-[3vh] tracking-wider transition-all duration-300 ${
-                  currentIndex === index
-                    ? 'text-[#65C54E] font-bold underline underline-offset-4'
-                    : 'font-normal no-underline'
-                } ${
-                  hoveredIndex === index
-                    ? currentIndex === index ? 'text-[#65C54E] animate-blink' : 'text-white animate-blink'
-                    : ''
-                }`}
-              >
-                {hoveredIndex === index ? `> ${label} <` : label}
-              </p>
-            </div>
-          ))}
-        </div>
+  className="w-full mt-[6vh] grid grid-cols-2 grid-rows-3 sm:flex sm:flex-wrap justify-center items-center"
+  onKeyDown={handleKeyNavigation}
+  tabIndex={0}
+>
+  {['WEB', 'IOT', 'APP', 'AI/ML', 'RND'].map((label, index) => (
+    <div
+      key={index}
+      className={`${
+        index === 2 ? 'col-span-2 ' : ''
+      } sm:basis-1/3 sm:flex-col mb-[5vh] sm:mb-0  sm:p-4 basis-auto flex flex-col items-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
+        index >= 3 ? 'sm:basis-1/2' : ''
+      } transform ${hoveredIndex === index ? 'scale-110' : 'scale-100'}`}
+      onClick={() => handleClick(index)}
+      onMouseEnter={() => handleHover(index)}
+      onMouseLeave={handleLeave}
+    >
+      <img
+        className="h-[5.5vh] sm:h-[12.5vh]"
+        src={
+          index === 0
+            ? '/computer.svg'
+            : index === 1
+            ? '/drone.svg'
+            : index === 2
+            ? '/App.svg'
+            : index === 3
+            ? '/AI.svg'
+            : '/book.svg'
+        }
+        alt={label}
+      />
+      <p
+        className={`text-[3vh] tracking-wider transition-all duration-300 ${
+          currentIndex === index
+            ? 'text-[#65C54E] font-bold underline underline-offset-4'
+            : 'font-normal no-underline'
+        } ${
+          hoveredIndex === index
+            ? currentIndex === index
+              ? 'text-[#65C54E] animate-blink'
+              : 'text-white animate-blink'
+            : ''
+        }`}
+      >
+        {hoveredIndex === index ? `> ${label} <` : label}
+      </p>
+    </div>  
+  ))}
+</div>
+
       </div>
     </div>
   );
