@@ -4,6 +4,7 @@ import './App.css'
 import Bg from './components/bg'
 import Navbar from './components/Navbar'
 import Start from './components/Start'
+import Landing from './components/Landing'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Bg />
       <Navbar />
       <Start />
+      <Landing/>
     </div>
   )
 }
