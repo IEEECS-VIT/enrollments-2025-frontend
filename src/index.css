@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'PlayMeGames-demo';
+  src: url('/fonts/PlayMeGames-Demo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'PlayMeGames-demo', sans-serif;
+}
+
+:focus {
+  outline: none;
+}
+

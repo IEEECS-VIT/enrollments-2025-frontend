@@ -1,6 +1,19 @@
 // "use server";
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function Start(){
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        const handleKeyDown = (event: KeyboardEvent)=>{
+            if(event.code ==="Space"){
+                navigate('/landing');
+            }
+        };
+        window.addEventListener('keydown',handleKeyDown);
+    },[navigate]);
+
     return(
         <>
             <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-2">

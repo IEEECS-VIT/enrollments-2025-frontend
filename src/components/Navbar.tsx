@@ -7,7 +7,7 @@ export default function Navbar(){
 
     return(
         <>
-            <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-10 p-10 pt-16 lg:justify-around justify-between items-center flex">
+            <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 lg:justify-around justify-between items-center flex">
                 <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block"/>
                 <button className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block">HOME</button>
                 <button className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block">FAQS</button>

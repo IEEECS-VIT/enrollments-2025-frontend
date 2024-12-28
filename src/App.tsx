@@ -1,20 +1,31 @@
-// "use server"
-
-import './App.css'
-import Bg from './components/bg'
-import Navbar from './components/Navbar'
-import Start from './components/Start'
-import Landing from './components/Landing'
-
-function App() {
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Domainselection from './components/Domainselection';
+import Designdomain from './components/Designdomain';
+import Technicaldomain from './components/Technicaldomain';
+import Managementdomain from './components/Managementdomain';
+import Bg from './components/bg';
+import Navbar from './components/Navbar';
+import Landing from './components/Landing';
+import Start from './components/Start';
+const App = () => {
   return (
-    <div className="overflow-x-hidden relative h-[100vh]">
-      <Bg />
-      <Navbar />
-      <Start />
-      <Landing/>
-    </div>
-  )
-}
+    <Router>
+      <div className="bg-black relative min-h-screen">
+        <Bg />
+        <Navbar />
+        <div className="relative z-20">
+          <Routes>
+            <Route index element={<Start/>}/>
+            <Route path="/landing" element={<Landing/>}/>
+            <Route path="/domain" element={<Domainselection />} />
+            <Route path="/design" element={<Designdomain />} />
+            <Route path="/technical" element={<Technicaldomain />} />
+            <Route path="/management" element={<Managementdomain />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
+};
 
-export default App
+export default App;
