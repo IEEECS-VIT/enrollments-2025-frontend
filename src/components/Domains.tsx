@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Domains() {
@@ -38,21 +38,21 @@ export default function Domains() {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames">
-      <div className="border-2 mt-[10vh] sm:mt-0 rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">CHOOSE YOUR</p>
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold leading-[0.5rem] sm:leading-[5rem]">ELEMENT</p>
         </div>
 
         <div
-          className="flex flex-col sm:flex-row gap-8 sm:gap-5 md:gap-16 lg:gap-24 justify-center items-center w-full mt-[6vh]"
+          className="flex flex-col sm:flex-row  justify-center items-center w-full mt-[6vh]"
           onKeyDown={handleKeyNavigation}
           tabIndex={0}
         >
           {['MANAGEMENT', 'TECHNICAL', 'DESIGN'].map((label, index) => (
             <div
               key={index}
-              className={`flex flex-col items-center cursor-pointer p-2 rounded-md transform transition-transform duration-300 ${
+              className={`flex flex-col sm:basis-1/3 items-center cursor-pointer p-2 mb-[2.5vh] sm:mb-0 rounded-md transform transition-transform duration-300 ${
                 hoveredIndex === index || currentIndex === index ? 'scale-110' : 'scale-100'
               }`}
               tabIndex={0}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function Technical() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -34,7 +34,7 @@ export default function Technical() {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames">
-      <div className="border-2 border-[#65C54E] sm:mt-0 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[66vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 border-[#65C54E] mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[66vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[7vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">TECHNICAL</p>
         </div>
@@ -49,7 +49,7 @@ export default function Technical() {
       key={index}
       className={`${
         index === 2 ? 'col-span-2 ' : ''
-      } sm:basis-1/3 sm:flex-col mb-[5vh] sm:mb-0  sm:p-4 basis-auto flex flex-col items-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
+      } sm:basis-1/3 sm:flex-col mb-[2.5vh] mt-[2.5vh] sm:mt-0 sm:mb-0  sm:p-4 basis-auto flex flex-col items-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
         index >= 3 ? 'sm:basis-1/2' : ''
       } transform ${hoveredIndex === index ? 'scale-110' : 'scale-100'}`}
       onClick={() => handleClick(index)}

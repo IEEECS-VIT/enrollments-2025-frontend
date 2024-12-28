@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function Design() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -34,20 +34,20 @@ export default function Design() {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames ">
-      <div className="border-2 border-[#0395F1] sm:mt-0 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 border-[#0395F1] mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
-          <p className="sm:text-[5vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">DESIGN</p>
+          <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">DESIGN</p>
         </div>
 
         <div
-          className="flex flex-col sm:flex-row gap-8 sm:gap-5 md:gap-16 lg:gap-28 justify-center items-center w-full mt-[6vh]"
+          className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           onKeyDown={handleKeyNavigation}
           tabIndex={0}
         >
           {['UI/UX', 'Graphic Design', 'Video Editing'].map((label, index) => (
             <div
               key={index}
-              className={`flex flex-col items-center cursor-pointer nav-button p-4 rounded-lg transition-transform duration-300 ${
+              className={`flex flex-col mb-[2.5vh] items-center sm:basis-1/3 cursor-pointer nav-button p-4 rounded-lg transition-transform duration-300 ${
                 hoveredIndex === index ? 'scale-110' : 'scale-100'
               }`}
               tabIndex={0}
