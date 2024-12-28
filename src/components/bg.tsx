@@ -11,20 +11,18 @@ import { loadSlim } from "@tsparticles/slim";
 const Bg = () => {
   const [init, setInit] = useState(false);
 
-  // Initialize tsParticles engine
   useEffect(() => {
     initParticlesEngine(async (engine) => {
-      await loadSlim(engine); // Load the Slim build of tsParticles
+      await loadSlim(engine);
     }).then(() => {
       setInit(true);
     });
   }, []);
 
   const particlesLoaded = async (container?: Container): Promise<void> => {
-    console.log("Particles container loaded:", container);
+    console.log(container);
   };
 
-  // Particle configuration
   const options: ISourceOptions = useMemo(
     () => ({
       background: {
@@ -36,23 +34,31 @@ const Bg = () => {
       interactivity: {
         events: {
           onClick: {
-            enable: false,
+            enable: true,
+            mode: "push", // Add more particles on click
           },
           onHover: {
-            enable: false 
+            enable: true,
+            mode: "repulse", // Push particles away on hover
           },
         },
         modes: {
-          
+          push: {
+            quantity: 10, // Add more particles when clicked
+          },
+          repulse: {
+            distance: 100,
+            duration: 0.4,
+          },
         },
       },
       particles: {
         color: {
-          value: ["#A11414", "#2D4F97", "#D9D9D9"], // Random confetti colors
+          value: ["#A11414", "#2D4F97", "#D9D9D9", "#264381", "#C71F1F", "#CB2424", "#324292"], // Random confetti colors
         },
         move: {
           enable: true,
-          speed: 2,
+          speed: 4,
           direction: MoveDirection.none, // Confetti can move in multiple directions
           outModes: {
             default: OutMode.out, // Particles disappear after leaving the screen
@@ -72,10 +78,12 @@ const Bg = () => {
         },
         shape: {
           type: ["square"], // Random shapes for confetti
-          
+          polygon: {
+            sides: 5, // You can add polygons like pentagons
+          },
         },
         size: {
-          value: { min: 3, max: 5 }, // Varying confetti sizes
+          value: { min: 3, max: 4 }, // Varying confetti sizes
           random: true,
         },
       },
@@ -83,8 +91,7 @@ const Bg = () => {
     }),
     []
   );
-          
-      
+
   if (init) {
     return (
         <div className="absolute inset-0 z-1">
