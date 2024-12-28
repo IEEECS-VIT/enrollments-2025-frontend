@@ -33,7 +33,7 @@ export default function Navbar(){
                     </nav>
                 </div>
                 <img src="logo2.svg" className="h-[5vh] relative left-[7vw] lg:hidden" />
-                <button className="text-white lg:text-xl text-xs pl-2 pr-2 flex gap-x-4 lg:h-14 lg:w-40 h-[4vh] border border-solid border-[#F8B95A] bg-[#F8B95A] rounded-md bg-opacity-50 items-center justify-center relative left-[7vw] lg:left-[0vw]">Join<img src="discord.svg" className="h-[2vh] lg:h-[3vh] xl:h-[4vh]" /></button>
+                <button className="ring-2 ring-[#F8B95A] rounded-md shadow-red-glow flex flex-wrap text-white lg:text-xl text-xs pl-2 pr-2 gap-x-4 lg:h-14 lg:w-40 h-[4vh] border border-solid border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 items-center justify-center relative left-[7vw] lg:left-[0vw]">Join<img src="discord.svg" className="h-[2vh] lg:h-[3vh] xl:h-[4vh]" /></button>
             </div>
         </>
     )

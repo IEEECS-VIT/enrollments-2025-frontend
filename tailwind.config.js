@@ -23,6 +23,9 @@ export default {
         'glow': '0 0 8px #FF0000, 0 0 12px #F39D18',
         
       },
+      boxShadow: {
+        'red-glow': '5px 5px 0px #FF4500', 
+      }
     },
   },
   plugins: [
