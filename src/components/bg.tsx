@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { type Container, type ISourceOptions, MoveDirection, OutMode } from "@tsparticles/engine";
+import {
+  type Container,
+  type ISourceOptions,
+  MoveDirection,
+  OutMode,
+} from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim"; 
 
 const Bg = () => {
@@ -29,31 +34,23 @@ const Bg = () => {
       interactivity: {
         events: {
           onClick: {
-            enable: true,
-            mode: "push", // Add more particles on click
+            enable: false,
           },
           onHover: {
-            enable: true,
-            mode: "repulse", // Push particles away on hover
+            enable: false,
           },
         },
         modes: {
-          push: {
-            quantity: 10, // Add more particles when clicked
-          },
-          repulse: {
-            distance: 100,
-            duration: 0.4,
-          },
+          
         },
       },
       particles: {
         color: {
-          value: ["#A11414", "#2D4F97", "#D9D9D9", "#264381", "#C71F1F", "#CB2424", "#324292"], // Random confetti colors
+          value: ["#A11414", "#2D4F97", "#D9D9D9"], // Random confetti colors
         },
         move: {
           enable: true,
-          speed: 4,
+          speed: 2,
           direction: MoveDirection.none, // Confetti can move in multiple directions
           outModes: {
             default: OutMode.out, // Particles disappear after leaving the screen
@@ -69,33 +66,31 @@ const Bg = () => {
           value: 200, // Number of particles
         },
         opacity: {
-          value: { min: 1, max: 1 }, // Make particles slightly transparent
+          value: {min:1,max:1}, // Make particles slightly transparent
         },
         shape: {
-          type: ["square"], // Random shapes for confetti
-          polygon: {
-            sides: 5, // You can add polygons like pentagons
-          },
+          type: ["circle"], // Random shapes for confetti
+          
         },
         size: {
-          value: { min: 3, max: 4 }, // Varying confetti sizes
+          value: { min: 3, max: 5 }, // Varying confetti sizes
           random: true,
         },
       },
-      detectRetina: true,
+      
     }),
     []
   );
 
   if (init) {
     return (
-      <div className="absolute inset-0 z-10">
-        <Particles
-          id="tsparticles"
-          particlesLoaded={particlesLoaded}
-          options={options}
-        />
-      </div>
+        <div className="absolute inset-0 z-1">
+            <Particles
+                id="tsparticles"
+                particlesLoaded={particlesLoaded}
+                options={options}
+            />
+        </div>
     );
   }
 

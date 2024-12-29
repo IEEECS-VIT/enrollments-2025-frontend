@@ -5,7 +5,8 @@ import Technicaldomain from './components/Technicaldomain';
 import Managementdomain from './components/Managementdomain';
 import Bg from './components/bg';
 import Navbar from './components/Navbar';
-
+import Landing from './components/Landing';
+import Start from './components/Start';
 const App = () => {
   return (
     <Router>
@@ -14,7 +15,9 @@ const App = () => {
         <Navbar />
         <div className="relative z-20">
           <Routes>
-            <Route path="/" element={<Domainselection />} />
+            <Route index element={<Start/>}/>
+            <Route path="/landing" element={<Landing/>}/>
+            <Route path="/domain" element={<Domainselection />} />
             <Route path="/design" element={<Designdomain />} />
             <Route path="/technical" element={<Technicaldomain />} />
             <Route path="/management" element={<Managementdomain />} />
