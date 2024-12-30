@@ -7,6 +7,8 @@ import Bg from './components/bg';
 import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import Start from './components/Start';
+import Profile from './components/Profile';
+
 const App = () => {
   return (
     <Router>
@@ -21,6 +23,8 @@ const App = () => {
             <Route path="/design" element={<Designdomain />} />
             <Route path="/technical" element={<Technicaldomain />} />
             <Route path="/management" element={<Managementdomain />} />
+            <Route path="/profile" element={<Profile />} />
+
           </Routes>
         </div>
       </div>
