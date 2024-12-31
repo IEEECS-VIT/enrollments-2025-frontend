@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Design() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setHoveredIndex(0);
+    if (containerRef.current) {
+      containerRef.current.focus(); 
+    }
+  }, []);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const totalButtons = 3;
@@ -24,33 +33,38 @@ export default function Design() {
   };
 
   const handleLeave = () => {
-    setHoveredIndex(null);
+    setHoveredIndex((current) => (current !== null ? current : 0));
   };
 
   const handleClick = (index: number) => {
-    setCurrentIndex(index);
-    console.log(`Button ${index + 1} clicked`);
+    if (currentIndex === null){
+      setCurrentIndex(index);
+      console.log(`Button ${index + 1} clicked`);
+    }
+    if (currentIndex !== null){
+      setCurrentIndex(null);
+    }
   };
 
   return (
-    <div className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames ">
+    <div
+      className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
+      ref={containerRef}
+      onKeyDown={handleKeyNavigation}
+      tabIndex={0} 
+    >
       <div className="border-2 border-[#0395F1] mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">DESIGN</p>
         </div>
 
-        <div
-          className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
-          onKeyDown={handleKeyNavigation}
-          tabIndex={0}
-        >
+        <div className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]">
           {['UI/UX', 'Graphic Design', 'Video Editing'].map((label, index) => (
             <div
               key={index}
               className={`flex flex-col mb-[2.5vh] items-center sm:basis-1/3 cursor-pointer nav-button p-4 rounded-lg transition-transform duration-300 ${
                 hoveredIndex === index ? 'scale-110' : 'scale-100'
               }`}
-              tabIndex={0}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
               onMouseLeave={handleLeave}
@@ -61,7 +75,7 @@ export default function Design() {
                 alt={label}
               />
               <p
-                className={`text-[2.5vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
+                className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
                   currentIndex === index ? 'text-[#0395F1] font-bold underline underline-offset-4' : 'text-white'
                 } ${hoveredIndex === index ? 'animate-blink' : ''}`}
               >

@@ -18,6 +18,7 @@ const App = () => {
         <div className="relative z-20">
           <Routes>
             <Route index element={<Start/>}/>
+            <Route path="/domains" element={<Domainselection/>}/>
             <Route path="/landing" element={<Landing/>}/>
             <Route path="/domain" element={<Domainselection />} />
             <Route path="/design" element={<Designdomain />} />
