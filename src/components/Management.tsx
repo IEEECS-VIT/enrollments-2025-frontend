@@ -1,8 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Management() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setHoveredIndex(0);
+    if (containerRef.current) {
+      containerRef.current.focus(); 
+    }
+  }, []);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const totalButtons = 2;
@@ -24,16 +32,26 @@ export default function Management() {
   };
 
   const handleLeave = () => {
-    setHoveredIndex(null);
+    setHoveredIndex((current) => (current !== null ? current : 0));
   };
 
   const handleClick = (index: number) => {
-    setCurrentIndex(index);
-    console.log(`Button ${index + 1} clicked`);
+    if (currentIndex === null){
+      setCurrentIndex(index);
+      console.log(`Button ${index + 1} clicked`);
+    }
+    if (currentIndex !== null){
+      setCurrentIndex(null);
+    }
   };
 
   return (
-    <div className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames">
+    <div
+      className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
+      ref={containerRef}
+      onKeyDown={handleKeyNavigation}
+      tabIndex={0} 
+    >
       <div className="border-2 border-[#FF0004] mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-24 sm:mt-[6vh]">
           <p className="text-[7vw] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">MANAGEMENT</p>
@@ -55,12 +73,12 @@ export default function Management() {
               onMouseLeave={handleLeave}
             >
               <img
-                className="h-15 sm:h-30"
+                className="h-[7.5vh] sm:h-[12.5vh]"
                 src={index === 0 ? '/calendar.svg' : '/microphone.svg'}
                 alt={label}
               />
               <p
-                className={`text-[3vh] tracking-wider transition-all duration-300 ${
+                className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
                   currentIndex === index
                     ? 'text-[#FF0004] font-bold underline underline-offset-4'
                     : 'font-normal no-underline'

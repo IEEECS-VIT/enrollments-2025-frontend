@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import { useState,useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Domains() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setHoveredIndex(0);
+    if (containerRef.current) {
+      containerRef.current.focus();   
+    }
+  }, []);
+  
+
   const navigate = useNavigate();
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -26,7 +36,7 @@ export default function Domains() {
   };
 
   const handleLeave = () => {
-    setHoveredIndex(null);
+    setHoveredIndex((current) => (current !== null ? current : 0));
   };
 
   const handleClick = (index: number) => {
@@ -37,7 +47,12 @@ export default function Domains() {
   };
 
   return (
-    <div className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames">
+    <div
+      className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
+      ref={containerRef}
+      onKeyDown={handleKeyNavigation}
+      tabIndex={0} 
+    >
       <div className="border-2 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">CHOOSE YOUR</p>
@@ -62,7 +77,7 @@ export default function Domains() {
             >
               <img className="h-[7.5vh] sm:h-[15vh]" src={`/${label.toLowerCase()}.svg`} alt={label} />
               <p
-                className={`text-[3vh] tracking-wider transition-all duration-300 ${
+                className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
                   currentIndex === index
                     ? 'font-bold underline underline-offset-4'
                     : 'font-normal no-underline'
