@@ -1,7 +1,18 @@
+import { useState } from "react";
+import GoogleLogin from "./Login";
 
-// "use server";
+const Landing: React.FC = () => {
+  const [showLogin, setShowLogin] = useState<boolean>(false);
 
-export default function Landing(){
+  const handleLogin = () => {
+    setShowLogin(true);
+    console.log("Login button clicked");
+  };
+
+  if (showLogin) {
+    return <GoogleLogin />;
+  }
+
     return(
         <>
             <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-2">
@@ -24,9 +35,11 @@ export default function Landing(){
                     into realms of the unknown.
                     </h2>
                 </div>
-                <button className="text-white text-xl mt-[13vh] lg:hidden tracking-tighter">{'<'}Sign In with Google{'>'}</button>
-                <button className="text-white text-2xl mt-[10vh] hidden lg:block">{'<'}Sign In with Google{'>'}</button>
+                <button onClick={handleLogin} className="text-white text-xl mt-[13vh] lg:hidden tracking-tighter">{'<'}Sign In with Google{'>'}</button>
+                <button onClick={handleLogin} className="text-white text-2xl mt-[10vh] hidden lg:block">{'<'}Sign In with Google{'>'}</button>
             </div>
         </>
     )
 }
+
+export default Landing;

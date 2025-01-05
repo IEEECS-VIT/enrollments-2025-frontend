@@ -8,6 +8,8 @@ import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import Start from './components/Start';
 import Profile from './components/Profile';
+import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
@@ -17,15 +19,25 @@ const App = () => {
         <Navbar />
         <div className="relative z-20">
           <Routes>
-            <Route index element={<Start/>}/>
-            <Route path="/domains" element={<Domainselection/>}/>
-            <Route path="/landing" element={<Landing/>}/>
-            <Route path="/domain" element={<Domainselection />} />
-            <Route path="/design" element={<Designdomain />} />
-            <Route path="/technical" element={<Technicaldomain />} />
-            <Route path="/management" element={<Managementdomain />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route index element={<Start />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/landing" element={<Landing />} />
 
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <div />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="domains" element={<Domainselection />} />
+              <Route path="domain" element={<Domainselection />} />
+              <Route path="design" element={<Designdomain />} />
+              <Route path="technical" element={<Technicaldomain />} />
+              <Route path="management" element={<Managementdomain />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
           </Routes>
         </div>
       </div>
