@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import axios from 'axios';
+import { SubmitDomains } from '../api/user';
 
 export default function Domains() {
-  
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-
-  
   const navigate = useNavigate();
 
   
@@ -18,6 +15,14 @@ export default function Domains() {
     if (containerRef.current) {
       containerRef.current.focus();
       containerRef.current.focus();
+    }
+
+    const lastVisited = localStorage.getItem('lastVisited');
+    if (lastVisited) {
+      const lastIndex = ['/management', '/technical', '/design'].indexOf(lastVisited);
+      if (lastIndex !== -1) setHoveredIndex(lastIndex);
+    } else {
+      setHoveredIndex(0);
     }
   }, []);
 
@@ -51,7 +56,9 @@ export default function Domains() {
 
   const handleHover = (index: number) => setHoveredIndex(index);
   const handleHover = (index: number) => setHoveredIndex(index);
+  const handleHover = (index: number) => setHoveredIndex(index);
 
+  const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
   const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
   const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
 
@@ -62,30 +69,28 @@ export default function Domains() {
   };
 
 
+
   const handleSubmit = async () => {
     const managementData = JSON.parse(localStorage.getItem('management') || '[]');
     const technicalData = JSON.parse(localStorage.getItem('technical') || '[]');
     const designData = JSON.parse(localStorage.getItem('design') || '[]');
   
+  
     const allSelectedData = {
-      "1": managementData,
-      "2": technicalData,
-      "3": designData
+      "management": managementData,
+      "technical": technicalData,
+      "design": designData
     };
     console.log(allSelectedData);
-
-
-    /*try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/domain/submit`, allSelectedData, {
-        headers: {
-          'Content-Type': 'application/json'
+  
+      try {
+        const response = await SubmitDomains(allSelectedData);
+        if(response.status==200){
+          navigate("/profile");
         }
-      });
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error submitting data:', error);
-    }*/ 
-      localStorage.clear();
+      } catch (error) {
+        console.error('Error submitting data:', error);
+      }
     };
   
 
@@ -94,10 +99,12 @@ export default function Domains() {
       className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
       ref={containerRef}
       onKeyDown={handleKeyNavigation} 
+      onKeyDown={handleKeyNavigation} 
       tabIndex={0}
       onKeyDown={handleKeyNavigation} 
       tabIndex={0}
     >
+      <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
       <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
       <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
@@ -106,6 +113,7 @@ export default function Domains() {
         </div>
 
         <div
+          className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           tabIndex={0}
@@ -139,12 +147,7 @@ export default function Domains() {
       </div>
       <button
         onClick={handleSubmit}
-        tabIndex={0}
-        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
-        }`}
-        onMouseEnter={() => setHoveredIndex(3)}
-        onMouseLeave={() => setHoveredIndex(null)}
+        className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8"
       >
         SUBMIT
       </button>
