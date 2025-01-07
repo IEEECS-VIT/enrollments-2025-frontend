@@ -91,3 +91,17 @@ export async function SubmitUsername(username: string): Promise<UsernameResponse
     };
 }
 
+type Dict = { [key: string]: string };
+export async function SubmitDomains(domain: Dict): Promise<UsernameResponse> {
+  console.log('doms ', domain);
+    const response = await ProtectedRequest<UsernameResponse>(
+      "POST",
+      "/user/username",
+      { domain:domain }
+    );
+    console.log("Domain submission response:", response.data);
+    return {
+      status: response.status,
+    };
+}
+
