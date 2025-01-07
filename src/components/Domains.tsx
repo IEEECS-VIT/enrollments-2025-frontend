@@ -1,17 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SubmitDomains } from '../api/user';
+import axios from 'axios';
 
 export default function Domains() {
-  
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   
+  const navigate = useNavigate();
+
+  
   useEffect(() => {
     if (containerRef.current) {
+      containerRef.current.focus();
       containerRef.current.focus();
     }
   }, []);
@@ -45,7 +49,9 @@ export default function Domains() {
   };
 
   const handleHover = (index: number) => setHoveredIndex(index);
+  const handleHover = (index: number) => setHoveredIndex(index);
 
+  const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
   const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
 
   const handleClick = (index: number) => {
@@ -61,17 +67,19 @@ export default function Domains() {
     const designData = JSON.parse(localStorage.getItem('design') || '[]');
   
     const allSelectedData = {
-      "management": managementData,
-      "technical": technicalData,
-      "design": designData
+      "1": managementData,
+      "2": technicalData,
+      "3": designData
     };
     console.log(allSelectedData);
   
       try {
-        const response = await SubmitDomains(allSelectedData);
-        if(response.status==200){
-          navigate("/profile");
-        }
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/domain/submit`, allSelectedData, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log('Response:', response.data);
       } catch (error) {
         console.error('Error submitting data:', error);
       }
@@ -84,7 +92,10 @@ export default function Domains() {
       ref={containerRef}
       onKeyDown={handleKeyNavigation} 
       tabIndex={0}
+      onKeyDown={handleKeyNavigation} 
+      tabIndex={0}
     >
+      <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
       <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">CHOOSE YOUR</p>
@@ -92,6 +103,7 @@ export default function Domains() {
         </div>
 
         <div
+          className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           tabIndex={0}
         >
@@ -124,12 +136,7 @@ export default function Domains() {
       </div>
       <button
         onClick={handleSubmit}
-        tabIndex={0}
-        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
-        }`}
-        onMouseEnter={() => setHoveredIndex(3)}
-        onMouseLeave={() => setHoveredIndex(null)}
+        className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8"
       >
         SUBMIT
       </button>

@@ -1,18 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Technical() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [selectedIndices, setSelectedIndices] = usePersistentState<number[]>('technical', []);
+  const [selectedIndices, setSelectedIndices] = usePersistentState<number[]>('technical', []);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
   const navigate = useNavigate();
 
 
   useEffect(() => {
     setHoveredIndex(0);
     if (containerRef.current) {
+      containerRef.current.focus();
       containerRef.current.focus();
     }
   }, []);
@@ -58,11 +64,15 @@ export default function Technical() {
       setSelectedIndices([...selectedIndices, index]);
     } else if (selectedIndices.includes(index)) {
       setSelectedIndices(selectedIndices.filter((i) => i !== index));
+    if (selectedIndices.length < 2 && !selectedIndices.includes(index)) {
+      setSelectedIndices([...selectedIndices, index]);
+    } else if (selectedIndices.includes(index)) {
+      setSelectedIndices(selectedIndices.filter((i) => i !== index));
     }
   };
 
   const handleOkClick = () => {
-    navigate('/domain'); // Navigates to the /domains route
+    navigate('/domains'); // Navigates to the /domains route
 };
 
 
@@ -72,9 +82,13 @@ export default function Technical() {
       ref={containerRef}
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
+      onKeyDown={handleKeyNavigation}
+      tabIndex={0}
     >
       <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
+          <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">TECHNICAL</p>
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">TECHNICAL</p>
         </div>
 
@@ -122,19 +136,27 @@ export default function Technical() {
         </div>
        </div>
        <button
-        onClick={handleOkClick}
-        tabIndex={0} 
-        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 5 ? 'scale-110 bg-opacity-70' : 'scale-100'
-        }`}
-        onMouseEnter={() => setHoveredIndex(5)}
-        onMouseLeave={() => setHoveredIndex(null)}
-      >
-        OK
-      </button>
+    onClick={handleOkClick} // Navigates to /domains on click
+    className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-4 sm:mt-8"
+>
+    OK
+</button>
 
     </div>
   );
+}
+
+function usePersistentState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+  const [state, setState] = useState<T>(() => {
+    const storedState = localStorage.getItem(key);
+    return storedState !== null ? JSON.parse(storedState) : initialValue;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+
+  return [state, setState];
 }
 
 function usePersistentState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
