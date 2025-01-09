@@ -1,17 +1,28 @@
-import { useState } from "react";
-import GoogleLogin from "./Login";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../firebaseConfig';
+import Cookies from 'js-cookie';
+import {login} from '../../api/login.js';
 
 const Landing: React.FC = () => {
-  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+      Cookies.set('authToken', idToken, { expires: 1, path: '' });
+      console.log('ID Token:', idToken);
+      const response = await login(idToken);
+      if(response.status=="success"){
+        navigate("/profile");
+      }
+    } catch (error: any) {
+      console.error('Login error: ', error);
+    }
+    
 
-  const handleLogin = () => {
-    setShowLogin(true);
-    console.log("Login button clicked");
   };
-
-  if (showLogin) {
-    return <GoogleLogin />;
-  }
 
     return(
         <>
