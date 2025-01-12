@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
     if (token) {
       setIsAuthenticated(true); 
     } else {
-      navigate('/login'); 
+      navigate('/'); 
     }
   }, [navigate]);
 
@@ -27,7 +27,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
     );
   }
 
-  // If you want to render children in a nested route:
   return (
     <div>
       <Outlet />

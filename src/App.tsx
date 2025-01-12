@@ -8,7 +8,6 @@ import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import Start from './components/Start';
 import Profile from './components/Profile';
-import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -20,7 +19,6 @@ const App = () => {
         <div className="relative z-20">
           <Routes>
             <Route index element={<Start />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/landing" element={<Landing />} />
 
             <Route
@@ -30,7 +28,7 @@ const App = () => {
                   <div />
                 </ProtectedRoute>
               }
-            >
+              >
               <Route path="domains" element={<Domainselection />} />
               <Route path="domain" element={<Domainselection />} />
               <Route path="design" element={<Designdomain />} />
