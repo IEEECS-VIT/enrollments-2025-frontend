@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { SubmitDomains } from '../api/user';
 
 export default function Domains() {
+  
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,15 +18,28 @@ export default function Domains() {
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const totalButtons = 3;
+    const submitButtonIndex = totalButtons;
+
     if (event.key === 'ArrowLeft') {
       const prevIndex = (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) % totalButtons;
       setHoveredIndex(prevIndex);
     } else if (event.key === 'ArrowRight') {
       const nextIndex = (hoveredIndex === null ? 0 : hoveredIndex + 1) % totalButtons;
       setHoveredIndex(nextIndex);
-    } else if (event.key === 'Enter') {
+    }else if (event.key === 'ArrowDown') {
+      setHoveredIndex(submitButtonIndex); 
+    } else if (event.key === 'ArrowUp') {
+      if (hoveredIndex === submitButtonIndex) {
+        setHoveredIndex(0);
+      }
+    }  
+    else if (event.key === 'Enter') {
       if (hoveredIndex !== null) {
-        handleClick(hoveredIndex);
+        if (hoveredIndex === submitButtonIndex) {
+          handleSubmit(); 
+        } else {
+          handleClick(hoveredIndex); 
+        }
       }
     }
   };
@@ -110,7 +124,12 @@ export default function Domains() {
       </div>
       <button
         onClick={handleSubmit}
-        className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8"
+        tabIndex={0}
+        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
+          hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
+        }`}
+        onMouseEnter={() => setHoveredIndex(3)}
+        onMouseLeave={() => setHoveredIndex(null)}
       >
         SUBMIT
       </button>
