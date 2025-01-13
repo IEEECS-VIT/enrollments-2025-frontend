@@ -27,7 +27,9 @@ export default function Design() {
   }, []);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const totalButtons = 3;   
+    const totalButtons = 3; 
+    const submitButtonIndex = totalButtons;
+    
     if (event.key === 'ArrowLeft') {
       const prevIndex = (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) % totalButtons;
       setHoveredIndex(prevIndex);
@@ -132,11 +134,16 @@ export default function Design() {
         </div>
       </div>
       <button
-    onClick={handleOkClick}
-    className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-4 sm:mt-8"
->
-    OK
-</button>
+        onClick={handleOkClick}
+        tabIndex={0} 
+        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
+          hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
+        }`}
+        onMouseEnter={() => setHoveredIndex(3)}
+        onMouseLeave={() => setHoveredIndex(null)}
+      >
+        OK
+      </button>
 
     </div>
   );  

@@ -31,7 +31,7 @@ function usePersistentState<T>(key: string, initialState: T): [T, React.Dispatch
 export default function Management() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndexes, setCurrentIndexes] = usePersistentState<number[]>('management', []);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +90,7 @@ export default function Management() {
   };
 
   const handleOkClick = () => {
-    navigate('/domains'); // Navigate to the /domains route
+    navigate('/domains');
   };
 
   return (
@@ -145,8 +145,13 @@ export default function Management() {
         </div>
       </div>
       <button
-        onClick={handleOkClick} // Attach navigation handler
-        className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8"
+        onClick={handleOkClick}
+        tabIndex={0} 
+        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
+          hoveredIndex === 2 ? 'scale-110 bg-opacity-70' : 'scale-100'
+        }`}
+        onMouseEnter={() => setHoveredIndex(2)}
+        onMouseLeave={() => setHoveredIndex(null)}
       >
         OK
       </button>

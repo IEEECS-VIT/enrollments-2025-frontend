@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+//import axios from 'axios';
 
 export default function Domains() {
+  
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,17 +73,19 @@ export default function Domains() {
       "3": designData
     };
     console.log(allSelectedData);
-  
-      try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/domain/submit`, allSelectedData, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        console.log('Response:', response.data);
-      } catch (error) {
-        console.error('Error submitting data:', error);
-      }
+
+
+    /*try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/domain/submit`, allSelectedData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error submitting data:', error);
+    }*/ 
+      localStorage.clear();
     };
   
 
@@ -136,7 +139,12 @@ export default function Domains() {
       </div>
       <button
         onClick={handleSubmit}
-        className="ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8"
+        tabIndex={0}
+        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
+          hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
+        }`}
+        onMouseEnter={() => setHoveredIndex(3)}
+        onMouseLeave={() => setHoveredIndex(null)}
       >
         SUBMIT
       </button>
