@@ -3,20 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../firebaseConfig';
 import Cookies from 'js-cookie';
-import { useToken, login } from "../api/user"; 
+import { login } from "../api/user"; 
 
 const Landing: React.FC = () => {
-  const navigate = useNavigate();
-  const { getTokenFromCookies } = useToken(); 
+  const navigate = useNavigate(); 
 
   const handleLogin = async () => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       Cookies.set('authToken', idToken, { expires: 1, path: '' });
-      const token = getTokenFromCookies();
-      const response = await login(token);
-      console.log('resppppp ', response);
-      navigate("/profile", { state: { profileData: response.data } });
+      const response = await login();  
+      console.log('Response: ', response);
+      navigate("/profile");
   };
 
   return (

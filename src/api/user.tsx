@@ -22,7 +22,7 @@ export function useToken() {
   const getTokenFromCookies = (): string | null => {
     const idToken = Cookies.get("authToken");
     if (!idToken) {
-      navigate("/landing"); 
+      navigate("/landing");
       throw new Error("No auth token found. Redirecting to login.");
     }
     return idToken;
@@ -34,11 +34,11 @@ export function useToken() {
 const protectedRequest = async (
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   endpoint: string,
-  token: string | null,
   data: Record<string, unknown> | null = null,
   params: Record<string, unknown> | null = null
 ): Promise<AxiosResponse> => {
   try {
+    const token = Cookies.get("authToken");  
     if (!token) throw new Error("Token is required for protected requests.");
 
     const config = {
@@ -61,20 +61,20 @@ const protectedRequest = async (
   }
 };
 
-export async function login(token: string | null): Promise<ResponseData> {
-    if (!token) throw new Error('No token available for login.');
-    
-    const response = await protectedRequest("POST", `/user/login`, token);
-    return {
-      status: response.status,
-      data: response.data,
-    };
-  }
+export async function login(): Promise<ResponseData> {
+  const token = Cookies.get("authToken");  
+  if (!token) throw new Error("No token available for login.");
   
+  const response = await protectedRequest("POST", "/user/login");
+  return {
+    status: response.status,
+    data: response.data,
+  };
+}
 
-export async function loadProfile(token: string): Promise<ProfileData> {
-  const response = await protectedRequest("GET", `/user/profile`, token);
-  const data = response.data.data;
+export async function loadProfile(): Promise<ProfileData> {
+  const response = await protectedRequest("GET", "/user/profile");
+  const data = response.data;
   return {
     name: data.name,
     mobile: data.mobile,
