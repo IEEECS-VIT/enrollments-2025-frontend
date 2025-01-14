@@ -1,7 +1,7 @@
 import Treecloud from "./Treecloud";
 import ProfileInfo from "./ProfileInfo";
 import { useEffect, useState } from "react";
-import { loadProfile } from "../api/user";
+import { LoadProfile } from "../api/user";
 
 interface ProfileData {
   name: string;
@@ -16,7 +16,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const data: ProfileData = await loadProfile();
+        const data: ProfileData = await LoadProfile();
         console.log('data ', data);
         setProfileData(data);
       } catch (error) {

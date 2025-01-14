@@ -16,7 +16,7 @@ interface ResponseData {
   data: object;
 }
 
-export function useToken() {
+export function token() {
   const navigate = useNavigate();
 
   const getTokenFromCookies = (): string | null => {
@@ -31,7 +31,7 @@ export function useToken() {
   return { getTokenFromCookies };
 }
 
-const protectedRequest = async (
+const ProtectedRequest = async (
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   endpoint: string,
   data: Record<string, unknown> | null = null,
@@ -61,19 +61,19 @@ const protectedRequest = async (
   }
 };
 
-export async function login(): Promise<ResponseData> {
+export async function Login(): Promise<ResponseData> {
   const token = Cookies.get("authToken");  
   if (!token) throw new Error("No token available for login.");
   
-  const response = await protectedRequest("POST", "/user/login");
+  const response = await ProtectedRequest("POST", "/user/login");
   return {
     status: response.status,
     data: response.data,
   };
 }
 
-export async function loadProfile(): Promise<ProfileData> {
-  const response = await protectedRequest("GET", "/user/profile");
+export async function LoadProfile(): Promise<ProfileData> {
+  const response = await ProtectedRequest("GET", "/user/profile");
   const data = response.data;
   return {
     name: data.name,

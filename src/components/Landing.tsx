@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../firebaseConfig';
 import Cookies from 'js-cookie';
-import { login } from "../api/user"; 
+import { Login } from "../api/user"; 
 
 const Landing: React.FC = () => {
   const navigate = useNavigate(); 
@@ -12,7 +12,7 @@ const Landing: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       Cookies.set('authToken', idToken, { expires: 1, path: '' });
-      const response = await login();  
+      const response = await Login();  
       console.log('Response: ', response);
       navigate("/profile");
   };
