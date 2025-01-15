@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -16,19 +15,12 @@ interface ResponseData {
   data: object;
 }
 
-export function token() {
-  const navigate = useNavigate();
-
-  const getTokenFromCookies = (): string | null => {
-    const idToken = Cookies.get("authToken");
-    if (!idToken) {
-      navigate("/landing");
-      throw new Error("No auth token found. Redirecting to login.");
-    }
-    return idToken;
-  };
-
-  return { getTokenFromCookies };
+export function getAuthToken(): string {
+  const token = Cookies.get("authToken");
+  if (!token) {
+    throw new Error("No auth token found");
+  }
+  return token;
 }
 
 const ProtectedRequest = async (
@@ -38,8 +30,7 @@ const ProtectedRequest = async (
   params: Record<string, unknown> | null = null
 ): Promise<AxiosResponse> => {
   try {
-    const token = Cookies.get("authToken");  
-    if (!token) throw new Error("Token is required for protected requests.");
+    const token = getAuthToken();
 
     const config = {
       method,
@@ -62,9 +53,6 @@ const ProtectedRequest = async (
 };
 
 export async function Login(): Promise<ResponseData> {
-  const token = Cookies.get("authToken");  
-  if (!token) throw new Error("No token available for login.");
-  
   const response = await ProtectedRequest("POST", "/user/login");
   return {
     status: response.status,
