@@ -17,7 +17,7 @@ const Landing: React.FC = () => {
       if(response.status==200)
         navigate("/profile");
       else if(response.status==402)
-        setError(response.domain.detail);
+        setError(response.data);
   };
 
   return (

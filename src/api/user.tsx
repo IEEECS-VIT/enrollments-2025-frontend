@@ -12,7 +12,7 @@ interface ProfileData {
 
 interface ResponseData {
   status: number;
-  data: object;
+  data: string; 
 }
 
 export function getAuthToken(): string {
@@ -23,12 +23,12 @@ export function getAuthToken(): string {
   return token;
 }
 
-const ProtectedRequest = async (
+const ProtectedRequest = async <T = unknown>(
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   endpoint: string,
   data: Record<string, unknown> | null = null,
   params: Record<string, unknown> | null = null
-): Promise<AxiosResponse> => {
+): Promise<AxiosResponse<T>> => {
   try {
     const token = getAuthToken();
 
@@ -42,7 +42,7 @@ const ProtectedRequest = async (
       params,
     };
 
-    const response = await axios(config);
+    const response = await axios<T>(config);
     return response;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -53,7 +53,7 @@ const ProtectedRequest = async (
 };
 
 export async function Login(): Promise<ResponseData> {
-  const response = await ProtectedRequest("POST", "/user/login");
+  const response = await ProtectedRequest<{ detail: string }>("POST", "/user/login");
   return {
     status: response.status,
     data: response.data.detail,
@@ -61,7 +61,7 @@ export async function Login(): Promise<ResponseData> {
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
-  const response = await ProtectedRequest("GET", "/user/profile");
+  const response = await ProtectedRequest<ProfileData>("GET", "/user/profile");
   const data = response.data;
   return {
     name: data.name,
