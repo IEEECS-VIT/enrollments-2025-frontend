@@ -158,6 +158,7 @@ export default function Questions() {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4">
         <p className="text-lg">Quiz answers submitted successfully.</p>
+        {showScore&&<p>{score}</p>}
       </div>
     );
   }

@@ -24,10 +24,10 @@ export default function Profile() {
       }
     };
 
-    if (!profileData) {  // Fetch data only if profileData is not set
+    if (!profileData) { 
       fetchProfileData();
     }
-  }, [profileData]);  // Only run effect when profileData is null
+  }, [profileData]); 
 
   return (
     <div className="relative min-h-screen flex items-center justify-center">

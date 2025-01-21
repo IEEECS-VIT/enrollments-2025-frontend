@@ -38,6 +38,7 @@ const Landing: React.FC = () => {
             Where innovation meets technology <br />
             We forge tech<br /> that transcends from ordinary <br />
             into realms of the unknown.
+            {error && <p>{error}</p>}
           </h2>
         </div>
         <button onClick={handleLogin} className="text-white text-xl mt-[13vh] lg:hidden tracking-tighter">{'<'}Sign In with Google{'>'}</button>

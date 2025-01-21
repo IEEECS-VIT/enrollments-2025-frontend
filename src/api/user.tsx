@@ -13,9 +13,6 @@ interface ProfileData {
 interface ResponseData {
   status: number;
   data: object;
-  domain: {
-    detail: string;
-  };
 }
 
 export function getAuthToken(): string {
