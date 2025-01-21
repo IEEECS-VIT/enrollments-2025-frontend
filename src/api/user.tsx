@@ -13,6 +13,9 @@ interface ProfileData {
 interface ResponseData {
   status: number;
   data: object;
+  domain: {
+    detail: string;
+  };
 }
 
 export function getAuthToken(): string {
@@ -56,7 +59,7 @@ export async function Login(): Promise<ResponseData> {
   const response = await ProtectedRequest("POST", "/user/login");
   return {
     status: response.status,
-    data: response.data,
+    data: response.data.detail,
   };
 }
 

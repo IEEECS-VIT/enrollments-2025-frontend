@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../firebaseConfig';
@@ -7,14 +7,17 @@ import { Login } from "../api/user";
 
 const Landing: React.FC = () => {
   const navigate = useNavigate(); 
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       Cookies.set('authToken', idToken, { expires: 1, path: '' });
-      const response = await Login();  
-      console.log('Response: ', response);
-      navigate("/profile");
+      const response = await Login(); 
+      if(response.status==200)
+        navigate("/profile");
+      else if(response.status==402)
+        setError(response.domain.detail);
   };
 
   return (
