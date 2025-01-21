@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import useFetch from "../hooks/useFetch.ts";
 import QuestionNumber from "./QuestionNumber.tsx";
 
 interface QuizData {
@@ -101,7 +100,7 @@ export default function Questions() {
 
   // const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { data, loading, error } = useFetch("https://dummyjson.com/test");
+  const { data, loading, error } = {data:"",loading:"",error:""};
   console.log(data, loading, error);
 
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -158,6 +157,7 @@ export default function Questions() {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4">
         <p className="text-lg">Quiz answers submitted successfully.</p>
+        {showScore&&<p>{score}</p>}
       </div>
     );
   }
