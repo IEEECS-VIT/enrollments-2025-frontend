@@ -8,6 +8,8 @@ import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import Start from './components/Start';
 import Profile from './components/Profile';
+import Quiz1 from './components/Quiz1';
+
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
             <Route path="/technical" element={<Technicaldomain />} />
             <Route path="/management" element={<Managementdomain />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/quiz" element={<Quiz1 />} />
+
 
           </Routes>
         </div>

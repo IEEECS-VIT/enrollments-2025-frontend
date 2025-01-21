@@ -113,7 +113,7 @@ export default function Technical() {
                     : ''
                 }`}
               >
-                {hoveredIndex === index || selectedIndices.includes(index)
+                {hoveredIndex === index
                   ? `> ${label} <`
                   : label}
               </p>

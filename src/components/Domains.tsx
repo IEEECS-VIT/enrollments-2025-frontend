@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import axios from 'axios';
 
 export default function Domains() {
   
@@ -61,12 +60,12 @@ export default function Domains() {
     const designData = JSON.parse(localStorage.getItem('design') || '[]');
   
     const allSelectedData = {
-      "1": managementData,
-      "2": technicalData,
+      "1":  managementData,
+      "2": technicalData, 
       "3": designData
     };
     console.log(allSelectedData);
-
+    
 
     /*try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/domain/submit`, allSelectedData, {
@@ -112,31 +111,41 @@ export default function Domains() {
             >
               <img className="h-[7.5vh] sm:h-[15vh]" src={`/${label.toLowerCase()}.svg`} alt={label} />
               <p
-                className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
-                  currentIndex === index
-                    ? 'font-bold underline underline-offset-4'
-                    : 'font-normal no-underline'
-                } ${
-                  hoveredIndex === index ? 'animate-blink text-white' : ''
-                }`}
-              >
-                {hoveredIndex === index ? `> ${label} <` : label}
-              </p>
+  className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
+    currentIndex === index ? 'font-bold' : 'font-normal'
+  } ${
+    hoveredIndex === index ? 'animate-blink' : ''
+  } ${
+    JSON.parse(localStorage.getItem(label.toLowerCase()) || '[]').length > 0
+      ? index === 0
+        ? 'text-[#FF0004] font-extrabold underline underline-offset-4'
+        : index === 1
+        ? 'text-[#65C54E] font-extrabold underline underline-offset-4'
+        : index === 2
+        ? 'text-[#0395F1] font-extrabold underline underline-offset-4'  
+        : ''
+      : ''
+  }`}
+>
+  {hoveredIndex === index ? `> ${label} <` : label}
+</p>
+
             </div>
           ))}
         </div>
-      </div>
+      </div>  
       <button
-        onClick={handleSubmit}
-        tabIndex={0}
-        className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
-        }`}
-        onMouseEnter={() => setHoveredIndex(3)}
-        onMouseLeave={() => setHoveredIndex(null)}
-      >
-        SUBMIT
-      </button>
+  onClick={handleSubmit}
+  tabIndex={0}
+  className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
+    hoveredIndex === 3 ? 'scale-110 bg-opacity-70' : 'scale-100'
+  } ${hoveredIndex === 3 ? 'animate-blink' : ''}`}
+  onMouseEnter={() => setHoveredIndex(3)}
+  onMouseLeave={() => setHoveredIndex(null)}
+>
+  SUBMIT
+</button>
+
     </div>
   );
 }

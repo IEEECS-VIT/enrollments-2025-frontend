@@ -10,7 +10,7 @@ export default {
         },
       },
       animation: {
-        blink: 'blink 0.75s infinite',
+        blink: 'blink 0.8s infinite',
       },
       fontFamily: {
         'press-start': ['"Press Start 2P"', 'cursive'],
