@@ -9,6 +9,8 @@ import Landing from './components/Landing';
 import Start from './components/Start';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
+import Quiz1 from './components/Quiz1';
+
 
 const App = () => {
   return (
@@ -21,6 +23,7 @@ const App = () => {
             <Route index element={<Start />} />
             <Route path="/landing" element={<Landing />} />
 
+
             <Route
               path="/"
               element={
@@ -29,12 +32,12 @@ const App = () => {
                 </ProtectedRoute>
               }
               >
-              <Route path="domains" element={<Domainselection />} />
               <Route path="domain" element={<Domainselection />} />
               <Route path="design" element={<Designdomain />} />
               <Route path="technical" element={<Technicaldomain />} />
               <Route path="management" element={<Managementdomain />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="quiz" element={<Quiz1 />} />
             </Route>
           </Routes>
         </div>
