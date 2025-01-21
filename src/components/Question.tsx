@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import useFetch from "../hooks/useFetch.ts";
 import QuestionNumber from "./QuestionNumber.tsx";
 
 interface QuizData {
   questions: {
     question: string;
-    questionType: string;
-    answerSelectionType: string;
     answers: string[];
-    correctAnswer: number; // 1-indexed correct answer
+    correctAnswer: number;
   }[];
 }
 
@@ -16,9 +15,9 @@ export default function Questions() {
   const quizData: QuizData = {
     questions: [
       {
-        question: "What is the correct syntax for including an external JavaScript file in an HTML document?",
-        questionType: "text",
-        answerSelectionType: "single",
+        question:
+          "What is the correct syntax for including an external JavaScript file in an HTML document?",
+
         answers: [
           "<script href='file.js'></script>",
           "<script src='file.js'></script>",
@@ -29,15 +28,13 @@ export default function Questions() {
       },
       {
         question: "Which HTML tag is used to define an internal style sheet?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: ["<css>", "<style>", "<script>", "<link>"],
         correctAnswer: 2,
       },
       {
         question: "What does CSS stand for?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: [
           "Creative Style Sheets",
           "Cascading Style Sheets",
@@ -48,22 +45,20 @@ export default function Questions() {
       },
       {
         question: "Which is not a valid JavaScript data type?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: ["Boolean", "Undefined", "Float", "Number"],
         correctAnswer: 3,
       },
       {
-        question: "Which HTML element is used to display scalar measurements within a range?",
-        questionType: "text",
-        answerSelectionType: "single",
+        question:
+          "Which HTML element is used to display scalar measurements within a range?",
+
         answers: ["<gauge>", "<measure>", "<progress>", "<meter>"],
         correctAnswer: 4,
       },
       {
         question: "What does SQL stand for?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: [
           "Structured Query Language",
           "Structured Question Language",
@@ -74,8 +69,7 @@ export default function Questions() {
       },
       {
         question: "Which is the correct way to write a comment in CSS?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: [
           "// this is a comment",
           "/* this is a comment */",
@@ -86,31 +80,33 @@ export default function Questions() {
       },
       {
         question: "Which company developed JavaScript?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: ["Netscape", "Microsoft", "Sun Microsystems", "IBM"],
         correctAnswer: 1,
       },
       {
         question: "What is the default display value for a <div> element?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: ["inline", "inline-block", "block", "none"],
         correctAnswer: 3,
       },
       {
         question: "Which property is used to change the text color in CSS?",
-        questionType: "text",
-        answerSelectionType: "single",
+
         answers: ["font-color", "text-color", "color", "foreground-color"],
         correctAnswer: 3,
       },
     ],
   };
 
-// const [quizData, setQuizData] = useState<QuizData | null>(null);
+  // const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: number }>({});
+  const { data, loading, error } = useFetch("https://dummyjson.com/test");
+  console.log(data, loading, error);
+
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: number;
+  }>({});
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
 
@@ -118,9 +114,9 @@ export default function Questions() {
     // const fetchQuizData = async () => {
     //   setQuizData(null);
     //   await axios
-    //     .get<QuizData>("/api/quiz") // Replace with your API endpoint
+    //     .get<QuizData>("/api/quiz")
     //     .then((response) => {
-    //       setQuizData(response.data); 
+    //       setQuizData(response.data);
     //     })
     //     .catch((error) => {
     //       console.error("Error fetching quiz data:", error);
@@ -139,7 +135,7 @@ export default function Questions() {
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
     setSelectedAnswers(updatedAnswers);
-    Cookies.set("quizAnswers", JSON.stringify(updatedAnswers), { expires: 7 }); 
+    Cookies.set("quizAnswers", JSON.stringify(updatedAnswers), { expires: 7 });
   };
 
   const handleQuestionChange = (index: number) => {
@@ -161,56 +157,55 @@ export default function Questions() {
   if (showScore) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4">
-        <p className="text-lg">
-          Quiz answers submitted successfully.
-        </p>
+        <p className="text-lg">Quiz answers submitted successfully.</p>
       </div>
     );
   }
-  
+
   return (
     <>
-    <div className="relative flex flex-col justify-start items-center p-2 h-full max-w-[100%]">
+      <div className="relative flex flex-col justify-start items-center p-2 h-full max-w-[100%]">
+        <div id="questionBox" className="m-4 p-4 w-full rounded-xl">
+          {/* Display question */}
+          <div
+            id="question"
+            className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-center"
+          >
+            {quizData.questions[currentQuestionIndex].question}
+          </div>
 
-      <div id="questionBox" className="m-4 p-4 w-full rounded-xl">
-        {/* Display question */}
-        <div id="question" className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-center">
-          {quizData.questions[currentQuestionIndex].question}
+          {/* Display answer options */}
+          <div className="text-xs md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {quizData.questions[currentQuestionIndex].answers.map(
+              (option, index) => (
+                <div
+                  key={index}
+                  className={`p-2 border rounded-xl cursor-pointer ${
+                    selectedAnswers[currentQuestionIndex] === index
+                      ? "bg-[#f8770f] text-white"
+                      : "hover:bg-gray-900"
+                  }`}
+                  onClick={() =>
+                    handleOptionSelect(currentQuestionIndex, index)
+                  }
+                >
+                  {option}
+                </div>
+              )
+            )}
+          </div>
         </div>
-
-        {/* Display answer options */}
-        <div className="text-xs md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          {quizData.questions[currentQuestionIndex].answers.map((option, index) => (
-            <div
-              key={index}
-              className={`p-2 border rounded-xl cursor-pointer ${
-                selectedAnswers[currentQuestionIndex] === index
-                  ? "bg-[#f8770f] text-white"
-                  : "hover:bg-gray-900"
-              }`}
-              onClick={() => handleOptionSelect(currentQuestionIndex, index)}
-            >
-              {option}
-            </div>
-          ))}
+        {/* Question Number Navigation */}
+        <div className="absolute bottom-0">
+          <QuestionNumber
+            totalQuestions={quizData.questions.length}
+            currentQuestionIndex={currentQuestionIndex}
+            onQuestionChange={handleQuestionChange}
+          />
         </div>
-
-        
       </div>
-      {/* Question Number Navigation */}
-      <div className="absolute bottom-0">
-      <QuestionNumber
-          totalQuestions={quizData.questions.length}
-          currentQuestionIndex={currentQuestionIndex}
-          onQuestionChange={handleQuestionChange}
-        />
-      </div>
-    </div>
-    {currentQuestionIndex === quizData.questions.length - 1 && (
-        <button
-          className="absolute bottom-8 text-white"
-          onClick={handleSubmit}
-        >
+      {currentQuestionIndex === quizData.questions.length - 1 && (
+        <button className="absolute bottom-8 text-white" onClick={handleSubmit}>
           &lt; Submit &gt;
         </button>
       )}

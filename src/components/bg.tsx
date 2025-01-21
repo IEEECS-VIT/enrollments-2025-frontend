@@ -6,7 +6,7 @@ import {
   MoveDirection,
   OutMode,
 } from "@tsparticles/engine";
-import { loadSlim } from "@tsparticles/slim"; 
+import { loadSlim } from "@tsparticles/slim";
 
 const Bg = () => {
   const [init, setInit] = useState(false);
@@ -40,9 +40,7 @@ const Bg = () => {
             enable: false,
           },
         },
-        modes: {
-          
-        },
+        modes: {},
       },
       particles: {
         color: {
@@ -66,31 +64,29 @@ const Bg = () => {
           value: 200, // Number of particles
         },
         opacity: {
-          value: {min:1,max:1}, // Make particles slightly transparent
+          value: { min: 1, max: 1 }, // Make particles slightly transparent
         },
         shape: {
           type: ["circle"], // Random shapes for confetti
-          
         },
         size: {
           value: { min: 3, max: 5 }, // Varying confetti sizes
           random: true,
         },
       },
-      
     }),
     []
   );
 
   if (init) {
     return (
-        <div className="absolute inset-0 z-1">
-            <Particles
-                id="tsparticles"
-                particlesLoaded={particlesLoaded}
-                options={options}
-            />
-        </div>
+      <div className="absolute inset-0 z-1">
+        <Particles
+          id="tsparticles"
+          particlesLoaded={particlesLoaded}
+          options={options}
+        />
+      </div>
     );
   }
 
