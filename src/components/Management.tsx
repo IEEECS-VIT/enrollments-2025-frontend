@@ -16,7 +16,7 @@ function usePersistentState<T>(key: string, initialState: T): [T, React.Dispatch
 
 export default function Management() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
-  const [currentIndexes, setCurrentIndexes] = usePersistentState<number[]>('management', []);
+  const [currentSelections, setCurrentSelections] = usePersistentState<string[]>('management', []); 
   const navigate = useNavigate(); 
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -61,15 +61,18 @@ export default function Management() {
   const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
 
   const handleClick = (index: number) => {
-    if (currentIndexes.length < 2 && !currentIndexes.includes(index)) {
-      setCurrentIndexes([...currentIndexes, index]);
-    } else if (currentIndexes.includes(index)) {
-      setCurrentIndexes(currentIndexes.filter((i) => i !== index));
+    const labels = ['Events', 'PnM'];
+    const selectedLabel = labels[index];
+
+    if (currentSelections.length < 2 && !currentSelections.includes(selectedLabel)) {
+      setCurrentSelections([...currentSelections, selectedLabel]);
+    } else if (currentSelections.includes(selectedLabel)) {
+      setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
     }
   };
 
   const handleOkClick = () => {
-    navigate('/domains');
+    navigate('/domain');
   };
 
   return (
@@ -93,7 +96,7 @@ export default function Management() {
             <div
               key={index}
               className={`flex flex-col mb-[3vh] items-center sm:basis-1/2 cursor-pointer nav-button p-4 transition-transform duration-300 ${
-                currentIndexes.includes(index) ? 'scale-110' : 'scale-100'
+                currentSelections.includes(label) ? 'scale-110' : 'scale-100'
               }`}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
@@ -106,7 +109,7 @@ export default function Management() {
               />
               <p
                 className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
-                  currentIndexes.includes(index)
+                  currentSelections.includes(label)
                     ? 'text-[#FF0004] font-bold underline underline-offset-4'
                     : 'font-normal no-underline'
                 } ${hoveredIndex === index ? 'animate-blink' : ''}`}

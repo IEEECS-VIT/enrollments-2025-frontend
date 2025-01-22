@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Technical() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
-  const [selectedIndices, setSelectedIndices] = usePersistentState<number[]>('technical', []);
+  const [currentSelections, setCurrentSelections] = usePersistentState<string[]>('technical', []); 
 
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -54,15 +54,18 @@ export default function Technical() {
   };
 
   const handleClick = (index: number) => {
-    if (selectedIndices.length < 2 && !selectedIndices.includes(index)) {
-      setSelectedIndices([...selectedIndices, index]);
-    } else if (selectedIndices.includes(index)) {
-      setSelectedIndices(selectedIndices.filter((i) => i !== index));
+    const labels = ['WEB', 'IOT', 'APP','AI/ML','RND'];
+    const selectedLabel = labels[index];
+
+    if (currentSelections.length < 2 && !currentSelections.includes(selectedLabel)) {
+      setCurrentSelections([...currentSelections, selectedLabel]);
+    } else if (currentSelections.includes(selectedLabel)) {
+      setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
     }
   };
 
   const handleOkClick = () => {
-    navigate('/domains'); 
+    navigate('/domain'); 
 };
 
 
@@ -90,7 +93,7 @@ export default function Technical() {
                 index === 2 ? 'col-span-2 ' : ''
               } sm:basis-1/3 sm:flex-col mb-[2.5vh] mt-[2.5vh] sm:mt-0 sm:mb-0 sm:p-4 basis-auto flex flex-col items-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
                 index >= 3 ? 'sm:basis-1/2' : ''
-              } transform ${hoveredIndex === index || selectedIndices.includes(index) ? 'scale-110' : 'scale-100'}`}
+              } transform ${hoveredIndex === index || currentSelections.includes(label) ? 'scale-110' : 'scale-100'}`}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
               onMouseLeave={handleLeave}
@@ -102,12 +105,12 @@ export default function Technical() {
               />
               <p
                 className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
-                  selectedIndices.includes(index)
+                  currentSelections.includes(label)
                     ? 'text-[#65C54E] font-bold underline underline-offset-4'
                     : 'font-normal no-underline'
                 } ${
                   hoveredIndex === index
-                    ? selectedIndices.includes(index)
+                    ? currentSelections.includes(label)
                       ? 'text-[#65C54E] animate-blink'
                       : 'text-white animate-blink'
                     : ''
