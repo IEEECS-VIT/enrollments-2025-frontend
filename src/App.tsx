@@ -10,6 +10,7 @@ import Start from './components/Start';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import Quiz1 from './components/Quiz1';
+import Faq from "./components/Faq";
 
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
               <Route path="management" element={<Managementdomain />} />
               <Route path="profile" element={<Profile />} />
               <Route path="quiz" element={<Quiz1 />} />
+              <Route path="faq" element={<Faq />} />
             </Route>
           </Routes>
         </div>
