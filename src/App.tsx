@@ -10,7 +10,8 @@ import Start from './components/Start';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import Quiz1 from './components/Quiz1';
-import UsernameForm from './components/Username';
+import UsernameForm from './components/Username';import Faq from "./components/Faq";
+
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
               <Route path="profile" element={<Profile />} />
               <Route path="username" element={<UsernameForm />} />
               <Route path="quiz" element={<Quiz1 />} />
+              <Route path="faq" element={<Faq />} />
             </Route>
           </Routes>
         </div>
