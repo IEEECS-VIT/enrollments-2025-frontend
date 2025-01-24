@@ -7,7 +7,7 @@ interface ProfileData {
   name: string;
   mobile: string;
   email: string;
-  domain: string[];
+  domain: { [key: string]: string[] }; 
 }
 
 interface ResponseData {
@@ -16,6 +16,10 @@ interface ResponseData {
 }
 
 interface UsernameResponse {
+  status: number
+}
+
+interface DomainResponse {
   status: number
 }
 
@@ -91,17 +95,18 @@ export async function SubmitUsername(username: string): Promise<UsernameResponse
     };
 }
 
-type Dict = { [key: string]: string };
-export async function SubmitDomains(domain: Dict): Promise<UsernameResponse> {
-  console.log('doms ', domain);
-    const response = await ProtectedRequest<UsernameResponse>(
-      "POST",
-      "/user/username",
-      { domain:domain }
-    );
-    console.log("Domain submission response:", response.data);
-    return {
-      status: response.status,
-    };
+type Domain = { [key: string]: string[] };
+
+export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
+  const response = await ProtectedRequest<DomainResponse>(
+    "POST",
+    "/domain/submit",
+    domain
+  );
+
+  return {
+    status: response.status,
+  };
 }
+
 

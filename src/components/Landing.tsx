@@ -28,7 +28,7 @@ const Landing: React.FC = () => {
       } else if (response.status === 402) {
         setError(response.data);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error during login:", error);
       setError("Login failed. Please try again.");
     } finally {

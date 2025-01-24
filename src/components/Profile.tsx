@@ -7,7 +7,7 @@ interface ProfileData {
   name: string;
   mobile: string;
   email: string;
-  domain: string[];
+  domain: { [key: string]: string[] }; 
 }
 
 export default function Profile() {

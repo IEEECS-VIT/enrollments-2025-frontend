@@ -11,9 +11,8 @@ import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import Quiz1 from './components/Quiz1';
 import Faq from "./components/Faq";
-import UsernameForm from './components/Username';import Faq from "./components/Faq";
-
 import UsernameForm from './components/Username';
+
 
 const App = () => {
   return (

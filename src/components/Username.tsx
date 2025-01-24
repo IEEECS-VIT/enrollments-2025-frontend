@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const UsernameForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
- const [error, setError] = useState<string>("");
  const [message, setMessage] = useState<string>("");
     const navigate=useNavigate();
 
