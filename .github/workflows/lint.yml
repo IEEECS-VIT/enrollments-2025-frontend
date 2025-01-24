@@ -19,9 +19,9 @@ jobs:
 
       # Set up Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "16.14.2"
+          node-version: "18.20.5"
 
       # Restore cached dependencies
       - name: Restore cached dependencies

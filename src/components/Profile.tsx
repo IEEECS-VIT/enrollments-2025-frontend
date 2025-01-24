@@ -1,16 +1,46 @@
-import Treecloud from './Treecloud';
-import ProfileInfo from './ProfileInfo';
+import Treecloud from "./Treecloud";
+import ProfileInfo from "./ProfileInfo";
+import { useEffect, useState } from "react";
+import { LoadProfile } from "../api/user";
 
-export default function Profile(){
-    return(
-            <div className="relative min-h-screen flex items-center justify-center">
-              <div className="absolute w-full pointer-events-none z-20">
-                <Treecloud />
-              </div>
-        
-              <div className="absolute w-full z-10 pointer-events-auto ">
-                <ProfileInfo></ProfileInfo>
-              </div>
-            </div>
-    )
+interface ProfileData {
+  name: string;
+  mobile: string;
+  email: string;
+  domain: string[];
+}
+
+export default function Profile() {
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const data: ProfileData = await LoadProfile();
+        console.log('data ', data);
+        setProfileData(data);
+      } catch (error) {
+        console.error("Failed to load profile data:", error);
+      }
+    };
+
+    if (!profileData) { 
+      fetchProfileData();
+    }
+  }, [profileData]); 
+
+  return (
+    <div className="relative min-h-screen flex items-center justify-center">
+      <div className="absolute w-full pointer-events-none">
+        <Treecloud />
+      </div>
+      <div className="absolute w-full z-10 pointer-events-auto">
+        {profileData ? (
+          <ProfileInfo profileData={profileData} />
+        ) : (
+          <p>Loading profile...</p>
+        )}
+      </div>
+    </div>
+  );
 }
