@@ -35,17 +35,20 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
   <span className="block md:inline">
   {profileData?.domain &&
   Object.entries(profileData.domain).map(([key, domainList], index) => (
-    <div key={key}>
-      <strong>{key}:</strong>{" "}
-      {domainList.map((domain, i) => (
-        <span key={i}>
-          {domain}
-          {i < domainList.length - 1 && ", "}
-        </span>
-      ))}
-      {index < Object.keys(profileData.domain).length - 1 && <br />}
-    </div>
+    domainList.length > 0 && (
+      <div key={key}>
+        <strong>{key}:</strong>{" "}
+        {domainList.map((domain, i) => (
+          <span key={i}>
+            {domain}
+            {i < domainList.length - 1 && ", "}
+          </span>
+        ))}
+        {index < Object.keys(profileData.domain).length - 1 && <br />}
+      </div>
+    )
   ))}
+
 
   </span>
 </p>

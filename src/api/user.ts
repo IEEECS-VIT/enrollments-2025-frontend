@@ -12,7 +12,6 @@ interface ProfileData {
 
 interface ResponseData {
   status: number;
-  data: string; 
 }
 
 interface UsernameResponse {
@@ -64,7 +63,6 @@ export async function Login(): Promise<ResponseData> {
   const response = await ProtectedRequest<{ detail: string }>("POST", "/user/login");
   return {
     status: response.status,
-    data: response.data.detail,
   };
 }
 
@@ -89,7 +87,6 @@ export async function SubmitUsername(username: string): Promise<UsernameResponse
       "/user/username",
       { username: username }
     );
-    console.log("Username submission response:", response.data);
     return {
       status: response.status,
     };

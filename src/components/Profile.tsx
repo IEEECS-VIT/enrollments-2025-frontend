@@ -17,7 +17,6 @@ export default function Profile() {
     const fetchProfileData = async () => {
       try {
         const data: ProfileData = await LoadProfile();
-        console.log('data ', data);
         setProfileData(data);
       } catch (error) {
         console.error("Failed to load profile data:", error);

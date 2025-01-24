@@ -20,13 +20,12 @@ const Landing: React.FC = () => {
       const idToken = await result.user.getIdToken();
       Cookies.set("authToken", idToken, { expires: 1, path: "" });
       const response = await Login();
-      console.log(response, 'res[');
       if (response.status === 200) {
         navigate("/domain");
       } else if(response.status === 201 ){
         navigate("/username");
-      } else if (response.status === 402) {
-        setError(response.data);
+      } else if (response.status === 204) {
+        setError("User not registered on VTOP");
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -54,7 +53,7 @@ const Landing: React.FC = () => {
             Where innovation meets technology <br />
             We forge tech<br /> that transcends from ordinary <br />
             into realms of the unknown.
-            {error && <p>{error}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
           </h2>
         </div>
         <button
