@@ -43,9 +43,9 @@ const App = () => {
             </Route>
           </Routes>
         </div>
-      </div>
-    </Router>
-  );
-};
+        </div>
+      </Router>
+    );
+  };
 
-export default App;
+  export default App;
