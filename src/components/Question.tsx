@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
+import { SubmitAnswers } from "../api/user.ts";
 
 interface QuizData {
   questions: {
@@ -141,7 +142,7 @@ export default function Questions() {
     setCurrentQuestionIndex(index);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     // Calculate the score
     let calculatedScore = 0;
     quizData.questions.forEach((question, index) => {
@@ -151,6 +152,21 @@ export default function Questions() {
     });
     setScore(calculatedScore);
     setShowScore(true);
+
+    const questions=quizData.questions.map((q)=>q.question);
+    const answers = quizData.questions.map(
+      (q, index) => q.answers[selectedAnswers[index]]
+    );
+    const domain="sample";
+    try {
+      const result = await SubmitAnswers (domain, questions, answers );
+       if(result.status!==200){
+        alert("Error submitting answers. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting answers:", error);
+      alert("Error submitting answers. Please try again.");
+    }
   };
 
   if (showScore) {
