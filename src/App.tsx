@@ -41,6 +41,7 @@ const App = () => {
               <Route path="management" element={<Managementdomain />} />
               <Route path="profile" element={<Profile />} />
               <Route path="username" element={<UsernameForm />} />
+              <Route path="username" element={<UsernameForm />} />
               <Route path="quiz" element={<Quiz1 />} />
               <Route path="faq" element={<Faq />} />
             </Route>
