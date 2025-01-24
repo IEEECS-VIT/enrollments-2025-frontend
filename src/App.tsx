@@ -13,6 +13,7 @@ import Quiz1 from './components/Quiz1';
 import Faq from "./components/Faq";
 import UsernameForm from './components/Username';import Faq from "./components/Faq";
 
+import UsernameForm from './components/Username';
 
 const App = () => {
   return (
@@ -39,7 +40,6 @@ const App = () => {
               <Route path="technical" element={<Technicaldomain />} />
               <Route path="management" element={<Managementdomain />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="username" element={<UsernameForm />} />
               <Route path="username" element={<UsernameForm />} />
               <Route path="quiz" element={<Quiz1 />} />
               <Route path="faq" element={<Faq />} />
