@@ -106,4 +106,22 @@ export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
   };
 }
 
+export async function SubmitAnswers(domain:string,questions:string[],answers:string[]){
+  if(questions.length!==answers.length){
+    throw new Error("question and answer count not same");
+  }
+
+  const payload={
+    domain,
+    questions,
+    answers
+  }
+
+  const response=await ProtectedRequest<DomainResponse>("POST","/answer/post-answer",payload);
+
+  return{
+    status:response.status
+  };
+}
+
 
