@@ -8,18 +8,34 @@ import { Login } from "../api/user";
 const Landing: React.FC = () => {
   const navigate = useNavigate(); 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (loading) return; 
+    setLoading(true); 
+    setError(""); 
+  
+    try {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      Cookies.set('authToken', idToken, { expires: 1, path: '' });
-      const response = await Login(); 
-      if(response.status==200)
-        navigate("/profile");
-      else if(response.status==402)
+      Cookies.set("authToken", idToken, { expires: 1, path: "" });
+      const response = await Login();
+      console.log(response, 'res[');
+      if (response.status === 200) {
+        navigate("/domain");
+      } else if(response.status === 201 ){
+        navigate("/username");
+      } else if (response.status === 402) {
         setError(response.data);
+      }
+    } catch (error: any) {
+      console.error("Error during login:", error);
+      setError("Login failed. Please try again.");
+    } finally {
+      setLoading(false); 
+    }
   };
-
+  
   return (
     <>
       <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-2">
@@ -41,9 +57,26 @@ const Landing: React.FC = () => {
             {error && <p>{error}</p>}
           </h2>
         </div>
-        <button onClick={handleLogin} className="text-white text-xl mt-[13vh] lg:hidden tracking-tighter">{'<'}Sign In with Google{'>'}</button>
-        <button onClick={handleLogin} className="text-white text-2xl mt-[10vh] hidden lg:block">{'<'}Sign In with Google{'>'}</button>
-      </div>
+        <button
+  onClick={handleLogin}
+  disabled={loading}
+  className={`text-white text-xl mt-[13vh] lg:hidden tracking-tighter ${
+    loading ? "opacity-50 cursor-not-allowed" : ""
+  }`}
+>
+  {loading ? "Signing In..." : "<Sign In with Google>"}
+</button>
+<button
+  onClick={handleLogin}
+  disabled={loading}
+  className={`text-white text-2xl mt-[10vh] hidden lg:block ${
+    loading ? "opacity-50 cursor-not-allowed" : ""
+  }`}
+>
+  {loading ? "Signing In..." : "<Sign In with Google>"}
+</button>
+
+ </div>
     </>
   );
 };

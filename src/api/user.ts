@@ -15,6 +15,10 @@ interface ResponseData {
   data: string; 
 }
 
+interface UsernameResponse {
+  status: number
+}
+
 export function getAuthToken(): string {
   const token = Cookies.get("authToken");
   if (!token) {
@@ -70,3 +74,20 @@ export async function LoadProfile(): Promise<ProfileData> {
     domain: data.domain,
   };
 }
+
+export async function SubmitUsername(username: string): Promise<UsernameResponse> {
+  if (!username.trim()) {
+    throw new Error("Username cannot be empty");
+  }
+
+    const response = await ProtectedRequest<UsernameResponse>(
+      "POST",
+      "/user/username",
+      { username: username }
+    );
+    console.log("Username submission response:", response.data);
+    return {
+      status: response.status,
+    };
+}
+
