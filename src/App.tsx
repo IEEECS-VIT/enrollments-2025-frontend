@@ -11,6 +11,7 @@ import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import Quiz1 from './components/Quiz1';
 import Faq from "./components/Faq";
+import UsernameForm from './components/Username';
 
 
 const App = () => {
@@ -38,14 +39,16 @@ const App = () => {
               <Route path="technical" element={<Technicaldomain />} />
               <Route path="management" element={<Managementdomain />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="username" element={<UsernameForm />} />
+              <Route path="username" element={<UsernameForm />} />
               <Route path="quiz" element={<Quiz1 />} />
               <Route path="faq" element={<Faq />} />
             </Route>
           </Routes>
         </div>
-        </div>
-      </Router>
-    );
-  };
+      </div>
+    </Router>
+  );
+};
 
-  export default App;
+export default App;

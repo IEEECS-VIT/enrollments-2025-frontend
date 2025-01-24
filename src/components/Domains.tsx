@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { SubmitDomains } from '../api/user';
 
 export default function Domains() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -66,26 +66,19 @@ export default function Domains() {
     const designData = JSON.parse(localStorage.getItem('design') || '[]');
 
     const allSelectedData = {
-      "1": managementData,
-      "2": technicalData,
-      "3": designData,
+      "Management": managementData,
+      "Technical": technicalData,
+      "Design": designData,
     };
     console.log(allSelectedData);
 
-   /* try {
-      const token = localStorage.getItem('authToken');
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/domain/submit`, allSelectedData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error submitting data:', error);
-    }*/
+    const response = await SubmitDomains(allSelectedData);
+    if(response.status==200){
+      navigate("/profile");
     localStorage.clear();
-  };
+    }
+   }
+
 
   return (
     <div

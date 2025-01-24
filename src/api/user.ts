@@ -7,12 +7,19 @@ interface ProfileData {
   name: string;
   mobile: string;
   email: string;
-  domain: string[];
+  domain: { [key: string]: string[] }; 
 }
 
 interface ResponseData {
   status: number;
-  data: string; 
+}
+
+interface UsernameResponse {
+  status: number
+}
+
+interface DomainResponse {
+  status: number
 }
 
 export function getAuthToken(): string {
@@ -56,7 +63,6 @@ export async function Login(): Promise<ResponseData> {
   const response = await ProtectedRequest<{ detail: string }>("POST", "/user/login");
   return {
     status: response.status,
-    data: response.data.detail,
   };
 }
 
@@ -70,3 +76,34 @@ export async function LoadProfile(): Promise<ProfileData> {
     domain: data.domain,
   };
 }
+
+export async function SubmitUsername(username: string): Promise<UsernameResponse> {
+  if (!username.trim()) {
+    throw new Error("Username cannot be empty");
+  }
+
+    const response = await ProtectedRequest<UsernameResponse>(
+      "POST",
+      "/user/username",
+      { username: username }
+    );
+    return {
+      status: response.status,
+    };
+}
+
+type Domain = { [key: string]: string[] };
+
+export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
+  const response = await ProtectedRequest<DomainResponse>(
+    "POST",
+    "/domain/submit",
+    domain
+  );
+
+  return {
+    status: response.status,
+  };
+}
+
+

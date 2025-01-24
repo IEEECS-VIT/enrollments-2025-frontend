@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
     if (token) {
       setIsAuthenticated(true); 
     } else {
-      navigate('/'); 
+      navigate('/landing'); 
     }
   }, [navigate]);
 
