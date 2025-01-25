@@ -27,3 +27,55 @@ body {
 * {
   user-select: none;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  position: absolute;
+  border-radius: 10px;
+  width: 10px;
+}
+
+.custom-toast {
+  background-color: rgba(248, 185, 90, 0.5) !important;
+  color: white !important;
+  border: 3px solid #F8B95A;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  font-family: "retro-gaming" !important;
+  width: 27vw !important;
+  top: 12vh;
+}
+
+
+@media (max-width: 1024px) {
+  .custom-toast {
+    width: 40vw !important; 
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-toast {
+    width: 50vw !important; 
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-toast {
+    font-size: small;
+    height: 2.5vh;
+    width: 70vw !important; 
+    top: 15vh; 
+  }
+}
+
+.Toastify__close-button {
+  color: white   !important;
+  opacity: 100%;
+}

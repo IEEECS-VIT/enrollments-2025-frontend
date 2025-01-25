@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubmitDomains } from '../api/user';
+import { ToastContainer, toast } from 'react-toastify';
+import { showToastWarning,showToastSuccess } from '../Toast';
 
 export default function Domains() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -54,11 +56,26 @@ export default function Domains() {
   const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
 
   const handleClick = (index: number) => {
+    const managementData = JSON.parse(localStorage.getItem('management') || '[]');
+    const technicalData = JSON.parse(localStorage.getItem('technical') || '[]');
+    const designData = JSON.parse(localStorage.getItem('design') || '[]');
+  
+    const nonEmptyCount =
+      (managementData.length > 0 ? 1 : 0) +
+      (technicalData.length > 0 ? 1 : 0) +
+      (designData.length > 0 ? 1 : 0);
+  
+    if (nonEmptyCount >= 2 && ![managementData, technicalData, designData][index].length) {
+      showToastWarning('You can select 2 Domains only');
+      return;
+    }
+  
     setCurrentIndex(index);
     const paths = ['/management', '/technical', '/design'];
     navigate(paths[index]);
-    localStorage.setItem('lastVisited', paths[index]); 
+    localStorage.setItem('lastVisited', paths[index]);
   };
+  
 
   const handleSubmit = async () => {
     const managementData = JSON.parse(localStorage.getItem('management') || '[]');
@@ -66,16 +83,20 @@ export default function Domains() {
     const designData = JSON.parse(localStorage.getItem('design') || '[]');
 
     const allSelectedData = {
-      "Management": managementData,
-      "Technical": technicalData,
-      "Design": designData,
-    };
+    ...(managementData.length > 0 && { Management: managementData }),
+    ...(technicalData.length > 0 && { Technical: technicalData }),
+    ...(designData.length > 0 && { Design: designData }),
+  };
+
     console.log(allSelectedData);
+    showToastSuccess('Domains selected successfully');
 
     const response = await SubmitDomains(allSelectedData);
     if(response.status==200){
-      navigate("/profile");
-    localStorage.clear();
+      setTimeout(() => {
+        navigate("/profile");
+        localStorage.clear(); 
+      }, 3000); 
     }
    }
 
@@ -87,6 +108,7 @@ export default function Domains() {
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
     >
+      <ToastContainer className="custom-toast-container"/>
       <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">CHOOSE YOUR</p>

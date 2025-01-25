@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { showToastWarning } from '../Toast';
 
 export default function Design() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
@@ -54,6 +56,8 @@ export default function Design() {
       setCurrentSelections([...currentSelections, selectedLabel]);
     } else if (currentSelections.includes(selectedLabel)) {
       setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
+    } else {
+      showToastWarning('Only 2 Sub-Domains Allowed');
     }
   };
 
@@ -68,6 +72,7 @@ export default function Design() {
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
     >
+      <ToastContainer className="custom-toast-container" />
       <div className="border-2 border-[#0395F1] mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh]">
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
