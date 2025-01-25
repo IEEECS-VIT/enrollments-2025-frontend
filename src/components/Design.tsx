@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { showToastWarning } from '../Toast';
 
 export default function Design() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
@@ -57,15 +57,7 @@ export default function Design() {
     } else if (currentSelections.includes(selectedLabel)) {
       setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
     } else {
-      toast.warning('Only 2 Sub-Domains Allowed', {
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: 'custom-toast',
-      });
+      showToastWarning('Only 2 Sub-Domains Allowed');
     }
   };
 

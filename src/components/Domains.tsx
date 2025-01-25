@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubmitDomains } from '../api/user';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { showToastWarning,showToastSuccess } from '../Toast';
 
 export default function Domains() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -66,16 +66,7 @@ export default function Domains() {
       (designData.length > 0 ? 1 : 0);
   
     if (nonEmptyCount >= 2 && ![managementData, technicalData, designData][index].length) {
-      toast.warning('You can select 2 Domains only', {
-        
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className:"custom-toast",
-      });
+      showToastWarning('You can select 2 Domains only');
       return;
     }
   
@@ -98,15 +89,7 @@ export default function Domains() {
   };
 
     console.log(allSelectedData);
-    toast.success('Domains selected successfully', {
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      className: "custom-toast",
-    });
+    showToastSuccess('Domains selected successfully');
 
     const response = await SubmitDomains(allSelectedData);
     if(response.status==200){
