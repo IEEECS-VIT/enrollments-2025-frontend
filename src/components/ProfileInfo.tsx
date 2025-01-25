@@ -1,6 +1,6 @@
-import React from "react";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileData {
   name: string;
@@ -15,35 +15,37 @@ interface ProfileInfoProps {
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
   const navigate = useNavigate();
+
   const handleSignOut = () => {
-    Cookies.remove("authToken");
+    Cookies.remove('authToken');
     localStorage.clear();
     sessionStorage.clear();
-    navigate("/landing");
+    navigate('/landing');
   };
 
   return (
-    <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start">
-      <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-8">
-        <p className="text-2xl mb-8 md:text-left text-center">
-          PROFILE DETAILS
-        </p>
-        <div className="flex-col justify-start items-start leading-[2rem] md:leading-[3rem] text-[0.6rem] md:text-xl p-2">
-          <p className="mb-4">
-            Character Name:{" "}
-            <span className="block md:inline">{profileData?.name}</span>
-          </p>
-          <p className="mb-4">
-            Mobile No.:{" "}
-            <span className="block md:inline">{profileData?.mobile}</span>
-          </p>
-          <p className="mb-4">
-            Email id:{" "}
-            <span className="block md:inline">{profileData?.email}</span>
-          </p>
-          <p className="mb-4">
-            Selected domain:
-            <span className="block md:inline">
+    <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start p-4 space-y-6 relative">
+
+      <div className="border-2 border-white mt-[15.5vh] rounded-3xl w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-8 px-6 space-y-6 mx-auto">
+        <p className="text-2xl sm:text-3xl tracking-widest text-center sm:mb-8">PROFILE</p>
+
+        
+        <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-8 w-full">
+  
+          <div className="flex flex-col text-sm sm:text-base md:text-lg w-full space-y-10 pl-6">
+            <p>
+              <span className="font-bold">Username :</span> {profileData?.name}
+            </p>
+            <p>
+              <span className="font-bold">Mobile No.:</span> {profileData?.mobile}
+            </p>
+            <p>
+              <span className="font-bold">Mail ID:</span>{' '}
+              <span className="break-all">{profileData?.email}</span>
+            </p>
+            <p>
+              <span className="font-bold">Selected Domains:</span>
+              <div className="mt-4 space-y-3">
               {profileData?.domain &&
                 Object.entries(profileData.domain).map(
                   ([key, domainList], index) =>
@@ -62,26 +64,20 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                       </div>
                     )
                 )}
-            </span>
-          </p>
-          <div className="flex flex-col w-full items-center">
-            <img
-              src="/character.svg"
-              alt="character"
-              className="w-14 md:w-14 class "
-            />
-            <p className="text-[0.6rem] md:text-xl">Character created!</p>
+              </div>
+            </p>
           </div>
         </div>
       </div>
-      <p
-        className="text-white text-[0.6rem] md:text-xl absolute md:bottom-10 bottom-5"
+
+      <button
         onClick={handleSignOut}
+        className="text-white px-6 py-2 rounded-lg tracking-wide text-sm sm:text-xl"
       >
-        Sign out
-      </p>
+        &lt;Sign Out&gt;
+      </button>
     </div>
   );
 };
 
-export default ProfileInfo;
+export default ProfileInfo; 

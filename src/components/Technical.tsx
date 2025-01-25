@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Technical() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
@@ -62,6 +63,17 @@ export default function Technical() {
     } else if (currentSelections.includes(selectedLabel)) {
       setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
     }
+    else{
+        toast.warning('Only 2 Sub-Domains Allowed', {
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            className:"custom-toast",
+          });
+      }
   };
 
   const handleOkClick = () => {
@@ -76,13 +88,14 @@ export default function Technical() {
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
     >
+      <ToastContainer />
       <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">TECHNICAL</p>
         </div>
 
-        <div
-          className="w-full mt-[4vh] grid grid-cols-2 grid-rows-3 sm:flex sm:flex-wrap justify-center items-center"
+        <div                            
+          className="w-full mt-[4vh] grid grid-cols-2 grid-rows-3 sm:flex sm:flex-wrap justify-center items-center "
           onKeyDown={handleKeyNavigation}
           tabIndex={0}
         >

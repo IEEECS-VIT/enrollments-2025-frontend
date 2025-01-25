@@ -44,7 +44,7 @@ export default function Dashboard(): JSX.Element {
       <div className="absolute w-full pointer-events-none">
         <Treecloud />
       </div>
-      <div className="border-2 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center bg-black text-white px-10 py-5">
+      <div className="border-2 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center  text-white px-10 py-5">
         <div className="flex flex-col items-center mb-8 gap-2">
           <h2 className="text-4xl  mb-4">PENDING TASKS</h2>
           <div className="flex gap-8 ">
@@ -52,7 +52,7 @@ export default function Dashboard(): JSX.Element {
               quizData.pending.map((quiz) => (
                 <div
                   key={quiz.id}
-                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center bg-black text-white hover:border-orange-500 transition duration-300"
+                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white hover:border-orange-500 transition duration-300"
                 >
                   <h3 className="text-xl">{quiz.title}</h3>
                   {quiz.subDomain && (
@@ -72,7 +72,7 @@ export default function Dashboard(): JSX.Element {
               quizData.completed.map((quiz) => (
                 <div
                   key={quiz.id}
-                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center bg-black text-white  hover:border-white transition duration-300"
+                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white  hover:border-white transition duration-300"
                 >
                   <h3 className="text-xl">{quiz.title}</h3>
                   {quiz.subDomain && (

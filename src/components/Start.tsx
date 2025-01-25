@@ -14,6 +14,10 @@ export default function Start(){
         window.addEventListener('keydown',handleKeyDown);
     },[navigate]);
 
+    const landing = () => {
+        navigate('/landing');
+      };
+
     return(
         <>
             <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-2">
@@ -29,7 +33,7 @@ export default function Start(){
                 <h1 className="text-[#e8b974] text-5xl text-shadow-glow lg:hidden">IEEE-CS</h1>
                 <button className="text-white text-xl mt-[13vh] lg:hidden tracking-tighter">{'<'}LOADING...{'>'}</button>
                 <img className="lg:hidden h-[5vh]" src="loading bar.svg" />
-                <button className="text-white text-2xl mt-[10vh] hidden lg:block">{'<'}Press space to start{'>'}</button>
+                <button onClick={landing} className="text-white text-2xl mt-[10vh] hidden lg:block">{'<'}Press space to start{'>'}</button>
             </div>
         </>
     )
