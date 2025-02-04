@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import { useState, useEffect } from "react";
+// import axios from "axios";
 import Treecloud from "./Treecloud";
 
-type Quiz = {
-  id: number;
-  title: string;
-  subDomain?: string;
-};
-
-type QuizData = {
-  pending: Quiz[];
-  completed: Quiz[];
-};
+// type QuizData = {
+//   pending: Quiz[];
+//   completed: Quiz[];
+// };
 
 export default function Dashboard(): JSX.Element {
-  const [quizData, setQuizData] = useState<QuizData>({
+  const quizData = {
     pending: [
       { id: 1, title: "Technical", subDomain: "Web" },
       { id: 2, title: "Technical", subDomain: "IOT" },
@@ -23,21 +17,21 @@ export default function Dashboard(): JSX.Element {
       { id: 3, title: "Design", subDomain: "UI/UX" },
       { id: 4, title: "Management", subDomain: "Events" },
     ],
-  });
+  };
 
-  //   useEffect(() => {
-  //     // Example API call to fetch quiz data
-  //     const fetchQuizData = async () => {
-  //       try {
-  //         const response = await axios.get<QuizData>("/api/quizzes");
-  //         setQuizData(response.data);
-  //       } catch (error) {
-  //         console.error("Error fetching quiz data:", error);
-  //       }
-  //     };
+  // useEffect(() => {
+  //   // Example API call to fetch quiz data
+  //   const fetchQuizData = async () => {
+  //     try {
+  //       // const response = await axios.get<QuizData>("/api/quizzes");
+  //       // setQuizData(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching quiz data:", error);
+  //     }
+  //   };
 
-  //     fetchQuizData();
-  //   }, [quizData]);
+  //   fetchQuizData();
+  // }, [quizData]);
 
   return (
     <div className="relative min-h-screen flex items-center justify-center">

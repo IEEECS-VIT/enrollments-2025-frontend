@@ -1,15 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import { showToastWarning } from '../Toast';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { showToastWarning } from "../Toast";
 
 export default function Technical() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
-  const [currentSelections, setCurrentSelections] = usePersistentState<string[]>('technical', []); 
+  const [currentSelections, setCurrentSelections] = usePersistentState<
+    string[]
+  >("technical", []);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     setHoveredIndex(0);
@@ -22,25 +23,27 @@ export default function Technical() {
     const totalButtons = 5;
     const submitButtonIndex = totalButtons;
 
-    if (event.key === 'ArrowLeft') {
-      const prevIndex = (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) % totalButtons;
+    if (event.key === "ArrowLeft") {
+      const prevIndex =
+        (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) %
+        totalButtons;
       setHoveredIndex(prevIndex);
-    } else if (event.key === 'ArrowRight') {
-      const nextIndex = (hoveredIndex === null ? 0 : hoveredIndex + 1) % totalButtons;
+    } else if (event.key === "ArrowRight") {
+      const nextIndex =
+        (hoveredIndex === null ? 0 : hoveredIndex + 1) % totalButtons;
       setHoveredIndex(nextIndex);
-    } else if (event.key === 'ArrowDown') {
-      setHoveredIndex(submitButtonIndex); 
-    } else if (event.key === 'ArrowUp') {
+    } else if (event.key === "ArrowDown") {
+      setHoveredIndex(submitButtonIndex);
+    } else if (event.key === "ArrowUp") {
       if (hoveredIndex === submitButtonIndex) {
         setHoveredIndex(0);
       }
-    }  
-    else if (event.key === 'Enter') {
+    } else if (event.key === "Enter") {
       if (hoveredIndex !== null) {
         if (hoveredIndex === submitButtonIndex) {
-          handleOkClick(); 
+          handleOkClick();
         } else {
-          handleClick(hoveredIndex); 
+          handleClick(hoveredIndex);
         }
       }
     }
@@ -55,23 +58,26 @@ export default function Technical() {
   };
 
   const handleClick = (index: number) => {
-    const labels = ['WEB', 'IOT', 'APP','AI/ML','RND'];
+    const labels = ["WEB", "IOT", "APP", "AI/ML", "RND"];
     const selectedLabel = labels[index];
 
-    if (currentSelections.length < 2 && !currentSelections.includes(selectedLabel)) {
+    if (
+      currentSelections.length < 2 &&
+      !currentSelections.includes(selectedLabel)
+    ) {
       setCurrentSelections([...currentSelections, selectedLabel]);
     } else if (currentSelections.includes(selectedLabel)) {
-      setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
+      setCurrentSelections(
+        currentSelections.filter((label) => label !== selectedLabel)
+      );
+    } else {
+      showToastWarning("Only 2 Sub-Domains Allowed");
     }
-    else{
-        showToastWarning('Only 2 Sub-Domains Allowed');
-      }
   };
 
   const handleOkClick = () => {
-    navigate('/domain'); 
-};
-
+    navigate("/domain");
+  };
 
   return (
     <div
@@ -83,69 +89,85 @@ export default function Technical() {
       <ToastContainer />
       <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
-          <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">TECHNICAL</p>
+          <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
+            TECHNICAL
+          </p>
         </div>
 
-        <div                            
+        <div
           className="w-full mt-[4vh] grid grid-cols-2 grid-rows-3 sm:flex sm:flex-wrap justify-center items-center "
           onKeyDown={handleKeyNavigation}
           tabIndex={0}
         >
-          {['WEB', 'IOT', 'APP', 'AI/ML', 'RND'].map((label, index) => (
+          {["WEB", "IOT", "APP", "AI/ML", "RND"].map((label, index) => (
             <div
               key={index}
               className={`${
-                index === 2 ? 'col-span-2 ' : ''
+                index === 2 ? "col-span-2 " : ""
               } sm:basis-1/3 sm:flex-col mb-[2.5vh] mt-[2.5vh] sm:mt-0 sm:mb-0 sm:p-4 basis-auto flex flex-col items-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
-                index >= 3 ? 'sm:basis-1/2' : ''
-              } transform ${hoveredIndex === index || currentSelections.includes(label) ? 'scale-110' : 'scale-100'}`}
+                index >= 3 ? "sm:basis-1/2" : ""
+              } transform ${
+                hoveredIndex === index || currentSelections.includes(label)
+                  ? "scale-110"
+                  : "scale-100"
+              }`}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
               onMouseLeave={handleLeave}
             >
               <img
                 className="h-[7.5vh] sm:h-[12.5vh]"
-                src={index === 0 ? '/computer.svg' : index === 1 ? '/drone.svg' : index === 2 ? '/App.svg' : index === 3 ? '/AI.svg' : '/book.svg'}
+                src={
+                  index === 0
+                    ? "/computer.svg"
+                    : index === 1
+                    ? "/drone.svg"
+                    : index === 2
+                    ? "/App.svg"
+                    : index === 3
+                    ? "/AI.svg"
+                    : "/book.svg"
+                }
                 alt={label}
               />
               <p
                 className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
                   currentSelections.includes(label)
-                    ? 'text-[#65C54E] font-bold underline underline-offset-4'
-                    : 'font-normal no-underline'
+                    ? "text-[#65C54E] font-bold underline underline-offset-4"
+                    : "font-normal no-underline"
                 } ${
                   hoveredIndex === index
                     ? currentSelections.includes(label)
-                      ? 'text-[#65C54E] animate-blink'
-                      : 'text-white animate-blink'
-                    : ''
+                      ? "text-[#65C54E] animate-blink"
+                      : "text-white animate-blink"
+                    : ""
                 }`}
               >
-                {hoveredIndex === index
-                  ? `> ${label} <`
-                  : label}
+                {hoveredIndex === index ? `> ${label} <` : label}
               </p>
             </div>
           ))}
         </div>
-       </div>
-       <button
+      </div>
+      <button
         onClick={handleOkClick}
-        tabIndex={0} 
+        tabIndex={0}
         className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 5 ? 'scale-110 bg-opacity-70' : 'scale-100'
+          hoveredIndex === 5 ? "scale-110 bg-opacity-70" : "scale-100"
         }`}
         onMouseEnter={() => setHoveredIndex(5)}
         onMouseLeave={() => setHoveredIndex(null)}
       >
         OK
       </button>
-
     </div>
   );
 }
 
-function usePersistentState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+function usePersistentState<T>(
+  key: string,
+  initialValue: T
+): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = useState<T>(() => {
     const storedState = localStorage.getItem(key);
     return storedState !== null ? JSON.parse(storedState) : initialValue;

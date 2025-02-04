@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { SubmitUsername } from "../api/user";
 import { useNavigate } from "react-router-dom";
 
@@ -13,13 +13,13 @@ const UsernameForm: React.FC = () => {
     if (response.status == 200) {
       navigate("/domain");
     } else if (response.status == 201) {
-      setMessage(`${username} aldready taken. Try again`);
+      setMessage(`${username} already taken. Try again`);
     }
     setUsername("");
   };
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  // const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -53,23 +53,6 @@ const UsernameForm: React.FC = () => {
   };
 
   return (
-    // <div className="h-screen flex justify-center items-center text-white flex-col">
-    //   <h1>Submit Your Username</h1>
-    //   {message && <h1>{message}</h1>}
-    //   <form onSubmit={handleSubmit}>
-    //     <input
-    //       type="text"
-    //       placeholder="Enter your username"
-    //       value={username}
-    //       className="text-black"
-    //       onChange={(e) => setUsername(e.target.value)}
-    //     />
-    //     <button type="submit" className="">
-    //       Submit
-    //     </button>
-    //   </form>
-    // </div>
-
     <form onSubmit={handleSubmit}>
       <div
         className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
@@ -95,9 +78,7 @@ const UsernameForm: React.FC = () => {
               className="bg-black border-white border rounded-lg p-2 text-center h-20 w-72 text-xl font-retro-gaming"
               onChange={(e) => setUsername(e.target.value)}
             />
-            {/* <p className="text-red-700 text-center mt-2">
-            *Username already exists
-          </p> */}
+            <p className="text-red-700 text-center mt-2">{message}</p>
           </div>
         </div>
 

@@ -13,8 +13,9 @@ import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
+import Tasks from "./components/Tasks";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export const showToastWarning = (message: string) => {
   toast.warning(message, {
@@ -24,7 +25,7 @@ export const showToastWarning = (message: string) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    className: 'custom-toast',
+    className: "custom-toast",
   });
 };
 
@@ -36,10 +37,9 @@ export const showToastSuccess = (message: string) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    className: 'custom-toast',
+    className: "custom-toast",
   });
 };
-
 
 const App = () => {
   return (
@@ -69,6 +69,7 @@ const App = () => {
               <Route path="quiz" element={<Quiz1 />} />
               <Route path="faqs" element={<Faq />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="task" element={<Tasks />} />
             </Route>
           </Routes>
         </div>
