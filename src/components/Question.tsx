@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
@@ -13,6 +14,9 @@ interface QuizData {
 }
 
 export default function Questions() {
+  const location = useLocation();
+  const domain = location.state?.quiz?.subDomain;
+
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -26,7 +30,7 @@ export default function Questions() {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get<QuizData>(
-          `http://localhost:8000/domain/questions?domain=Web&round=1`
+          `http://localhost:8000/domain/questions?domain=${domain}&round=1`
         );
         setQuizData(response.data);
       } catch (error) {
@@ -40,7 +44,7 @@ export default function Questions() {
     if (savedAnswers) {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
-  }, []);
+  }, [domain]);
 
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
@@ -68,7 +72,6 @@ export default function Questions() {
     const answers = quizData.questions.map(
       (q, index) => q.options[selectedAnswers[index]]
     );
-    const domain = "sample";
 
     try {
       const result = await SubmitAnswers(domain, questions, answers);
