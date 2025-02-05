@@ -123,5 +123,3 @@ export async function SubmitAnswers(domain:string,questions:string[],answers:str
     status:response.status
   };
 }
-
-

@@ -1,13 +1,14 @@
-import React from "react";
+import React from 'react';
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 interface ProfileData {
-  name: string;
-  mobile: string;
-  email: string;
-  domain: { [key: string]: string[] };
+    name: string;
+    mobile: string;
+    email: string;
+    domain: { [key: string]: string[] }; 
 }
+
 
 interface ProfileInfoProps {
   profileData: ProfileData;
