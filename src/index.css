@@ -3,14 +3,21 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'PlayMeGames-demo';
-  src: url('/fonts/PlayMeGames-Demo.otf') format('opentype');
+  font-family: "PlayMeGames-demo";
+  src: url("/fonts/PlayMeGames-Demo.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "retro-gaming";
+  src: url("/fonts/Retro Gaming.ttf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'PlayMeGames-demo', sans-serif;
+  font-family: "PlayMeGames-demo", sans-serif;
 }
 
 :focus {
