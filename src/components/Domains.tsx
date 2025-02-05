@@ -88,29 +88,32 @@ export default function Domains() {
   };
 
   const handleSubmit = async () => {
-    const managementData = JSON.parse(
-      localStorage.getItem("management") || "[]"
-    );
+    const managementData = JSON.parse(localStorage.getItem("management") || "[]");
     const technicalData = JSON.parse(localStorage.getItem("technical") || "[]");
     const designData = JSON.parse(localStorage.getItem("design") || "[]");
-
-    const allSelectedData = {
-      ...(managementData.length > 0 && { Management: managementData }),
-      ...(technicalData.length > 0 && { Technical: technicalData }),
-      ...(designData.length > 0 && { Design: designData }),
-    };
-
-    console.log(allSelectedData);
-    showToastSuccess("Domains selected successfully");
-
-    const response = await SubmitDomains(allSelectedData);
-    if (response.status == 200) {
-      setTimeout(() => {
-        navigate("/profile");
-        localStorage.clear();
-      }, 3000);
+  
+    if (managementData.length === 0 && technicalData.length === 0 && designData.length === 0) {
+      showToastWarning("Choose at least one domain!");
+      return; 
+    } else {
+      const allSelectedData = {
+        ...(managementData.length > 0 && { Management: managementData }),
+        ...(technicalData.length > 0 && { Technical: technicalData }),
+        ...(designData.length > 0 && { Design: designData }),
+      };
+  
+      console.log(allSelectedData);
+      showToastSuccess("Domains selected successfully");
+  
+      const response = await SubmitDomains(allSelectedData);
+      if (response.status === 200) {
+        setTimeout(() => {
+          navigate("/profile");
+        }, 3000);
+      }
     }
   };
+  
 
   return (
     <div

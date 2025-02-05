@@ -47,10 +47,11 @@ body {
   color: white !important;
   border: 3px solid #f8b95a;
   font-weight: bold;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.15em;
+  font-size: large;
   font-family: "PlayMeGames-demo" !important;
   width: 27vw !important;
-  top: 12vh;
+  top: 12.7vh;
 }
 
 @media (max-width: 1024px) {
