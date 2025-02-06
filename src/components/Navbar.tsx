@@ -12,7 +12,7 @@ export default function Navbar() {
       <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 lg:justify-around justify-between items-center flex">
         <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block" />
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/landing")}
           className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
         >
           HOME
@@ -30,10 +30,10 @@ export default function Navbar() {
           PROFILE
         </button> */}
         <button
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/domain")}
           className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
         >
-          DASHBOARD
+          DOMAINS
         </button>
         <button
           className="lg:hidden z-50 transition-all duration-500 ease-in-out"

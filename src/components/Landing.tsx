@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import Loader from "./Loader";
+import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, provider } from "../firebaseConfig";
 import Cookies from "js-cookie";
 import { Login } from "../api/user";
-import Loader from "./Loader";
+import { showToastSuccess, showToastWarning } from "../Toast";
+import { ToastContainer } from "react-toastify";
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
@@ -14,15 +16,19 @@ const Landing: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      const token = Cookies.get("authToken");
+
+      if (user && token) {
         const fullName = user.displayName
           ? user.displayName.split(" ").slice(0, 2).join(" ")
           : "User";
         setUser({ name: fullName });
       } else {
         setUser(null);
+        Cookies.remove("authToken"); 
       }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -38,11 +44,15 @@ const Landing: React.FC = () => {
 
       const response = await Login();
       if (response.status === 200) {
-        navigate("/domain");
+        setTimeout(() => {
+          navigate("/domain");
+        }, 3000);
+        showToastSuccess("Successfully signed In");
       } else if (response.status === 201) {
         navigate("/username");
       } else if (response.status === 204) {
         setError("User not registered on VTOP");
+        showToastWarning("User not registered in VTOP");
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -50,6 +60,13 @@ const Landing: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    Cookies.remove("authToken");
+    setUser(null);
+    showToastWarning("You have been signed out.");
   };
 
   return (
@@ -61,6 +78,7 @@ const Landing: React.FC = () => {
           <h1 className="text-[#e8b974] xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
             IEEE-CS
           </h1>
+          <ToastContainer className="custom-toast-container" />
           <img
             className="absolute xl:left-[15vw] lg:left-[10vw] top-[25vh] hidden lg:block"
             src="Coin1.svg"

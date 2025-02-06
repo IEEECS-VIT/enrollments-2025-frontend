@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { SubmitUsername } from "../api/user";
-import { useNavigate } from "react-router-dom";
+import { UNSAFE_createClientRoutesWithHMRRevalidationOptOut, useNavigate } from "react-router-dom";
+import { showToastSuccess, showToastWarning } from "../Toast";
+import { ToastContainer } from 'react-toastify';
 
 const UsernameForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -11,9 +13,15 @@ const UsernameForm: React.FC = () => {
     event.preventDefault();
     const response = await SubmitUsername(username);
     if (response.status == 200) {
-      navigate("/domain");
+      
+      setTimeout(() => {
+        navigate("/domain");
+      }, 3000);
+      console.log("hii1");
+      showToastSuccess("Username selected successfully");
     } else if (response.status == 201) {
       setMessage(`${username} already taken. Try again`);
+      showToastWarning("Username already taken");
     }
     setUsername("");
   };
@@ -60,6 +68,7 @@ const UsernameForm: React.FC = () => {
         onKeyDown={handleKeyNavigation}
         tabIndex={0}
       >
+        <ToastContainer className="custom-toast-container" />
         <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center  justify-center gap-y-16 py-8">
           <div className="text-center mt-[6vh] sm:mt-[vh]">
             <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">
@@ -82,7 +91,7 @@ const UsernameForm: React.FC = () => {
           </div>
         </div>
 
-        <button
+        <button onClick={handleSubmit}
           type="submit"
           tabIndex={0}
           className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
