@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
 import axios from "axios";
+import Loader from "./Loader";
 
 interface QuizData {
   questions: {
@@ -13,6 +15,9 @@ interface QuizData {
 }
 
 export default function Questions() {
+  const location = useLocation();
+  const domain = location.state?.quiz?.subDomain;
+
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -21,16 +26,19 @@ export default function Questions() {
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get<QuizData>(
-          `http://localhost:8000/domain/questions?domain=Web&round=1`
+          `http://localhost:8000/domain/questions?domain=${domain}&round=1`
         );
         setQuizData(response.data);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
+      } finally {
+        setTimeout(() => setLoading(false), 2000);
       }
     };
 
@@ -40,7 +48,7 @@ export default function Questions() {
     if (savedAnswers) {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
-  }, []);
+  }, [domain]);
 
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
@@ -68,7 +76,6 @@ export default function Questions() {
     const answers = quizData.questions.map(
       (q, index) => q.options[selectedAnswers[index]]
     );
-    const domain = "sample";
 
     try {
       const result = await SubmitAnswers(domain, questions, answers);
@@ -83,6 +90,14 @@ export default function Questions() {
 
   const attemptedQuestions = Object.keys(selectedAnswers).length;
   const totalQuestions = quizData?.questions.length || 0;
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <Loader />
+      </div>
+    );
+  }
 
   if (!quizData) {
     return <div className="text-center text-lg">Loading quiz...</div>;
