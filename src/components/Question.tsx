@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
 import axios from "axios";
+import Loader from "./Loader";
 
 interface QuizData {
   questions: {
@@ -25,6 +26,7 @@ export default function Questions() {
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -35,6 +37,8 @@ export default function Questions() {
         setQuizData(response.data);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
+      } finally {
+        setTimeout(() => setLoading(false), 2000);
       }
     };
 
@@ -86,6 +90,14 @@ export default function Questions() {
 
   const attemptedQuestions = Object.keys(selectedAnswers).length;
   const totalQuestions = quizData?.questions.length || 0;
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <Loader />
+      </div>
+    );
+  }
 
   if (!quizData) {
     return <div className="text-center text-lg">Loading quiz...</div>;
