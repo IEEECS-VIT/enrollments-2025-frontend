@@ -1,25 +1,31 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+// const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = "http://localhost:8000";
 
 interface ProfileData {
   name: string;
   mobile: string;
   email: string;
-  domain: { [key: string]: string[] }; 
+  domain: { [key: string]: string[] };
 }
+
+// interface DashboardData {
+//   pending: string[];
+//   completed: string[];
+// }
 
 interface ResponseData {
   status: number;
 }
 
 interface UsernameResponse {
-  status: number
+  status: number;
 }
 
 interface DomainResponse {
-  status: number
+  status: number;
 }
 
 export function getAuthToken(): string {
@@ -53,14 +59,20 @@ const ProtectedRequest = async <T = unknown>(
     return response;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Error with protected request to ${endpoint}:`, error.message);
+      console.error(
+        `Error with protected request to ${endpoint}:`,
+        error.message
+      );
     }
     throw error;
   }
 };
 
 export async function Login(): Promise<ResponseData> {
-  const response = await ProtectedRequest<{ detail: string }>("POST", "/user/login");
+  const response = await ProtectedRequest<{ detail: string }>(
+    "POST",
+    "/user/login"
+  );
   return {
     status: response.status,
   };
@@ -77,19 +89,21 @@ export async function LoadProfile(): Promise<ProfileData> {
   };
 }
 
-export async function SubmitUsername(username: string): Promise<UsernameResponse> {
+export async function SubmitUsername(
+  username: string
+): Promise<UsernameResponse> {
   if (!username.trim()) {
     throw new Error("Username cannot be empty");
   }
 
-    const response = await ProtectedRequest<UsernameResponse>(
-      "POST",
-      "/user/username",
-      { username: username }
-    );
-    return {
-      status: response.status,
-    };
+  const response = await ProtectedRequest<UsernameResponse>(
+    "POST",
+    "/user/username",
+    { username: username }
+  );
+  return {
+    status: response.status,
+  };
 }
 
 type Domain = { [key: string]: string[] };
@@ -106,22 +120,59 @@ export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
   };
 }
 
-export async function SubmitAnswers(domain:string,questions:string[],answers:string[]){
-  if(questions.length!==answers.length){
+export async function SubmitAnswers(
+  round: number,
+  domain: string,
+  questions: string[],
+  answers: string[]
+) {
+  if (questions.length !== answers.length) {
     throw new Error("question and answer count not same");
   }
 
-  const payload={
+  const payload = {
+    round,
     domain,
     questions,
-    answers
-  }
+    answers,
+  };
 
-  const response=await ProtectedRequest<DomainResponse>("POST","/answer/post-answer",payload);
+  const response = await ProtectedRequest<DomainResponse>(
+    "POST",
+    "/answer/submit",
+    payload
+  );
 
-  return{
-    status:response.status
+  return {
+    status: response.status,
   };
 }
 
+interface Quiz {
+  domain: string;
+  subDomain?: string;
+}
 
+interface DashboardData {
+  pending: Quiz[];
+  completed: Quiz[];
+}
+
+export async function LoadDashboard(round: number): Promise<DashboardData> {
+  const response = await ProtectedRequest<{
+    pending: string[];
+    completed: string[];
+  }>("GET", "/user/dashboard", null, { round: round });
+
+  // Transform API response to match the expected structure
+  const transformQuizzes = (quizzes: string[]): Quiz[] =>
+    quizzes.map((quiz) => {
+      const [domain, subDomain] = quiz.split(":");
+      return { domain, subDomain: subDomain || undefined };
+    });
+
+  return {
+    pending: transformQuizzes(response.data.pending), // Convert strings into Quiz objects
+    completed: transformQuizzes(response.data.completed),
+  };
+}

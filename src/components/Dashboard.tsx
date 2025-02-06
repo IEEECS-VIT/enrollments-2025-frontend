@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Treecloud from "./Treecloud";
+import { LoadDashboard } from "../api/user";
 
 interface Quiz {
   domain: string;
@@ -14,29 +15,24 @@ interface QuizData {
 
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
-    pending: [
-      { domain: "Technical", subDomain: "Web" },
-      { domain: "Technical", subDomain: "IOT" },
-    ],
-    completed: [
-      { domain: "Design", subDomain: "UI/UX" },
-      { domain: "Management", subDomain: "Events" },
-    ],
+    pending: [],
+    completed: [],
   });
 
   useEffect(() => {
-    // Example API call to fetch quiz data
     const fetchQuizData = async () => {
       try {
-        // const response = await axios.get<QuizData>("/api/quizzes");
-        // setQuizData(response.data);
+        const response = await LoadDashboard(1);
+        console.log(response);
+        setQuizData(response); // Corrected
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       }
     };
+
     fetchQuizData();
   }, []);
 
@@ -57,8 +53,10 @@ export default function Dashboard(): JSX.Element {
       <div className="absolute w-full pointer-events-none">
         <Treecloud />
       </div>
-      <div className="border-2 mt-[10vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center justify-center text-white px-10 py-5">
+      <div className="border-2 mt-[10vh] rounded-3xl w-[80%] lg:w-[70%] h-[70vh] flex flex-col items-center justify-center text-white px-10 py-5">
         <h2 className="text-2xl font-press-start mb-4 self-start">ROUND-1</h2>
+
+        {/* Pending Quizzes */}
         <div className="flex flex-col items-center mb-8 gap-2">
           <h2 className="text-4xl mb-4">PENDING QUIZZES</h2>
           <div className="flex gap-8">
@@ -80,6 +78,8 @@ export default function Dashboard(): JSX.Element {
             )}
           </div>
         </div>
+
+        {/* Completed Quizzes */}
         <div className="flex flex-col items-center">
           <h2 className="text-4xl mb-4">COMPLETED QUIZZES</h2>
           <div className="flex gap-4">
@@ -130,17 +130,3 @@ export default function Dashboard(): JSX.Element {
     </div>
   );
 }
-
-// useEffect(() => {
-//   // Example API call to fetch quiz data
-//   const fetchQuizData = async () => {
-//     try {
-//       // const response = await axios.get<QuizData>("/api/quizzes");
-//       // setQuizData(response.data);
-//     } catch (error) {
-//       console.error("Error fetching quiz data:", error);
-//     }
-//   };
-
-//   fetchQuizData();
-// }, [quizData]);

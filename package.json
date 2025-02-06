@@ -23,6 +23,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-quiz-component": "^0.9.1",
     "react-router-dom": "^7.1.1",
+    "react-timer-hook": "^3.0.8",
     "react-toastify": "^11.0.3",
     "react-tsparticles": "^2.12.2",
     "tailwindcss-textshadow": "^2.1.3",
