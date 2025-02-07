@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
 import axios from "axios";
-<<<<<<< Updated upstream
 import Loader from "./Loader";
-=======
 import { ToastContainer } from 'react-toastify';
 import { showToastSuccess } from "../Toast.ts";
->>>>>>> Stashed changes
+import { useTimer } from "react-timer-hook"; 
 
 interface QuizData {
   questions: {
@@ -21,7 +19,9 @@ interface QuizData {
 
 export default function Questions() {
   const location = useLocation();
-  const domain = location.state?.quiz?.subDomain;
+  const navigate = useNavigate();
+  const subdomain = location.state?.quiz?.subDomain;
+  var domain = location.state?.quiz?.domain;
 
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -32,12 +32,24 @@ export default function Questions() {
   const [score, setScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showBackWarning, setShowBackWarning] = useState(false);
+  const round = 1;
+
+  // Timer logic
+  const { seconds, minutes, start, pause, resume, restart } = useTimer({
+    expiryTimestamp: new Date(new Date().getTime() + 30 * 60 * 1000),
+    onExpire: () => {
+      // Handle timer expiry (e.g., auto-submit quiz)
+      alert("Time's up! The quiz will be submitted automatically.");
+      handleSubmit();
+    },
+  });
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get<QuizData>(
-          `http://localhost:8000/domain/questions?domain=${domain}&round=1`
+          `http://localhost:8000/domain/questions?domain=${subdomain}&round=1`
         );
         setQuizData(response.data);
       } catch (error) {
@@ -53,7 +65,32 @@ export default function Questions() {
     if (savedAnswers) {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
-  }, [domain]);
+  }, [subdomain]);
+
+  // Handle back button press
+  useEffect(() => {
+    const handleBackButton = (event: PopStateEvent) => {
+      event.preventDefault();
+      setShowBackWarning(true);
+      window.history.pushState(null, "", location.pathname);
+    };
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = ""; // Required for Chrome
+      setShowBackWarning(true);
+      return ""; // Required for legacy browsers
+    };
+
+    window.history.pushState(null, "", location.pathname);
+    window.addEventListener("popstate", handleBackButton);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [location.pathname]);
 
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
@@ -84,7 +121,15 @@ export default function Questions() {
     );
 
     try {
-      const result = await SubmitAnswers(domain, questions, answers);
+      console.log({
+        round,
+        domain: subdomain.toUpperCase(),
+        questions,
+        answers,
+      });
+
+      domain = subdomain.toUpperCase();
+      const result = await SubmitAnswers(round, domain, questions, answers);
       if (result.status !== 200) {
         alert("Error submitting answers. Please try again.");
       }
@@ -120,8 +165,17 @@ export default function Questions() {
 
   return (
     <>
+      <div className="flex w-full justify-center items-center">
+        <h2 className="text-5xl my-4 md:m-1 font-playmegames absolute">
+          {subdomain.toUpperCase()}
+        </h2>
+        <div className="border border-white rounded-xl p-4 ml-auto">
+          {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+        </div>
+      </div>
+
       <div className="relative flex flex-col justify-start items-center p-2 h-full max-w-[100%] font-retro-gaming">
-      <ToastContainer className="custom-toast-container" />
+        <ToastContainer className="custom-toast-container" />
         <div id="questionBox" className="m-4 p-4 w-full rounded-xl">
           <div
             id="question"
@@ -168,7 +222,7 @@ export default function Questions() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming ">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
           <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
             <p className="text-lg font-semibold">
               Are you sure you want to submit?
