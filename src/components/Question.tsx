@@ -23,6 +23,25 @@ export default function Questions() {
   const subdomain = location.state?.quiz?.subDomain;
   var domain = location.state?.quiz?.domain;
 
+  // Set expiry time in a secure cookie
+  // const setExpiryTime = (expiryTimestamp: Date) => {
+  //   Cookies.set("quizExpiryTime", expiryTimestamp.toISOString(), {
+  //     secure: true,
+  //     sameSite: "Strict",
+  //   });
+  // };
+
+  // // Get expiry time from a cookie
+  // const getExpiryTime = () => {
+  //   const storedExpiry = Cookies.get("quizExpiryTime");
+  //   return storedExpiry
+  //     ? new Date(storedExpiry)
+  //     : new Date(new Date().getTime() + 30 * 60 * 1000);
+  // };
+
+  // const expiryTimestamp = getExpiryTime();
+  // setExpiryTime(expiryTimestamp);
+
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -37,7 +56,7 @@ export default function Questions() {
 
   // Timer logic
   const { seconds, minutes, start, pause, resume, restart } = useTimer({
-    expiryTimestamp: new Date(new Date().getTime() + 30 * 60 * 1000),
+    expiryTimestamp:  new Date(new Date().getTime() + 30 * 60 * 1000),
     onExpire: () => {
       alert("Time's up! The quiz will be submitted automatically.");
       handleSubmit();
@@ -48,6 +67,8 @@ export default function Questions() {
     const fetchQuizData = async () => {
       try {
         const data = await LoadQuestions({ subdomain }); // Fetch data
+        Cookies.remove("quizAnswers");
+
         setQuizData(data); // Set quiz data state
       } catch (error) {
         console.error("Error fetching quiz data:", error);
@@ -88,8 +109,10 @@ export default function Questions() {
     setShowScore(true);
 
     const questions = quizData.questions.map((q) => q.question);
-    const answers = quizData.questions.map(
-      (q, index) => q.options[selectedAnswers[index]]
+    const answers = quizData.questions.map((q, index) =>
+      selectedAnswers[index] !== undefined
+        ? q.options[selectedAnswers[index]]
+        : ""
     );
 
     try {

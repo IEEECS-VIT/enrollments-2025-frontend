@@ -67,7 +67,7 @@ const Bg = () => {
           value: { min: 1, max: 1 }, // Make particles slightly transparent
         },
         shape: {
-          type: ["circle"], // Random shapes for confetti
+          type: ["square"], // Random shapes for confetti
         },
         size: {
           value: { min: 3, max: 5 }, // Varying confetti sizes
