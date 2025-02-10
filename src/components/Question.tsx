@@ -4,9 +4,10 @@ import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
 import Loader from "./Loader";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import { showToastSuccess } from "../Toast.ts";
-import { useTimer } from "react-timer-hook"; 
+import { useTimer } from "react-timer-hook";
+import { LoadQuestions } from "../api/user.ts";
 
 interface QuizData {
   questions: {
@@ -62,7 +63,6 @@ export default function Questions() {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
   }, [subdomain]);
-
 
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
