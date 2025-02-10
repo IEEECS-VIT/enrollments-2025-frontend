@@ -34,7 +34,7 @@ export default function Navbar() {
           className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
         >
           DOMAINS
-        </button>
+        </button> 
         <button
           className="lg:hidden z-50 transition-all duration-500 ease-in-out"
           onClick={toggleMenu}
@@ -57,14 +57,14 @@ export default function Navbar() {
         >
           <nav className="p-8 pt-32">
             <ul className="space-y-6 text-2xl text-white font-press-start">
-              <li className="hover:text-[#F87D10] hover:underline cursor-pointer">
+              <li onClick={() => navigate("/landing")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
                 HOME
               </li>
-              <li className="hover:text-[#F87D10] hover:underline cursor-pointer">
+              <li onClick={() => navigate("/faqs")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
                 FAQS
               </li>
-              <li className="hover:text-[#F87D10] hover:underline cursor-pointer">
-                PROFILE
+              <li onClick={() => navigate("/domain")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
+                DOMAINS
               </li>
             </ul>
           </nav>
@@ -74,10 +74,18 @@ export default function Navbar() {
           className="h-[5vh] relative left-[7vw] lg:hidden"
         />
         <button className="ring-2 ring-[#F8B95A] rounded-md shadow-red-glow flex flex-wrap text-white lg:text-xl text-xs px-2 gap-x-4 lg:h-14 lg:w-20 h-[4vh] border border-solid border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 items-center justify-center relative left-[7vw] lg:left-[0vw]">
-        <svg className="ml-2 mt-2" onClick={() => navigate("/profile")} width="50" height="50" viewBox="0 0 30 30" fill="white" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="12" cy="8" r="4"/>
-  <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="white" stroke-width="2" fill="none"/>
+        <svg
+  className="ml-2 lg:mt-2 cursor-pointer w-12 h-8 sm:w-16 sm:h-[5vh] md:w-20 md:h-8 lg:w-24 lg:h-12 xl:w-28 xl:h-12"
+  onClick={() => navigate("/profile")}
+  viewBox="0 0 30 30"
+  fill="white"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle cx="12" cy="8" r="4" />
+  <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="white" strokeWidth="2" fill="none" />
 </svg>
+
+
           
         </button>
       </div>

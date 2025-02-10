@@ -110,7 +110,7 @@ export default function Questions() {
       if (selectedAnswers[index] + 1 === question.correctAnswer) {
         calculatedScore++;
       }
-      showToastSuccess("Quiz Submitted successfully");
+      showToastSuccess("Quiz submitted successfully");
     });
     setScore(calculatedScore);
     setShowScore(true);
@@ -175,7 +175,7 @@ export default function Questions() {
       </div>
 
       <div className="relative flex flex-col justify-start items-center p-2 h-full max-w-[100%] font-retro-gaming">
-        <ToastContainer className="custom-toast-container" />
+        <ToastContainer />
         <div id="questionBox" className="m-4 p-4 w-full rounded-xl">
           <div
             id="question"
@@ -246,6 +246,35 @@ export default function Questions() {
                 onClick={() => setShowModal(false)}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Back button warning modal */}
+      {showBackWarning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
+          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
+            <p className="text-lg font-semibold font-retro-gaming">
+              Are you sure you want to leave? <br /> Your progress will be lost,
+              and the timer will keep running!
+            </p>
+            <div className="flex justify-center mt-4">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={() => setShowBackWarning(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={() => {
+                  window.removeEventListener("beforeunload", () => {});
+                  navigate("/dashboard");
+                }}
+              >
+                Leave
               </button>
             </div>
           </div>

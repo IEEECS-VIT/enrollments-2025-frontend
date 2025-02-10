@@ -17,7 +17,6 @@ const UsernameForm: React.FC = () => {
       setTimeout(() => {
         navigate("/domain");
       }, 3000);
-      console.log("hii1");
       showToastSuccess("Username selected successfully");
     } else if (response.status == 201) {
       setMessage(`${username} already taken. Try again`);
@@ -25,9 +24,8 @@ const UsernameForm: React.FC = () => {
     }
     setUsername("");
   };
-
+  
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  // const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -69,14 +67,15 @@ const UsernameForm: React.FC = () => {
         tabIndex={0}
       >
         <ToastContainer className="custom-toast-container" />
-        <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center  justify-center gap-y-16 py-8">
-          <div className="text-center mt-[6vh] sm:mt-[vh]">
-            <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">
+        <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center  justify-center gap-y-40 sm:gap-y-16 py-8">
+          <div className="text-center">
+            <p className="sm:text-[6.06vw] tracking-wider mb-4 sm:mb-0 text-[3.5vh] font-bold sm:leading-[5rem]">
               ENTER
             </p>
             <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold leading-[0.5rem] sm:leading-[5rem]">
               USERNAME
             </p>
+            
           </div>
 
           <div>
@@ -84,11 +83,14 @@ const UsernameForm: React.FC = () => {
               type="text"
               placeholder="Enter Username"
               value={username}
-              className="bg-black border-white border rounded-lg p-2 text-center h-20 w-72 text-xl font-retro-gaming"
+              className="bg-black border-white border rounded-lg p-2 text-center h-20 sm:w-72 w-56 text-xl font-retro-gaming"
               onChange={(e) => setUsername(e.target.value)}
             />
             <p className="text-red-700 text-center mt-2">{message}</p>
           </div>
+          <div>
+              
+            </div>
         </div>
 
         <button onClick={handleSubmit}

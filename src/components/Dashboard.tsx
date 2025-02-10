@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Treecloud from "./Treecloud";
 import { LoadDashboard } from "../api/user";
+import Loader from "./Loader";
 
 interface Quiz {
   domain: string;
@@ -15,6 +16,7 @@ interface QuizData {
 
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
@@ -30,6 +32,9 @@ export default function Dashboard(): JSX.Element {
         setQuizData(response); // Corrected
       } catch (error) {
         console.error("Error fetching quiz data:", error);
+      }
+      finally {
+        setLoading(false); 
       }
     };
 
@@ -53,12 +58,17 @@ export default function Dashboard(): JSX.Element {
       <div className="absolute w-full pointer-events-none">
         <Treecloud />
       </div>
-      <div className="border-2 mt-[10vh] rounded-3xl w-[80%] lg:w-[70%] h-[70vh] flex flex-col items-center justify-center text-white px-10 py-5">
-        <h2 className="text-2xl font-press-start mb-4 self-start">ROUND-1</h2>
+      {loading && (
+              <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50">
+                <Loader />
+              </div>
+            )}
+      <div className="border-2  mt-[5vh] rounded-3xl w-[80%] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+      <p className="text-2xl mt-8 ml-16 font-press-start self-start">ROUND-1</p>
 
         {/* Pending Quizzes */}
-        <div className="flex flex-col items-center mb-8 gap-2">
-          <h2 className="text-4xl mb-4">PENDING QUIZZES</h2>
+        <div className="flex flex-col items-center  gap-2">
+          <h2 className="text-2xl sm:text-4xl mt-16 sm:mt-12">PENDING QUIZZES</h2>
           <div className="flex gap-8">
             {quizData.pending.length > 0 ? (
               quizData.pending.map((quiz, index) => (
@@ -81,7 +91,7 @@ export default function Dashboard(): JSX.Element {
 
         {/* Completed Quizzes */}
         <div className="flex flex-col items-center">
-          <h2 className="text-4xl mb-4">COMPLETED QUIZZES</h2>
+          <h2 className="text-2xl sm:text-4xl mt-28 sm:mt-20">COMPLETED QUIZZES</h2>
           <div className="flex gap-4">
             {quizData.completed.length > 0 ? (
               quizData.completed.map((quiz, index) => (

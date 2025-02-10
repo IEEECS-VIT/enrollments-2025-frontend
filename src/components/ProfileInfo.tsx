@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { auth } from '../firebaseConfig';
 import { signOut as firebaseSignOut } from 'firebase/auth';
+import { showToastSuccess } from "../Toast";
 
 interface ProfileData {
   name: string;
@@ -25,6 +26,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
     } catch (error) {
       console.error("Error during sign out:", error);
     } 
+    showToastSuccess("Signed out successfully");
     navigate("/landing"); 
   };
 
