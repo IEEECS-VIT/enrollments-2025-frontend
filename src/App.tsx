@@ -47,6 +47,7 @@ const App = () => {
       <div className="bg-black relative min-h-screen">
         <Bg />
         <Navbar />
+        
         <div className="relative z-20">
           <Routes>
             <Route index element={<Start />} />
