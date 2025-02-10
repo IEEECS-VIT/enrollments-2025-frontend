@@ -1,7 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-function usePersistentState<T>(key: string, initialState: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+function usePersistentState<T>(
+  key: string,
+  initialState: T
+): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = useState<T>(() => {
     const storedValue = localStorage.getItem(key);
     return storedValue ? JSON.parse(storedValue) : initialState;
@@ -16,8 +19,10 @@ function usePersistentState<T>(key: string, initialState: T): [T, React.Dispatch
 
 export default function Management() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
-  const [currentSelections, setCurrentSelections] = usePersistentState<string[]>('management', []); 
-  const navigate = useNavigate(); 
+  const [currentSelections, setCurrentSelections] = usePersistentState<
+    string[]
+  >("management", []);
+  const navigate = useNavigate();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,25 +37,27 @@ export default function Management() {
     const totalButtons = 2;
     const submitButtonIndex = totalButtons;
 
-    if (event.key === 'ArrowLeft') {
-      const prevIndex = (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) % totalButtons;
+    if (event.key === "ArrowLeft") {
+      const prevIndex =
+        (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) %
+        totalButtons;
       setHoveredIndex(prevIndex);
-    } else if (event.key === 'ArrowRight') {
-      const nextIndex = (hoveredIndex === null ? 0 : hoveredIndex + 1) % totalButtons;
+    } else if (event.key === "ArrowRight") {
+      const nextIndex =
+        (hoveredIndex === null ? 0 : hoveredIndex + 1) % totalButtons;
       setHoveredIndex(nextIndex);
-    }else if (event.key === 'ArrowDown') {
-      setHoveredIndex(submitButtonIndex); 
-    } else if (event.key === 'ArrowUp') {
+    } else if (event.key === "ArrowDown") {
+      setHoveredIndex(submitButtonIndex);
+    } else if (event.key === "ArrowUp") {
       if (hoveredIndex === submitButtonIndex) {
         setHoveredIndex(0);
       }
-    }  
-     else if (event.key === 'Enter') {
+    } else if (event.key === "Enter") {
       if (hoveredIndex !== null) {
         if (hoveredIndex === submitButtonIndex) {
-          handleOkClick(); 
+          handleOkClick();
         } else {
-          handleClick(hoveredIndex); 
+          handleClick(hoveredIndex);
         }
       }
     }
@@ -58,21 +65,27 @@ export default function Management() {
 
   const handleHover = (index: number) => setHoveredIndex(index);
 
-  const handleLeave = () => setHoveredIndex((current) => (current !== null ? current : 0));
+  const handleLeave = () =>
+    setHoveredIndex((current) => (current !== null ? current : 0));
 
   const handleClick = (index: number) => {
-    const labels = ['Events', 'PnM'];
+    const labels = ["EVENTS", "PNM"];
     const selectedLabel = labels[index];
 
-    if (currentSelections.length < 2 && !currentSelections.includes(selectedLabel)) {
+    if (
+      currentSelections.length < 2 &&
+      !currentSelections.includes(selectedLabel)
+    ) {
       setCurrentSelections([...currentSelections, selectedLabel]);
     } else if (currentSelections.includes(selectedLabel)) {
-      setCurrentSelections(currentSelections.filter((label) => label !== selectedLabel));
+      setCurrentSelections(
+        currentSelections.filter((label) => label !== selectedLabel)
+      );
     }
   };
 
   const handleOkClick = () => {
-    navigate('/domain');
+    navigate("/domain");
   };
 
   return (
@@ -84,7 +97,9 @@ export default function Management() {
     >
       <div className="border-2 border-[#FF0004] mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-24 sm:mt-[6vh]">
-          <p className="text-[7vw] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">MANAGEMENT</p>
+          <p className="text-[7vw] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
+            MANAGEMENT
+          </p>
         </div>
 
         <div
@@ -92,11 +107,11 @@ export default function Management() {
           onKeyDown={handleKeyNavigation}
           tabIndex={0}
         >
-          {['Events', 'PnM'].map((label, index) => (
+          {["EVENTS", "PNM"].map((label, index) => (
             <div
               key={index}
               className={`flex flex-col mb-[3vh] items-center sm:basis-1/2 cursor-pointer nav-button p-4 transition-transform duration-300 ${
-                currentSelections.includes(label) ? 'scale-110' : 'scale-100'
+                currentSelections.includes(label) ? "scale-110" : "scale-100"
               }`}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
@@ -104,15 +119,15 @@ export default function Management() {
             >
               <img
                 className="h-[7.5vh] sm:h-[12.5vh]"
-                src={index === 0 ? '/calendar.svg' : '/microphone.svg'}
+                src={index === 0 ? "/calendar.svg" : "/microphone.svg"}
                 alt={label}
               />
               <p
                 className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
                   currentSelections.includes(label)
-                    ? 'text-[#FF0004] font-bold underline underline-offset-4'
-                    : 'font-normal no-underline'
-                } ${hoveredIndex === index ? 'animate-blink' : ''}`}
+                    ? "text-[#FF0004] font-bold underline underline-offset-4"
+                    : "font-normal no-underline"
+                } ${hoveredIndex === index ? "animate-blink" : ""}`}
               >
                 {hoveredIndex === index ? `> ${label} <` : label}
               </p>
@@ -122,9 +137,9 @@ export default function Management() {
       </div>
       <button
         onClick={handleOkClick}
-        tabIndex={0} 
+        tabIndex={0}
         className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 2 ? 'scale-110 bg-opacity-70' : 'scale-100'
+          hoveredIndex === 2 ? "scale-110 bg-opacity-70" : "scale-100"
         }`}
         onMouseEnter={() => setHoveredIndex(2)}
         onMouseLeave={() => setHoveredIndex(null)}

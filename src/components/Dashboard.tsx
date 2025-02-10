@@ -29,12 +29,11 @@ export default function Dashboard(): JSX.Element {
       try {
         const response = await LoadDashboard(1);
         console.log(response);
-        setQuizData(response); // Corrected
+        setQuizData(response);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
-      }
-      finally {
-        setLoading(false); 
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -42,6 +41,7 @@ export default function Dashboard(): JSX.Element {
   }, []);
 
   const handleStartQuiz = (quiz: Quiz) => {
+    // localStorage.removeItem("quizAnswers");
     setSelectedQuiz(quiz);
     setShowModal(true);
   };
@@ -59,17 +59,20 @@ export default function Dashboard(): JSX.Element {
         <Treecloud />
       </div>
       {loading && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50">
-                <Loader />
-              </div>
-            )}
-      <div className="border-2  mt-[5vh] rounded-3xl w-[80%] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
-      <p className="text-2xl mt-8 ml-16 font-press-start self-start">ROUND-1</p>
+        <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50">
+          <Loader />
+        </div>
+      )}
+      <div className="border-2  mt-[5vh] rounded-3xl w-[80%] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
+        {/* <p className="text-2xl mt-8 ml-16 font-press-start self-start">
+          ROUND-1
+        </p> */}
 
         {/* Pending Quizzes */}
-        <div className="flex flex-col items-center  gap-2">
-          <h2 className="text-2xl sm:text-4xl mt-16 sm:mt-12">PENDING QUIZZES</h2>
-          <div className="flex gap-8">
+        <div></div>
+        <div className="flex flex-col items-center ">
+          <h2 className="text-2xl sm:text-4xl  mb-4">PENDING QUIZZES</h2>
+          <div className="flex gap-4 md:flex-row flex-col">
             {quizData.pending.length > 0 ? (
               quizData.pending.map((quiz, index) => (
                 <div
@@ -91,8 +94,10 @@ export default function Dashboard(): JSX.Element {
 
         {/* Completed Quizzes */}
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl sm:text-4xl mt-28 sm:mt-20">COMPLETED QUIZZES</h2>
-          <div className="flex gap-4">
+          <h2 className="text-2xl sm:text-4xl mt-8 md:mt-12 mb-4">
+            COMPLETED QUIZZES
+          </h2>
+          <div className="flex gap-4 md:flex-row flex-col ">
             {quizData.completed.length > 0 ? (
               quizData.completed.map((quiz, index) => (
                 <div
