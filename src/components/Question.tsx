@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
-import axios from "axios";
 import Loader from "./Loader";
-import { useTimer } from "react-timer-hook"; // Import the useTimer hook
+import { useTimer } from "react-timer-hook";
+import { LoadQuestions } from "../api/user.ts";
 
 interface QuizData {
   questions: {
@@ -37,7 +37,6 @@ export default function Questions() {
   const { seconds, minutes, start, pause, resume, restart } = useTimer({
     expiryTimestamp: new Date(new Date().getTime() + 30 * 60 * 1000),
     onExpire: () => {
-      // Handle timer expiry (e.g., auto-submit quiz)
       alert("Time's up! The quiz will be submitted automatically.");
       handleSubmit();
     },
@@ -46,10 +45,8 @@ export default function Questions() {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get<QuizData>(
-          `http://localhost:8000/domain/questions?domain=${subdomain}&round=1`
-        );
-        setQuizData(response.data);
+        const data = await LoadQuestions({ subdomain }); // Fetch data
+        setQuizData(data); // Set quiz data state
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       } finally {
@@ -65,30 +62,6 @@ export default function Questions() {
     }
   }, [subdomain]);
 
-  // Handle back button press
-  useEffect(() => {
-    const handleBackButton = (event: PopStateEvent) => {
-      event.preventDefault();
-      setShowBackWarning(true);
-      window.history.pushState(null, "", location.pathname);
-    };
-
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = ""; // Required for Chrome
-      setShowBackWarning(true);
-      return ""; // Required for legacy browsers
-    };
-
-    window.history.pushState(null, "", location.pathname);
-    window.addEventListener("popstate", handleBackButton);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [location.pathname]);
 
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
@@ -248,7 +221,6 @@ export default function Questions() {
         </div>
       )}
 
-      {/* Back button warning modal */}
       {showBackWarning && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
           <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">

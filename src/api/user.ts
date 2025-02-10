@@ -11,11 +11,6 @@ interface ProfileData {
   domain: { [key: string]: string[] };
 }
 
-// interface DashboardData {
-//   pending: string[];
-//   completed: string[];
-// }
-
 interface ResponseData {
   status: number;
 }
@@ -26,6 +21,16 @@ interface UsernameResponse {
 
 interface DomainResponse {
   status: number;
+}
+
+interface Quiz {
+  domain: string;
+  subDomain?: string;
+}
+
+interface DashboardData {
+  pending: Quiz[];
+  completed: Quiz[];
 }
 
 export function getAuthToken(): string {
@@ -148,23 +153,12 @@ export async function SubmitAnswers(
   };
 }
 
-interface Quiz {
-  domain: string;
-  subDomain?: string;
-}
-
-interface DashboardData {
-  pending: Quiz[];
-  completed: Quiz[];
-}
-
 export async function LoadDashboard(round: number): Promise<DashboardData> {
   const response = await ProtectedRequest<{
     pending: string[];
     completed: string[];
   }>("GET", "/user/dashboard", null, { round: round });
 
-  // Transform API response to match the expected structure
   const transformQuizzes = (quizzes: string[]): Quiz[] =>
     quizzes.map((quiz) => {
       const [domain, subDomain] = quiz.split(":");
@@ -172,7 +166,29 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
     });
 
   return {
-    pending: transformQuizzes(response.data.pending), // Convert strings into Quiz objects
+    pending: transformQuizzes(response.data.pending),
     completed: transformQuizzes(response.data.completed),
   };
+}
+
+export interface Question {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+}
+
+export interface QuestionData {
+  questions: Question[];
+}
+
+export async function LoadQuestions({
+  subdomain,
+}: {
+  subdomain: string;
+}): Promise<QuestionData> {
+  const response = await ProtectedRequest<QuestionData>(
+    "GET",
+    `/domain/questions?domain=${subdomain}&round=1`
+  );
+  return response.data;
 }
