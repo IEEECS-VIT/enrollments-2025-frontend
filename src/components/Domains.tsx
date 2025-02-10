@@ -109,7 +109,7 @@ export default function Domains() {
       if (response.status === 200) {
         setTimeout(() => {
           navigate("/profile");
-        }, 3000);
+        }, 1500);
       }
     }
   };

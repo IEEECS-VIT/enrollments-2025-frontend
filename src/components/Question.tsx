@@ -5,7 +5,9 @@ import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
 import axios from "axios";
 import Loader from "./Loader";
-import { useTimer } from "react-timer-hook"; // Import the useTimer hook
+import { ToastContainer } from 'react-toastify';
+import { showToastSuccess } from "../Toast.ts";
+import { useTimer } from "react-timer-hook"; 
 
 interface QuizData {
   questions: {
@@ -108,6 +110,7 @@ export default function Questions() {
       if (selectedAnswers[index] + 1 === question.correctAnswer) {
         calculatedScore++;
       }
+      showToastSuccess("Quiz submitted successfully");
     });
     setScore(calculatedScore);
     setShowScore(true);
@@ -172,6 +175,7 @@ export default function Questions() {
       </div>
 
       <div className="relative flex flex-col justify-start items-center p-2 h-full max-w-[100%] font-retro-gaming">
+        <ToastContainer />
         <div id="questionBox" className="m-4 p-4 w-full rounded-xl">
           <div
             id="question"
