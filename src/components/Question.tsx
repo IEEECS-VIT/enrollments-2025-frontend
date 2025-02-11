@@ -55,8 +55,8 @@ export default function Questions() {
   const round = 1;
 
   // Timer logic
-  const { seconds, minutes, start, pause, resume, restart } = useTimer({
-    expiryTimestamp:  new Date(new Date().getTime() + 30 * 60 * 1000),
+  const { seconds, minutes } = useTimer({
+    expiryTimestamp: new Date(new Date().getTime() + 30 * 60 * 1000),
     onExpire: () => {
       alert("Time's up! The quiz will be submitted automatically.");
       handleSubmit();
@@ -103,7 +103,6 @@ export default function Questions() {
       if (selectedAnswers[index] + 1 === question.correctAnswer) {
         calculatedScore++;
       }
-      
     });
     setScore(calculatedScore);
     setShowScore(true);
@@ -126,7 +125,7 @@ export default function Questions() {
       domain = subdomain.toUpperCase();
       const result = await SubmitAnswers(round, domain, questions, answers);
       showToastSuccess("Quiz submitted successfully");
-      
+
       if (result.status !== 200) {
         alert("Error submitting answers. Please try again.");
         showToastWarning("Please try again");
@@ -174,11 +173,10 @@ export default function Questions() {
         </div>
       </div>
       <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
-          {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-        </div>
-      
+        {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+      </div>
+
       <div className="relative flex flex-col justify-start sm:mt-8  items-center p-2 h-full max-w-[100%] font-retro-gaming ">
-        
         <div id="questionBox" className=" p-4 w-72 sm:w-full rounded-xl">
           <div
             id="question"

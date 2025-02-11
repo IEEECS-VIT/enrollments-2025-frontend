@@ -82,13 +82,37 @@ const Landing: React.FC = () => {
         IEEE-CS
       </h1>
       <ToastContainer className="custom-toast-container" />
-      
-      <img className="absolute xl:left-[15vw] lg:left-[10vw] top-[25vh] hidden lg:block" src="Coin1.svg" alt="img" />
-      <img className="absolute left-[90vw] top-[55vh] hidden lg:block" src="Coin 2.svg" alt="img" />
-      <img className="absolute left-[5vw] top-[50vh] hidden lg:block" src="magnet1.svg" alt="img" />
-      <img className="absolute left-[75vw] top-[70vh] hidden lg:block" src="magnet2.svg" alt="img" />
-      <img className="absolute left-[17vw] top-[70vh] hidden lg:block" src="lightning1.svg" alt="img" />
-      <img className="absolute xl:left-[78vw] lg:left-[83vw] top-[22vh] hidden lg:block" src="lightning2.svg" alt="img" />
+
+      <img
+        className="absolute xl:left-[15vw] lg:left-[10vw] top-[25vh] hidden lg:block"
+        src="Coin1.svg"
+        alt="img"
+      />
+      <img
+        className="absolute left-[90vw] top-[55vh] hidden lg:block"
+        src="Coin 2.svg"
+        alt="img"
+      />
+      <img
+        className="absolute left-[5vw] top-[50vh] hidden lg:block"
+        src="magnet1.svg"
+        alt="img"
+      />
+      <img
+        className="absolute left-[75vw] top-[70vh] hidden lg:block"
+        src="magnet2.svg"
+        alt="img"
+      />
+      <img
+        className="absolute left-[17vw] top-[70vh] hidden lg:block"
+        src="lightning1.svg"
+        alt="img"
+      />
+      <img
+        className="absolute xl:left-[78vw] lg:left-[83vw] top-[22vh] hidden lg:block"
+        src="lightning2.svg"
+        alt="img"
+      />
 
       <div>
         <h1 className="text-[#e8b974] text-5xl text-shadow-glow lg:hidden">
@@ -104,10 +128,10 @@ const Landing: React.FC = () => {
           into realms of the unknown.
         </h2>
         {error && (
-  <p className="text-red-500 text-center text-sm md:text-md lg:text-lg font-semibold mt-4">
-    {error}
-  </p>
-)}
+          <p className="text-red-500 text-center text-sm md:text-md lg:text-lg font-semibold mt-4">
+            {error}
+          </p>
+        )}
       </div>
 
       {user ? (
@@ -119,7 +143,7 @@ const Landing: React.FC = () => {
             onClick={() => navigate("/dashboard")}
             className="text-white rounded-lg tracking-wide text-sm sm:text-xl"
           >
-            
+            &lt; GO TO DASHBOARD &gt;
           </button>
         </>
       ) : (
