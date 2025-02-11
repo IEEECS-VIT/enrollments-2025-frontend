@@ -157,8 +157,10 @@ export default function Questions() {
       <div className="flex flex-col items-center justify-center h-full p-4">
         <p className="text-lg">Quiz answers submitted successfully.</p>
         <ToastContainer />
-        <p>Score: {score}</p>
+        {/* <p>Score: {score}</p> */}
+        <button className="mt-16" onClick={() => navigate("/dashboard")}>
         &lt; GO TO DASHBOARD &gt;
+        </button>
       </div>
     );
   }
