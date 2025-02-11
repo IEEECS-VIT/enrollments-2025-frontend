@@ -5,7 +5,7 @@ import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers } from "../api/user.ts";
 import Loader from "./Loader";
 import { ToastContainer } from "react-toastify";
-import { showToastSuccess } from "../Toast.ts";
+import { showToastSuccess, showToastWarning } from "../Toast.ts";
 import { useTimer } from "react-timer-hook";
 import { LoadQuestions } from "../api/user.ts";
 
@@ -103,7 +103,7 @@ export default function Questions() {
       if (selectedAnswers[index] + 1 === question.correctAnswer) {
         calculatedScore++;
       }
-      showToastSuccess("Quiz submitted successfully");
+      
     });
     setScore(calculatedScore);
     setShowScore(true);
@@ -125,8 +125,11 @@ export default function Questions() {
 
       domain = subdomain.toUpperCase();
       const result = await SubmitAnswers(round, domain, questions, answers);
+      showToastSuccess("Quiz submitted successfully");
+      
       if (result.status !== 200) {
         alert("Error submitting answers. Please try again.");
+        showToastWarning("Please try again");
       }
     } catch (error) {
       console.error("Error submitting answers:", error);
@@ -153,7 +156,9 @@ export default function Questions() {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4">
         <p className="text-lg">Quiz answers submitted successfully.</p>
+        <ToastContainer />
         <p>Score: {score}</p>
+        &lt; GO TO DASHBOARD &gt;
       </div>
     );
   }
@@ -161,29 +166,32 @@ export default function Questions() {
   return (
     <>
       <div className="flex w-full justify-center items-center">
-        <h2 className="text-5xl my-4 md:m-1 font-playmegames absolute">
+        <h2 className="text-5xl flex-col my-4 mt-20 md:m-1 font-playmegames absolute">
           {subdomain.toUpperCase()}
         </h2>
-        <div className="border border-white rounded-xl p-4 ml-auto">
+        <div className="border hidden sm:block border-white rounded-xl p-4 ml-auto">
           {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
         </div>
       </div>
-
-      <div className="relative flex flex-col justify-start items-center p-2 h-full max-w-[100%] font-retro-gaming">
-        <ToastContainer />
-        <div id="questionBox" className="m-4 p-4 w-full rounded-xl">
+      <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
+          {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+        </div>
+      
+      <div className="relative flex flex-col justify-start sm:mt-8  items-center p-2 h-full max-w-[100%] font-retro-gaming ">
+        
+        <div id="questionBox" className=" p-4 w-72 sm:w-full rounded-xl">
           <div
             id="question"
-            className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-center"
+            className="p-4  text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-center"
           >
             {quizData.questions[currentQuestionIndex].question}
           </div>
-          <div className="text-xs md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="text-xs  md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-48 overflow-y-auto">
             {quizData.questions[currentQuestionIndex].options.map(
               (option, index) => (
                 <div
                   key={index}
-                  className={`p-2 border rounded-xl cursor-pointer ${
+                  className={`p-2 mt-4 sm:mt-0 border rounded-xl cursor-pointer ${
                     selectedAnswers[currentQuestionIndex] === index
                       ? "bg-[#f8770f] text-white"
                       : "hover:bg-gray-900"
