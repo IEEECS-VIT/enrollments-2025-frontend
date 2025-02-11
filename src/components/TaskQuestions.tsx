@@ -3,7 +3,6 @@ export default function TaskQuestions() {
     <div className="relative flex flex-col justify-start items-center h-full w-full font-retro-gaming px-4">
       <div id="taskBox" className="w-full max-w-[90vw] lg:max-w-[60vw] rounded-xl">
         
-        {/* Task Type Button */}
         <div className="text-center mb-5">
           <button
             tabIndex={0}
@@ -13,7 +12,6 @@ export default function TaskQuestions() {
           </button>
         </div>
 
-        {/* Difficulty Buttons */}
         <div className="flex flex-wrap gap-4 justify-center">
           {["EASY", "MEDIUM", "HARD"].map((level) => (
             <button
@@ -25,7 +23,6 @@ export default function TaskQuestions() {
           ))}
         </div>
 
-        {/* Task Description */}
         <div className="border border-white rounded-3xl mt-6 w-full min-h-[100px] sm:min-h-[15vh] p-4 flex flex-col justify-center items-center">
           <textarea
             placeholder="Enter task description..."
@@ -33,7 +30,6 @@ export default function TaskQuestions() {
           />
         </div>
 
-        {/* GitHub Link Input */}
         <div className="border border-white rounded-3xl mt-6 w-full p-4 flex flex-col justify-center items-center">
           <input
             type="text"
@@ -42,7 +38,6 @@ export default function TaskQuestions() {
           />
         </div>
 
-        {/* Other Links Input */}
         <div className="border border-white rounded-3xl mt-6 w-full p-4 flex flex-col justify-center items-center">
           <input
             type="text"
@@ -52,7 +47,6 @@ export default function TaskQuestions() {
         </div>
       </div>
 
-      {/* Submit Button */}
       <button className="text-white px-4 py-1 sm:py-3 mt-6 h-[5vh] sm:h-[7.5vh] sm:mt-12 rounded-lg tracking-wide text-base sm:text-lg lg:text-xl border border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 shadow-red-glow">
         &lt; SUBMIT &gt;
       </button>

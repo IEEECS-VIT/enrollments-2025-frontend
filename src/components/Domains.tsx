@@ -112,6 +112,7 @@ export default function Domains() {
         }, 1500);
       }
     }
+    localStorage.clear();
   };
   
 

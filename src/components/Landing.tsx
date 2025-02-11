@@ -21,14 +21,13 @@ const Landing: React.FC = () => {
 
       if (user && token) {
         const fullName = user.displayName
-          ? user.displayName.split(" ").slice(0, 2).join(" ")
+          ? user.displayName.split(" ").slice(0, -1).join(" ")
           : "User";
         setUser({ name: fullName });
       } else {
         setUser(null);
         Cookies.remove("authToken");
       }
-
       setCheckingAuth(false);
     });
 
@@ -78,8 +77,8 @@ const Landing: React.FC = () => {
   };
 
   return (
-    <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-2">
-      <h1 className="text-[#e8b974] mt-4 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
+    <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-10">
+      <h1 className="text-[#e8b974] mt-12 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
         IEEE-CS
       </h1>
       <ToastContainer className="custom-toast-container" />
@@ -113,14 +112,14 @@ const Landing: React.FC = () => {
 
       {user ? (
         <>
-          <h2 className="text-white text-sm sm:text-xl mt-[7.5vh] lg:text-2xl">
+          <h2 className="text-white text-sm sm:text-xl mt-[7.5vh] lg:text-2xl relative z-20">
             Welcome, {user.name}
           </h2>
           <button
             onClick={() => navigate("/dashboard")}
             className="text-white rounded-lg tracking-wide text-sm sm:text-xl"
           >
-            &lt; GO TO DASHBOARD &gt;
+            
           </button>
         </>
       ) : (
