@@ -52,10 +52,6 @@ const Landing: React.FC = () => {
     setError("");
 
     try {
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
-      Cookies.set("authToken", idToken, { expires: 1, path: "/" });
-
       const response = await Login();
       if (response.status === 200) {
         setTimeout(() => {
@@ -69,7 +65,6 @@ const Landing: React.FC = () => {
         showToastWarning("User not registered in VTOP");
       }
     } catch (error) {
-      console.error("Error during login:", error);
       setError("Login failed. Please try again.");
     } finally {
       setLoading(false);
