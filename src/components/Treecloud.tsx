@@ -1,22 +1,43 @@
+import { motion } from "framer-motion";
+import CloudImage from "/cloud.svg"; 
+
 export default function Treecloud() {
   return (
     <div className="relative min-h-screen min-w-screen overflow-hidden">
       <div className="absolute inset-0">
-        <img
-          className="absolute top-0 left-0 sm:mt-[12.5vh] mt-[12vh] ml-[40vw] sm:h-[9.5vh] h-[5vh]"
-          src="/cloud.svg"
-          alt="Cloud Image"
-        />
-        <img
-          className="absolute top-0 left-0 mt-[32.5vh] sm:-ml-[3vw] -ml-[6vw] sm:h-[12.5vh] h-[5vh]"
-          src="/cloud.svg"
-          alt="Cloud Image"
-        />
-        <img
-          className="absolute top-0 right-0 mt-[47.5vh] sm:mr-[3vw] mr-[6vw] sm:h-[9.5vh] h-[3.5vh]"
-          src="/cloud.svg"
-          alt="Cloud Image"
-        />
+      <motion.img
+      src={CloudImage}
+      alt="Cloud"
+      className="absolute top-[12.5vh] left-0 w-40 h-16 opacity-80"
+      animate={{ x: ["-100%", "1000%"] }}
+      transition={{
+        duration: 14,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    />
+        <motion.img
+      src={CloudImage}
+      alt="Cloud"
+      className="absolute top-[30.5vh] left-0 w-40 h-16 opacity-80"
+      animate={{ x: ["1000%", "-100%"] }}
+      transition={{
+        duration: 15,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    />
+        <motion.img
+      src={CloudImage}
+      alt="Cloud"
+      className="absolute top-[45.5vh] left-0 w-40 h-16 opacity-80"
+      animate={{ x: ["-500%", "1000%"] }}
+      transition={{
+        duration: 12,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    />
       </div>
 
       <div className="absolute inset-0 z-40 pointer-events-none">

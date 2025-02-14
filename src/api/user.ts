@@ -6,7 +6,7 @@ import { auth, provider } from "../firebaseConfig";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 interface ProfileData {
-  name: string;
+  username: string;
   mobile: string;
   email: string;
   domain: { [key: string]: string[] };
@@ -15,7 +15,7 @@ interface ProfileData {
 interface ResponseData {
   status: number;
 }
-
+  
 interface UsernameResponse {
   status: number;
 }
@@ -106,13 +106,16 @@ export async function Login(): Promise<ResponseData> {
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
+  console.log('in api');
   const response = await ProtectedRequest<ProfileData>("GET", "/user/profile");
   const data = response.data;
+  console.log(data, 'in api');
   return {
-    name: data.name,
+    username: data.username,
     mobile: data.mobile,
     email: data.email,
     domain: data.domain,
+    //username:data.username
   };
 }
 
