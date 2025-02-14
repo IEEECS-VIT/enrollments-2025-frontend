@@ -18,7 +18,7 @@ const QuestionNumber: React.FC<QuestionNumberProps> = ({
         className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 border border-white rounded-lg mx-2 sm:mx-4 text-white cursor-pointer hover:bg-[#f8770f] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={() =>
           onQuestionChange(
-            currentQuestionIndex > 0 ? currentQuestionIndex - 1 : 0
+             currentQuestionIndex > 0 ? currentQuestionIndex - 1 : 0
           )
         }
         disabled={currentQuestionIndex === 0}

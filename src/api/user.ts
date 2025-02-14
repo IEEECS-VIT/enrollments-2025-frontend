@@ -1,10 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
+import { getAuth, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../firebaseConfig";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 interface ProfileData {
-  name: string;
+  username: string;
   mobile: string;
   email: string;
   domain: { [key: string]: string[] };
@@ -13,7 +15,7 @@ interface ProfileData {
 interface ResponseData {
   status: number;
 }
-
+  
 interface UsernameResponse {
   status: number;
 }
@@ -32,13 +34,34 @@ interface DashboardData {
   completed: Quiz[];
 }
 
-export function getAuthToken(): string {
+export async function getAuthToken(): Promise<string> {
   const token = Cookies.get("authToken");
-  if (!token) {
-    throw new Error("No auth token found");
+  if (token) {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        const freshToken = await user.getIdToken(true);
+
+        Cookies.set("authToken", freshToken);
+        return freshToken;
+      } else {
+        throw new Error("User not authenticated");
+      }
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+      throw new Error("Failed to refresh token");
+    }
   }
-  return token;
+
+  
+  const result = await signInWithPopup(auth, provider);
+  const idToken = await result.user.getIdToken();
+  Cookies.set("authToken", idToken);
+  return idToken;
 }
+
 
 const ProtectedRequest = async <T = unknown>(
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
@@ -47,7 +70,7 @@ const ProtectedRequest = async <T = unknown>(
   params: Record<string, unknown> | null = null
 ): Promise<AxiosResponse<T>> => {
   try {
-    const token = getAuthToken();
+    const token = await getAuthToken();
 
     const config = {
       method,
@@ -83,13 +106,16 @@ export async function Login(): Promise<ResponseData> {
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
+  console.log('in api');
   const response = await ProtectedRequest<ProfileData>("GET", "/user/profile");
   const data = response.data;
+  console.log(data, 'in api');
   return {
-    name: data.name,
+    username: data.username,
     mobile: data.mobile,
     email: data.email,
     domain: data.domain,
+    //username:data.username
   };
 }
 

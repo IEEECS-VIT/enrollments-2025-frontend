@@ -52,10 +52,6 @@ const Landing: React.FC = () => {
     setError("");
 
     try {
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
-      Cookies.set("authToken", idToken, { expires: 1, path: "/" });
-
       const response = await Login();
       if (response.status === 200) {
         setTimeout(() => {
@@ -69,7 +65,6 @@ const Landing: React.FC = () => {
         showToastWarning("User not registered in VTOP");
       }
     } catch (error) {
-      console.error("Error during login:", error);
       setError("Login failed. Please try again.");
     } finally {
       setLoading(false);
@@ -78,7 +73,7 @@ const Landing: React.FC = () => {
 
   return (
     <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-10">
-      <h1 className="text-[#e8b974] mt-12 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
+      <h1 className="text-[#e8b974] mt-4 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
         IEEE-CS
       </h1>
       <ToastContainer className="custom-toast-container" />
@@ -141,7 +136,7 @@ const Landing: React.FC = () => {
           </h2>
           <button
             onClick={() => navigate("/dashboard")}
-            className="text-white rounded-lg tracking-wide text-sm sm:text-xl"
+            className="text-white  tracking-wide text-sm sm:text-xl"
           >
             &lt; GO TO DASHBOARD &gt;
           </button>

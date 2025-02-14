@@ -103,13 +103,13 @@ export default function Domains() {
       };
   
       console.log(allSelectedData);
-      showToastSuccess("Domains selected successfully");
-  
+      
       const response = await SubmitDomains(allSelectedData);
       if (response.status === 200) {
         setTimeout(() => {
           navigate("/profile");
         }, 1500);
+        showToastSuccess("Domains selected successfully");
       }
     }
     localStorage.clear();
@@ -125,16 +125,29 @@ export default function Domains() {
     >
       <ToastContainer className="custom-toast-container" />
       <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+        <div className="flex justify-between w-full ">
+          <div className="ml-8 sm:ml-16">
+
+          </div>
         <div className="text-center mt-[6vh] sm:mt-[6vh]">
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">
             CHOOSE YOUR
           </p>
+          
           <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold leading-[0.5rem] sm:leading-[5rem]">
             ELEMENT
           </p>
         </div>
-
-        <div
+        <div className="relative group mt-4 sm:mt-8 right-4">
+            <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
+              ℹ️
+            </span>
+            <div className="absolute left-12 tracking-widest bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-md px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Only Final Submission will be considered .
+            </div>
+          </div>
+        </div>
+        <div  
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           tabIndex={0}
         >
