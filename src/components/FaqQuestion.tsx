@@ -42,38 +42,46 @@ export default function FaqQuestion() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col gap-8 z-20">
-      {/* <div className="border-2 border-white mt-[5vh] rounded-3xl w-[80%] lg:w-[50vw] sm:h-[10vh] h-[20vh] flex flex-col items-center p-4 md:p-8 justify-center"> */}
+    <div className="flex flex-col gap-4 z-20">
       {faqs.map((faq, index) => (
         <div key={index} className="w-[55vw]">
+          
           <div
-            className={`rounded-3xl ${
-              expandedIndex === index
-                ? "border-2 border-orange-400 text-center"
-                : "border-2 border-white text-center"
-            } p-0.5`}
+            className={`rounded-3xl border-2 transition-all duration-300 overflow-hidden ${
+              expandedIndex === index ? "border-orange-400" : "border-white"
+            }`}
           >
+            
             <button
-              className="text-center p-4 bg-black rounded-3xl text-white"
-              onClick={() =>
-                setExpandedIndex(expandedIndex === index ? null : index)
-              }
+              className="p-4 bg-black rounded-3xl text-white w-full"
+              onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
             >
               <p className="font-press-start lg:text-[1.5rem] text-[10px] md:text-[13px]">
                 {faq.question}
               </p>
             </button>
-            {expandedIndex === index && (
-              <div className="bg-black p-4 border-t-2 border-orange-400 rounded-b-3xl">
-                <p className="font-press-start text-[10px] md:text-[13px] text-white text-center ">
-                  {faq.answer}
-                </p>
-              </div>
-            )}
+
+            
+            <div
+              className={`transition-all duration-200 ease-in-out overflow-hidden ${
+                expandedIndex === index ? "max-h-[200px] p-4" : "max-h-0 p-0"
+              }`}
+            >
+              
+              <div
+                className={`transition-all duration-300 ${
+                  expandedIndex === index ? "border-t-2 border-orange-400" : "border-t-0"
+                }`}
+              ></div>
+
+              
+              <p className="font-press-start text-[10px] md:text-[13px] text-white text-center mt-2">
+                {faq.answer}
+              </p>
+            </div>
           </div>
         </div>
       ))}
-      {/* </div> */}
     </div>
   );
 }
