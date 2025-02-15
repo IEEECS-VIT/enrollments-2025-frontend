@@ -12,8 +12,6 @@ interface ProfileData {
   domain: { [key: string]: string[] };
 }
 
-
-
 interface ProfileInfoProps {
   profileData: ProfileData;
 }
@@ -41,23 +39,35 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-10 w-full">
           <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[9vh] sm:space-y-12">
-            <p><span className="font-bold">Username : </span> {profileData?.username}</p>
-            <p><span className="font-bold">Mobile No. : </span> {profileData?.mobile}</p>
-            <p><span className="font-bold">Mail ID : </span> <span className="break-all">{profileData?.email}</span></p>
-            <p><span className="font-bold">Selected Domains : </span>
+            <p>
+              <span className="font-bold">Username : </span>{" "}
+              {profileData?.username}
+            </p>
+            <p>
+              <span className="font-bold">Mobile No. : </span>{" "}
+              {profileData?.mobile}
+            </p>
+            <p>
+              <span className="font-bold">Mail ID : </span>{" "}
+              <span className="break-all">{profileData?.email}</span>
+            </p>
+            <p>
+              <span className="font-bold">Selected Domains : </span>
               <div className="mt-2 space-y-2">
                 {profileData?.domain &&
-                  Object.entries(profileData.domain).map(([key, domainList], index) =>
-                    domainList.length > 0 && (
-                      <div key={key} className="text-sm sm:text-2xl">
-                        <strong>{key} : </strong> 
-                        {domainList.map((domain, i) => (
-                          <span key={i}>
-                            {domain}{i < domainList.length - 1 && ", "}
-                          </span>
-                        ))}
-                      </div>
-                    )
+                  Object.entries(profileData.domain).map(
+                    ([key, domainList]) =>
+                      domainList.length > 0 && (
+                        <div key={key} className="text-sm sm:text-2xl">
+                          <strong>{key} : </strong>
+                          {domainList.map((domain, i) => (
+                            <span key={i}>
+                              {domain}
+                              {i < domainList.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </div>
+                      )
                   )}
               </div>
             </p>

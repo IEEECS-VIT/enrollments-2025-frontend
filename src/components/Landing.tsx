@@ -73,7 +73,7 @@ const Landing: React.FC = () => {
 
   return (
     <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-10">
-      <h1 className="text-[#e8b974] mt-4 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
+      <h1 className="text-[#e8b974] mt-4 md:mt-16 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
         IEEE-CS
       </h1>
       <ToastContainer className="custom-toast-container" />

@@ -6,6 +6,7 @@ import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 
 interface ProfileData {
+  username: string;
   name: string;
   mobile: string;
   email: string;
