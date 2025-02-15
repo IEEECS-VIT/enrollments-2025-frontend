@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 interface ProfileData {
   username: string;
-  name: string;
   mobile: string;
   email: string;
   domain: { [key: string]: string[] };

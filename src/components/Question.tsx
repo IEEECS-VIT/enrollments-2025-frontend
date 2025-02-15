@@ -205,7 +205,7 @@ export default function Questions() {
 
               {quizData.questions[currentQuestionIndex].image_url && (
                 <button
-                  className=" bg-blue-500 text-white px-2 py-2 rounded "
+                  className=" bg-blue-500 text-white px-2 py-2 rounded"
                   onClick={() => setShowImageModal(true)}
                 >
                   View Image
@@ -214,7 +214,7 @@ export default function Questions() {
             </div>
 
             {showImageModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md flex justify-center items-center">
+              <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center">
                 <div className="bg-black p-4 rounded shadow-lg relative ">
                   <button
                     className="absolute top-2 right-2 text-lg"
