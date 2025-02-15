@@ -200,6 +200,7 @@ export interface Question {
   question: string;
   options: string[];
   correctAnswer: number;
+  image_url:string;
 }
 
 export interface QuestionData {
