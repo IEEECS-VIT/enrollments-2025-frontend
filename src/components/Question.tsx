@@ -20,29 +20,8 @@ interface QuizData {
 export default function Questions() {
   const location = useLocation();
   const navigate = useNavigate();
-  const subdomain = location.state?.quiz?.subDomain;
+  const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domain = location.state?.quiz?.domain;
-
-  // Set expiry time in a secure cookie
-  // const setExpiryTime = (expiryTimestamp: Date) => {
-  //   Cookies.set("quizExpiryTime", expiryTimestamp.toISOString(), {
-  //     secure: true,
-  //     sameSite: "Strict",
-  //   });
-  // };
-
-  // // Get expiry time from a cookie
-  // const getExpiryTime = () => {
-  //   const storedExpiry = Cookies.get("quizExpiryTime");
-  //   return storedExpiry
-  //     ? new Date(storedExpiry)
-  //     : new Date(new Date().getTime() + 30 * 60 * 1000);
-  // };
-
-  // const expiryTimestamp = getExpiryTime();
-  // setExpiryTime(expiryTimestamp);
-
-  const expiryTimestamp = new Date(new Date().getTime() + 30 * 60 * 1000);
 
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -57,6 +36,12 @@ export default function Questions() {
   const [showImageModal, setShowImageModal] = useState(false);
   const round = 1;
 
+  const expiryTimeFromCookie = Cookies.get(`${subdomain}ExpiryTime`);
+
+  const expiryTimestamp = expiryTimeFromCookie
+    ? new Date(Number(expiryTimeFromCookie))
+    : new Date(new Date().getTime() + 30 * 60 * 1000);
+
   const { seconds, minutes } = useTimer({
     expiryTimestamp,
     onExpire: () => {
@@ -68,6 +53,7 @@ export default function Questions() {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
+        console.log({ subdomain });
         const data = await LoadQuestions({ subdomain });
         Cookies.remove("quizAnswers");
         setQuizData(data);
@@ -81,36 +67,11 @@ export default function Questions() {
 
     fetchQuizData();
 
-    const savedAnswers = Cookies.get("quizAnswers");
+    const savedAnswers = Cookies.get(subdomain);
     if (savedAnswers) {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
   }, [subdomain]);
-
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue =
-        "Your progress will be lost, and the timer will continue!";
-    };
-
-    const handlePopState = (event: PopStateEvent) => {
-      event.preventDefault();
-      setShowBackWarning(true); // Show modal when back/forward buttons are clicked
-      window.history.pushState(null, "", window.location.pathname); // Prevent navigation
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("popstate", handlePopState);
-
-    // Prevent forward/backward navigation
-    window.history.pushState(null, "", window.location.pathname);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, []);
 
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };

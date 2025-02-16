@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Treecloud from "./Treecloud";
 import { LoadDashboard } from "../api/user";
 import Loader from "./Loader";
+import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 
 interface Quiz {
   domain: string;
@@ -20,7 +22,10 @@ export default function Dashboard(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-  const [quizData, setQuizData] = useState<QuizData>({ pending: [], completed: [] });
+  const [quizData, setQuizData] = useState<QuizData>({
+    pending: [],
+    completed: [],
+  });
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -55,8 +60,53 @@ export default function Dashboard(): JSX.Element {
     setShowModal(true); // Open confirmation modal
   };
 
+  const secretKey = "your-secret-key"; // Keep this secret & obfuscated
+  const expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
+
+  // Create an HMAC signature
+  const signature = CryptoJS.HmacSHA256(expiryTime, secretKey).toString(
+    CryptoJS.enc.Hex
+  );
+
+  // Store both expiryTime & signature
+  const cookieValue = `${expiryTime}.${signature}`;
+
   const confirmStartQuiz = () => {
     if (selectedQuiz) {
+      const subdomain = selectedQuiz.subDomain?.trim();
+      if (subdomain) {
+        Cookies.set("subdomain", subdomain, {
+          secure: true,
+          sameSite: "Strict",
+        });
+      }
+
+      const dbRequest = indexedDB.open("secureDB", 1);
+
+      dbRequest.onupgradeneeded = function (event) {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains("cookies")) {
+          db.createObjectStore("cookies", { keyPath: "key" }); // Ensure object store exists
+        }
+      };
+
+      dbRequest.onerror = function () {
+        console.error("❌ Failed to open IndexedDB.");
+      };
+
+      dbRequest.onsuccess = function (event) {
+        const db = (event.target as IDBOpenDBRequest).result;
+
+        // Ensure the transaction and store exist
+        const transaction = db.transaction("cookies", "readwrite");
+        const store = transaction.objectStore("cookies");
+
+        // Store signed expiry time in IndexedDB
+        store.put({ key: "ExpiryTime", value: cookieValue });
+
+        console.log("✅ Expiry time saved in IndexedDB.");
+      };
+
       navigate("/quiz", { state: { quiz: selectedQuiz } });
     }
     setShowModal(false);
@@ -86,7 +136,9 @@ export default function Dashboard(): JSX.Element {
                   onClick={() => handleStartQuiz(quiz)}
                 >
                   <h3 className="text-xl">{quiz.domain}</h3>
-                  {quiz.subDomain && <p className="text-xl text-gray-400">{quiz.subDomain}</p>}
+                  {quiz.subDomain && (
+                    <p className="text-xl text-gray-400">{quiz.subDomain}</p>
+                  )}
                 </div>
               ))
             ) : (
@@ -96,7 +148,9 @@ export default function Dashboard(): JSX.Element {
         </div>
 
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl sm:text-4xl mt-8 md:mt-12 mb-4">COMPLETED QUIZZES</h2>
+          <h2 className="text-2xl sm:text-4xl mt-8 md:mt-12 mb-4">
+            COMPLETED QUIZZES
+          </h2>
           <div className="flex gap-4 md:flex-row flex-col">
             {quizData.completed.length > 0 ? (
               quizData.completed.map((quiz, index) => (
@@ -105,7 +159,9 @@ export default function Dashboard(): JSX.Element {
                   className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white hover:border-white transition duration-300"
                 >
                   <h3 className="text-xl">{quiz.domain}</h3>
-                  {quiz.subDomain && <p className="text-xl text-gray-400">{quiz.subDomain}</p>}
+                  {quiz.subDomain && (
+                    <p className="text-xl text-gray-400">{quiz.subDomain}</p>
+                  )}
                 </div>
               ))
             ) : (
@@ -119,13 +175,21 @@ export default function Dashboard(): JSX.Element {
       {permissionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
           <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-            <p className="text-lg tracking-wider font-semibold">This quiz requires camera and microphone access.</p>
+            <p className="text-lg tracking-wider font-semibold">
+              This quiz requires camera and microphone access.
+            </p>
             <p className="mt-2">Please grant permissions to continue.</p>
             <div className="flex justify-center mt-4">
-              <button className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2" onClick={requestPermissions}>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={requestPermissions}
+              >
                 OK
               </button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2" onClick={() => setPermissionModal(false)}>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={() => setPermissionModal(false)}
+              >
                 Cancel
               </button>
             </div>
@@ -137,13 +201,21 @@ export default function Dashboard(): JSX.Element {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
           <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-            <p className="text-lg font-semibold">Are you sure you want to start the quiz?</p>
+            <p className="text-lg font-semibold">
+              Are you sure you want to start the quiz?
+            </p>
             <p className="mt-2">You will have 30 minutes to finish it.</p>
             <div className="flex justify-center mt-4">
-              <button className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2" onClick={confirmStartQuiz}>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={confirmStartQuiz}
+              >
                 Yes
               </button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2" onClick={() => setShowModal(false)}>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={() => setShowModal(false)}
+              >
                 Cancel
               </button>
             </div>

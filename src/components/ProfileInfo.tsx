@@ -23,11 +23,14 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
     try {
       await firebaseSignOut(auth);
       Cookies.remove("authToken");
+      showToastSuccess("Signed out successfully");
+
+      // Redirect to landing page after sign out
+      navigate("/landing");
+      window.location.reload(); // Ensure auth state resets
     } catch (error) {
       console.error("Error during sign out:", error);
     }
-    showToastSuccess("Signed out successfully");
-    navigate("/landing");
   };
 
   return (
