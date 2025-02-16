@@ -35,7 +35,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start p-4 space-y-6 relative">
-      <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-8 px-6 space-y-6 font-retro-gaming">
+      <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-8 px-6 space-y-6 font-retro-gaming">
         <p className="text-xl sm:text-3xl md:text-4xl tracking-widest text-center">
           PROFILE
         </p>

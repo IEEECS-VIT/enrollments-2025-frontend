@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { auth, provider } from "../firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 import Cookies from "js-cookie";
 import { Login } from "../api/user";
 import { showToastSuccess, showToastWarning } from "../Toast";

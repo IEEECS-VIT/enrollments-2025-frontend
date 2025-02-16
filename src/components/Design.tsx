@@ -84,7 +84,7 @@ export default function Design() {
       tabIndex={0}
     >
       <ToastContainer className="custom-toast-container" />
-      <div className="border-2 border-[#0395F1] mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 border-[#0395F1] mt-[15vh] backdrop-blur-[4.5px] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh]">
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
             DESIGN
