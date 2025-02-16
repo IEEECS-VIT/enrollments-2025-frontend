@@ -95,7 +95,7 @@ export default function Management() {
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
     >
-      <div className="border-2 border-[#FF0004] mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 border-[#FF0004] mt-[15vh] rounded-3xl backdrop-blur-[4.5px] w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-24 sm:mt-[6vh]">
           <p className="text-[7vw] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
             MANAGEMENT

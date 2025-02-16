@@ -19,6 +19,8 @@ interface QuizData {
 
 export default function Questions() {
   const location = useLocation();
+  const [nextRoute, setNextRoute] = useState(""); 
+
   const navigate = useNavigate();
   const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domain = location.state?.quiz?.domain;
@@ -189,7 +191,7 @@ export default function Questions() {
 
               {quizData.questions[currentQuestionIndex].image_url && (
                 <button
-                  className=" bg-blue-500 text-white px-2 py-2 rounded"
+                  className=" bg-blue-500 text-white px-2 py-2 rounded "
                   onClick={() => setShowImageModal(true)}
                 >
                   View Image
@@ -198,22 +200,27 @@ export default function Questions() {
             </div>
 
             {showImageModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center">
-                <div className="bg-black p-4 rounded shadow-lg relative ">
-                  <button
-                    className="absolute top-2 right-2 text-lg"
-                    onClick={() => setShowImageModal(false)}
-                  >
-                    &times;
-                  </button>
-                  <img
-                    src={quizData.questions[currentQuestionIndex].image_url}
-                    alt="Question Image"
-                    className="max-w-full max-h-[50vh] rounded-3xl"
-                  />
-                </div>
-              </div>
-            )}
+  <>
+    <div className="fixed inset-0 bg-black opacity-90 z-40 rounded-3xl"></div>
+
+    <div className="fixed inset-0 flex justify-center items-center z-50">
+      <div className="bg-black p-6 rounded-3xl shadow-lg relative border-4 border-yellow-400">
+        <button
+          className="absolute top-2 right-1 text-3xl text-yellow-400 hover:text-white transition"
+          onClick={() => setShowImageModal(false)}
+        >
+          &times;
+        </button>
+        <img
+          src={quizData.questions[currentQuestionIndex].image_url}
+          alt="Question Image"
+          className="max-w-full max-h-[50vh] rounded-2xl"
+        />
+      </div>
+    </div>
+  </>
+)}
+
 
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions[currentQuestionIndex].options ? (
@@ -303,7 +310,9 @@ export default function Questions() {
               <div className="flex justify-center mt-4">
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={() => setShowBackWarning(false)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowBackWarning(false)}}
                 >
                   Cancel
                 </button>

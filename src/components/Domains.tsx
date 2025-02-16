@@ -124,7 +124,7 @@ export default function Domains() {
       tabIndex={0}
     >
       <ToastContainer className="custom-toast-container" />
-      <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 mt-[15vh] rounded-3xl backdrop-blur-[4.5px] w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="flex justify-between w-full ">
           <div className="ml-8 sm:ml-16">
 
