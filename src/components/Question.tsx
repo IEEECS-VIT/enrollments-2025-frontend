@@ -19,7 +19,8 @@ interface QuizData {
 
 export default function Questions() {
   const location = useLocation();
-  const [nextRoute, setNextRoute] = useState(""); 
+    const [showLeaveModal, setShowLeaveModal] = useState(false);
+    const [allowLeave, setAllowLeave] = useState(false);
 
   const navigate = useNavigate();
   const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
@@ -73,7 +74,106 @@ export default function Questions() {
     if (savedAnswers) {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
+
+    // Set up back button handling
+    const handleBackButton = (e: PopStateEvent) => {
+      // Prevent the default back action
+      e.preventDefault();
+      
+      // Show the warning modal
+      setShowBackWarning(true);
+      
+      // Push a new state to prevent immediate navigation
+      window.history.pushState(null, '', window.location.pathname);
+    };
+
+    // Push an initial state so we have something to go back to
+    window.history.pushState(null, '', window.location.pathname);
+    
+    // Add the event listener for popstate (back button)
+    window.addEventListener('popstate', handleBackButton);
+    
+    // Clean up the event listener when component unmounts
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
   }, [subdomain]);
+
+  // Add beforeunload event listener to catch page refreshes and tab closes
+  
+
+  
+  useEffect(() => {
+    // Function to check if fullscreen is active
+    const checkFullscreen = () => {
+      if (!document.fullscreenElement) {
+        setShowModal(true);
+      }
+    };
+  
+    // Check fullscreen on load
+    checkFullscreen();
+  
+    // Event listener to detect fullscreen exit
+    document.addEventListener("fullscreenchange", checkFullscreen);
+  
+    return () => {
+      document.removeEventListener("fullscreenchange", checkFullscreen);
+    };
+  }, []);
+  
+
+  useEffect(() => {
+    const disableRightClick = (e: MouseEvent) => e.preventDefault();
+    document.addEventListener("contextmenu", disableRightClick);
+  
+    return () => {
+      document.removeEventListener("contextmenu", disableRightClick);
+    };
+  }, []);
+
+  useEffect(() => {
+  const blockDevTools = (e: KeyboardEvent) => {
+    if (
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) || // Ctrl+Shift+I/J/C
+      (e.ctrlKey && e.key === "U") || // Ctrl+U (View Source)
+      e.key === "F12" // F12
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  document.addEventListener("keydown", blockDevTools);
+
+  return () => {
+    document.removeEventListener("keydown", blockDevTools);
+  };
+}, []);
+
+  
+
+  const handleReEnterFullscreen = () => {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen().then(() => setShowModal(false));
+    }
+  };
+
+  
+
+  if (showModal) {
+    return (
+      <div className="fixed inset-0 flex flex-col relative z-80 items-center justify-center bg-black bg-opacity-90 text-white text-center p-8">
+        <h2 className="text-3xl font-bold mb-4">Enter Fullscreen to Continue</h2>
+        <button
+          className="bg-[#F8B95A] bg-opacity-50 border-4 border-[#F8B95A]  text-white px-6 py-3 rounded-md text-lg"
+          onClick={handleReEnterFullscreen}
+        >
+          Enter Fullscreen
+        </button>
+      </div>
+    );
+  }
 
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
@@ -198,6 +298,21 @@ export default function Questions() {
                 </button>
               )}
             </div>
+            {showLeaveModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg">
+            <p>Changes made will not be saved. Are you sure you want to leave?</p>
+            <div className="mt-4 flex justify-between">
+              <button onClick={handleStay} className="p-2 bg-gray-500 text-white rounded">
+                Stay on Page
+              </button>
+              <button onClick={handleLeave} className="p-2 bg-red-500 text-white rounded">
+                Leave Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
             {showImageModal && (
   <>
@@ -229,7 +344,7 @@ export default function Questions() {
                   (option, index) => (
                     <div
                       key={index}
-                      className={`p-2 mt-4 sm:mt-0 border rounded-xl cursor-pointer ${
+                      className={`p-2 mt-4 sm:mt-8 h-16 border rounded-xl cursor-pointer ${
                         selectedAnswers[currentQuestionIndex] === option
                           ? "bg-[#f8770f] text-white"
                           : "hover:bg-gray-900"
@@ -247,7 +362,7 @@ export default function Questions() {
               // If no options, show a text input field
               <div className="mt-4">
                 <textarea
-                  className="w-full h-60 mt-8 sm:mt-1 sm:h-32 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
+                  className="w-full h-60 mt-8 sm:mt-1 sm:h-72 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
                   placeholder="Type your answer here"
                   onCopy={handlePreventCopyPaste}
                   onCut={handlePreventCopyPaste}

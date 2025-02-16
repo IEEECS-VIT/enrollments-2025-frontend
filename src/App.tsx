@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Domainselection from "./components/Domainselection";
 import Designdomain from "./components/Designdomain";
 import Technicaldomain from "./components/Technicaldomain";
@@ -15,66 +15,49 @@ import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 
-import { toast } from "react-toastify";
+const AppContent = () => {
+  const location = useLocation(); // Get current route
 
-export const showToastWarning = (message: string) => {
-  toast.warning(message, {
-    autoClose: 3000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    className: "custom-toast",
-  });
-};
+  return (
+    <div className="bg-black relative min-h-screen">
+      <Bg />
+      {/* Hide Navbar if the path is "/quiz" */}
+      {location.pathname !== "/quiz" && <Navbar />}
 
-export const showToastSuccess = (message: string) => {
-  toast.success(message, {
-    autoClose: 3000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    className: "custom-toast",
-  });
+      <div className="relative z-20">
+        <Routes>
+          <Route index element={<Start />} />
+          <Route path="/landing" element={<Landing />} />
+
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <div />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="domain" element={<Domainselection />} />
+            <Route path="design" element={<Designdomain />} />
+            <Route path="technical" element={<Technicaldomain />} />
+            <Route path="management" element={<Managementdomain />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="username" element={<UsernameSection />} />
+            <Route path="quiz" element={<Quiz1 />} />
+            <Route path="faqs" element={<Faq />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="task" element={<Tasks />} />
+          </Route>
+        </Routes>
+      </div>
+    </div>
+  );
 };
 
 const App = () => {
   return (
     <Router>
-      <div className="bg-black relative min-h-screen">
-        <Bg />
-        <Navbar />
-        
-        <div className="relative z-20">
-          <Routes>
-            <Route index element={<Start />} />
-            <Route path="/landing" element={<Landing />} />
-
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <div />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="domain" element={<Domainselection />} />
-              <Route path="design" element={<Designdomain />} />
-              <Route path="technical" element={<Technicaldomain />} />
-              <Route path="management" element={<Managementdomain />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="username" element={<UsernameSection />} />
-              <Route path="quiz" element={<Quiz1 />} />
-              <Route path="faqs" element={<Faq />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="task" element={<Tasks />} />
-            </Route>
-          </Routes>
-        </div>
-      </div>
+      <AppContent />
     </Router>
   );
 };
