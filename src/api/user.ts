@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import { getAuth, signInWithPopup } from "firebase/auth";
+import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
 import { auth, provider } from "../firebaseConfig";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -15,7 +15,7 @@ interface ProfileData {
 interface ResponseData {
   status: number;
 }
-  
+
 interface UsernameResponse {
   status: number;
 }
@@ -35,33 +35,38 @@ interface DashboardData {
 }
 
 export async function getAuthToken(): Promise<string> {
-  const token = Cookies.get("authToken");
-  if (token) {
-    try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
-        const freshToken = await user.getIdToken(true);
-
-        Cookies.set("authToken", freshToken);
-        return freshToken;
+        try {
+          const freshToken = await user.getIdToken(true);
+          Cookies.set("authToken", freshToken, {
+            secure: true,
+            sameSite: "Strict",
+          });
+          resolve(freshToken);
+        } catch (error) {
+          console.error("Error refreshing token:", error);
+          reject("Failed to refresh token");
+        }
       } else {
-        throw new Error("User not authenticated");
+        console.warn("User not authenticated, signing in...");
+        try {
+          const result = await signInWithPopup(auth, provider);
+          const idToken = await result.user.getIdToken();
+          Cookies.set("authToken", idToken, {
+            secure: true,
+            sameSite: "Strict",
+          });
+          resolve(idToken);
+        } catch (error) {
+          console.error("Sign-in error:", error);
+          reject("Sign-in failed");
+        }
       }
-    } catch (error) {
-      console.error("Error refreshing token:", error);
-      throw new Error("Failed to refresh token");
-    }
-  }
-
-  
-  const result = await signInWithPopup(auth, provider);
-  const idToken = await result.user.getIdToken();
-  Cookies.set("authToken", idToken);
-  return idToken;
+    });
+  });
 }
-
 
 const ProtectedRequest = async <T = unknown>(
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
@@ -106,10 +111,10 @@ export async function Login(): Promise<ResponseData> {
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
-  console.log('in api');
+  console.log("in api");
   const response = await ProtectedRequest<ProfileData>("GET", "/user/profile");
   const data = response.data;
-  console.log(data, 'in api');
+  console.log(data, "in api");
   return {
     username: data.username,
     mobile: data.mobile,
@@ -200,7 +205,7 @@ export interface Question {
   question: string;
   options: string[];
   correctAnswer: number;
-  image_url:string;
+  image_url: string;
 }
 
 export interface QuestionData {
