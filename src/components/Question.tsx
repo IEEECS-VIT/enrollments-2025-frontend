@@ -74,6 +74,7 @@ export default function Questions() {
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       } finally {
+        console.log(quizData);
         setTimeout(() => setLoading(false), 2000);
       }
     };
@@ -86,10 +87,32 @@ export default function Questions() {
     }
   }, [subdomain]);
 
-  const handleAnswerChange = (
-    questionIndex: number,
-    answer: string | number
-  ) => {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue =
+        "Your progress will be lost, and the timer will continue!";
+    };
+
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault();
+      setShowBackWarning(true); // Show modal when back/forward buttons are clicked
+      window.history.pushState(null, "", window.location.pathname); // Prevent navigation
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+
+    // Prevent forward/backward navigation
+    window.history.pushState(null, "", window.location.pathname);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
     setSelectedAnswers(updatedAnswers);
     Cookies.set("quizAnswers", JSON.stringify(updatedAnswers), { expires: 7 });
@@ -234,17 +257,17 @@ export default function Questions() {
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions[currentQuestionIndex].options ? (
               <div className="text-xs md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
-                {quizData.questions[currentQuestionIndex].options!.map(
+                {quizData.questions[currentQuestionIndex].options.map(
                   (option, index) => (
                     <div
                       key={index}
                       className={`p-2 mt-4 sm:mt-0 border rounded-xl cursor-pointer ${
-                        selectedAnswers[currentQuestionIndex] === index
+                        selectedAnswers[currentQuestionIndex] === option
                           ? "bg-[#f8770f] text-white"
                           : "hover:bg-gray-900"
                       }`}
                       onClick={() =>
-                        handleAnswerChange(currentQuestionIndex, index)
+                        handleAnswerChange(currentQuestionIndex, option)
                       }
                     >
                       {option}
