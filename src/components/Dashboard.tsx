@@ -46,18 +46,75 @@ export default function Dashboard(): JSX.Element {
     setSelectedQuiz(quiz);
     setPermissionModal(true); // Show permission request modal first
   };
-
+  const [stream, setStream] = useState(null);
   const requestPermissions = async () => {
-    setPermissionModal(false); // Close modal
-
+    setPermissionModal(false);
+  
     try {
-      await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      // First request camera and microphone permissions
+      await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
       console.log("Camera and microphone permissions granted.");
+  
+      const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          displaySurface: "monitor",
+          cursor: "always",
+          logicalSurface: true,
+          systemAudio: "exclude",
+          surfaceSwitching: "exclude",
+          selfBrowserSurface: "exclude",
+          suppressLocalAudioPlayback: true
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+          suppressLocalAudioPlayback: true
+        }
+      });
+  
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      
+      const settings = videoTrack.getSettings();
+      
+      if (settings.displaySurface !== "monitor") {
+        mediaStream.getTracks().forEach(track => {
+          track.stop();
+        });
+        throw new Error("Only entire screen sharing is allowed");
+      }
+  
+      const cleanup = () => {
+        mediaStream.getTracks().forEach(track => {
+          const originalStop = track.stop;
+          track.stop = () => {
+            originalStop.call(track);
+          };
+        });
+        setStream(null);
+        setShowModal(false);
+      };
+  
+      videoTrack.addEventListener('ended', cleanup);
+  
+      setStream(mediaStream);
+      setShowModal(true);
+  
     } catch (error) {
-      console.warn("Camera and microphone permissions denied:", error);
+      console.error("Permission error:", error.message);
+      
+      if (error.name === "NotAllowedError") {
+        console.warn("User denied permission");
+      } else if (error.name === "NotFoundError") {
+        console.warn("No screens found to share");
+      }
+      
+      setStream(null);
+      setShowModal(false);
     }
-
-    setShowModal(true); // Open confirmation modal
   };
 
   const secretKey = "your-secret-key"; // Keep this secret & obfuscated
@@ -186,12 +243,16 @@ export default function Dashboard(): JSX.Element {
               >
                 OK
               </button>
+
               <button
                 className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
                 onClick={() => setPermissionModal(false)}
               >
                 Cancel
               </button>
+
+              {stream && <video autoPlay playsInline ref={(video) => video && (video.srcObject = stream)} />}
+   
             </div>
           </div>
         </div>
