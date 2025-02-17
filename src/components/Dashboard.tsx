@@ -22,6 +22,7 @@ export default function Dashboard(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
