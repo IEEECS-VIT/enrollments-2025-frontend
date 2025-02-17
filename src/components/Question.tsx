@@ -30,7 +30,7 @@ export default function Questions() {
     [key: number]: string | number;
   }>({});
   const [showScore, setShowScore] = useState(false);
-  const [score, setScore] = useState(0);
+  const [, setScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showBackWarning, setShowBackWarning] = useState(false);
@@ -171,9 +171,10 @@ export default function Questions() {
     setShowScore(true);
 
     const questions = quizData.questions.map((q) => q.question);
-    const answers = quizData.questions.map((q, index) =>
-      selectedAnswers[index] !== undefined ? selectedAnswers[index] : ""
-    );
+    const answers = quizData.questions.map((q, i) => {
+      console.log(q);
+      selectedAnswers[i] !== undefined ? selectedAnswers[i] : [];
+    });
 
     try {
       console.log({
@@ -184,7 +185,9 @@ export default function Questions() {
       });
 
       domain = subdomain.toUpperCase();
+
       const result = await SubmitAnswers(round, domain, questions, answers);
+
       showToastSuccess("Quiz submitted successfully");
 
       if (result.status !== 200) {
