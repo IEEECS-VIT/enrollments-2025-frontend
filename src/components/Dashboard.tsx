@@ -22,6 +22,7 @@ export default function Dashboard(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -124,7 +125,7 @@ export default function Dashboard(): JSX.Element {
         </div>
       )}
 
-      <div className="border-2 mt-[5vh] rounded-3xl w-[80%] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
+      <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
         <div className="flex flex-col items-center">
           <h2 className="text-2xl sm:text-4xl mb-4">PENDING QUIZZES</h2>
           <div className="flex gap-4 md:flex-row flex-col">

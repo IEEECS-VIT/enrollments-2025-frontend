@@ -67,7 +67,7 @@ const UsernameForm: React.FC = () => {
         tabIndex={0}
       >
         <ToastContainer className="custom-toast-container" />
-        <div className="border-2 mt-[15vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center  justify-center gap-y-40 sm:gap-y-16 py-8">
+        <div className="border-2 mt-[15vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center  justify-center gap-y-40 sm:gap-y-16 py-8">
           <div className="text-center">
             <p className="sm:text-[6.06vw] tracking-wider mb-4 sm:mb-0 text-[3.5vh] font-bold sm:leading-[5rem]">
               ENTER

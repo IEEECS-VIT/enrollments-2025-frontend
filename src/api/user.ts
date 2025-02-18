@@ -159,9 +159,9 @@ export async function SubmitAnswers(
   round: number,
   domain: string,
   questions: string[],
-  answers: string[]
+  answers: (string | number)[] | void[]
 ) {
-  if (questions.length !== answers.length) {
+  if (questions.length !== answers?.length) {
     throw new Error("question and answer count not same");
   }
 
