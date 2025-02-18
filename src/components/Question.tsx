@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers, LoadQuestions } from "../api/user.ts";
 import Loader from "./Loader";
@@ -10,6 +9,13 @@ import CryptoJS from "crypto-js";
 import { useTimer } from "react-timer-hook";
 import { disableDevTools, disableRightClick } from "../utils/securityUtils.tsx";
 
+import ConfirmationModal from "./Modal.tsx";
+import { fetchExpiryTime } from "../utils/indexedDb.ts";
+import {
+  saveAnswersToLocalStorage,
+  loadAnswersFromLocalStorage,
+  clearAnswersFromLocalStorage,
+} from "../utils/localStorage.ts";
 
 interface QuizData {
   questions: {
@@ -45,23 +51,22 @@ export default function Questions() {
   const [isLeaving, setIsLeaving] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
-
+  const [isTimerExpired, setIsTimerExpired] = useState(false);
   const round = 1;
-  const secretKey = "your-secret-key";
 
-  // const expiryTimeFromCookie = Cookies.get(`${subdomain}ExpiryTime`);
-
+  // Load questions and initialize answers
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        console.log({ subdomain });
         const data = await LoadQuestions({ subdomain });
-        Cookies.remove("quizAnswers");
         setQuizData(data);
+
+        // Load saved answers from localStorage
+        const savedAnswers = loadAnswersFromLocalStorage(subdomain);
+        setSelectedAnswers(savedAnswers);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       } finally {
-        console.log(quizData);
         setTimeout(() => setLoading(false), 2000);
       }
     };
@@ -97,76 +102,77 @@ export default function Questions() {
   }, [subdomain]);
 
   useEffect(() => {
-    const fetchExpiryTime = async () => {
-      const dbRequest = indexedDB.open("secureDB", 1);
-
-      dbRequest.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction("cookies", "readonly");
-        const store = transaction.objectStore("cookies");
-        const getRequest = store.get("ExpiryTime");
-
-        getRequest.onsuccess = () => {
-          if (getRequest.result) {
-            const [expiryTime, signature] = getRequest.result.value.split(".");
-            const computedSignature = CryptoJS.HmacSHA256(
-              expiryTime,
-              secretKey
-            ).toString(CryptoJS.enc.Hex);
-
-            if (computedSignature === signature) {
-              setExpiryTimestamp(new Date(Number(expiryTime))); // ✅ Valid Date
-            } else {
-              console.error(
-                "❌ Signature mismatch. Possible tampering detected."
-              );
-              setExpiryTimestamp(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
-            }
-          } else {
-            setExpiryTimestamp(new Date(Date.now() + 30 * 60 * 1000)); // Default fallback
-          }
-        };
-      };
-
-      dbRequest.onerror = () => {
-        console.error("❌ Failed to access IndexedDB.");
-        setExpiryTimestamp(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
-      };
-    };
-
-    fetchExpiryTime();
+    fetchExpiryTime().then(setExpiryTimestamp);
   }, []);
 
-  const [timeLeft, setTimeLeft] = useState<{
-    minutes: number;
-    seconds: number;
-  }>({ minutes: 0, seconds: 0 });
+  // Unified submit function for both manual and automatic submission
+  const handleSubmit = async (isAutoSubmit = false) => {
+    try {
+      // Fetch fresh quiz data and latest answers
+      const currentQuizData = await LoadQuestions({ subdomain });
+      const savedAnswers = loadAnswersFromLocalStorage(subdomain);
 
+      if (!currentQuizData || !currentQuizData.questions) {
+        throw new Error("Quiz data not loaded properly.");
+      }
+
+      if (Object.keys(savedAnswers).length === 0) {
+        throw new Error("No answers to submit.");
+      }
+
+      const answers = currentQuizData.questions.map(
+        (_, index) => savedAnswers[index]?.toString().trim() || ""
+      );
+
+      const result = await SubmitAnswers(
+        round,
+        domain,
+        currentQuizData.questions.map((q) => q.question),
+        answers
+      );
+
+      if (result.status === 200) {
+        clearAnswersFromLocalStorage(subdomain);
+        setShowScore(true);
+        showToastSuccess(
+          isAutoSubmit
+            ? "Time's up! Quiz submitted automatically"
+            : "Quiz submitted successfully"
+        );
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      showToastWarning(
+        isAutoSubmit
+          ? "Automatic submission failed. Please try manual submission."
+          : "Submission failed. Please try again."
+      );
+    }
+  };
+
+  // Timer display and auto-submit
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   useEffect(() => {
-    if (!expiryTimestamp) return;
+    if (!expiryTimestamp || isTimerExpired) return;
 
-    const updateTimer = () => {
+    const timerInterval = setInterval(() => {
       const now = new Date();
       const timeDiff = Math.max(
         0,
         Math.floor((expiryTimestamp.getTime() - now.getTime()) / 1000)
       );
 
-      setTimeLeft({
-        minutes: Math.floor(timeDiff / 60),
-        seconds: timeDiff % 60,
-      });
-
       if (timeDiff <= 0) {
-        handleSubmit();
-        // showToastSuccess("Time's up! Quiz submitted successfully");
-        return;
+        setIsTimerExpired(true);
+        clearInterval(timerInterval);
+        handleSubmit(true); // Auto-submit with flag
+      } else {
+        setTimeLeft({
+          minutes: Math.floor(timeDiff / 60),
+          seconds: timeDiff % 60,
+        });
       }
-    };
-
-    updateTimer(); // Initial update
-
-    const timerInterval = setInterval(updateTimer, 1000);
+    }, 1000);
 
     return () => clearInterval(timerInterval);
   }, [expiryTimestamp]);
@@ -288,10 +294,11 @@ export default function Questions() {
 
   }
 
+  // Answer handling
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
     setSelectedAnswers(updatedAnswers);
-    Cookies.set("quizAnswers", JSON.stringify(updatedAnswers), { expires: 7 });
+    saveAnswersToLocalStorage(subdomain, updatedAnswers);
   };
 
   const handleSubmit = async () => {
@@ -368,6 +375,10 @@ export default function Questions() {
 
   const attemptedQuestions = Object.keys(selectedAnswers).length;
   const totalQuestions = quizData?.questions.length || 0;
+  // Timer display formatting
+  const formattedTime = `${String(timeLeft.minutes).padStart(2, "0")}:${String(
+    timeLeft.seconds
+  ).padStart(2, "0")}`;
 
   if (loading || loadingSubmit) {
     return (
@@ -403,7 +414,7 @@ export default function Questions() {
             {subdomain.toUpperCase()}
           </h2>
           <div className="border hidden sm:block border-white rounded-xl p-4 ml-auto">
-            {timeLeft.minutes}:{timeLeft.seconds}
+            {formattedTime}
           </div>
           <div className="absolute group mt-4 sm:mt-0 left-4">
             <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
@@ -415,7 +426,7 @@ export default function Questions() {
           </div>
         </div>
         <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
-          {timeLeft.minutes}:{timeLeft.seconds}
+          {formattedTime}
         </div>
         <div className="relative flex flex-col justify-start sm:mt-4 items-center p-2 h-full w-[80vw] max-w-full font-retro-gaming">
           <div id="questionBox" className="p-4 w-100 sm:w-full rounded-xl">
@@ -484,9 +495,6 @@ export default function Questions() {
                 <textarea
                   className="w-full h-60 mt-8 sm:mt-1 sm:h-72 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
                   placeholder="Type your answer here"
-                  onCopy={handlePreventCopyPaste}
-                  onCut={handlePreventCopyPaste}
-                  onPaste={handlePreventCopyPaste}
                   value={selectedAnswers[currentQuestionIndex] || ""}
                   onChange={(e) =>
                     handleAnswerChange(currentQuestionIndex, e.target.value)
@@ -505,69 +513,27 @@ export default function Questions() {
           </div>
         </div>
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
-            <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-              <p className="text-lg font-semibold">
-                Are you sure you want to submit?
-              </p>
-              <p className="mt-2">
-                You have attempted {attemptedQuestions}/{totalQuestions}{" "}
-                questions.
-              </p>
-              <div className="flex justify-center mt-4">
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={() => {
-                    setShowModal(false);
-                    handleSubmit();
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
+          <ConfirmationModal
+            message={`Are you sure you want to submit?${"  "}
+        You have attempted ${
+          Object.values(selectedAnswers).filter((v) => v !== "").length
+        }/${quizData.questions.length} questions.`}
+            onConfirm={() => {
+              setShowModal(false);
+              handleSubmit();
+            }}
+            onCancel={() => setShowModal(false)}
+          />
         )}
-
-{showBackWarning && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
-            <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-              <p className="text-lg font-semibold font-retro-gaming">
-                Are you sure you want to leave? <br /> Your progress will be
-                lost, and the timer will keep running!
-              </p>
-              <div className="flex justify-center mt-4">
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowBackWarning(false);
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={() => {
-                    window.removeEventListener("beforeunload", () => {});
-                    navigate("/dashboard");
-                    if (document.fullscreenElement) {
-                      document.exitFullscreen();
-                    }
-                    
-                  }}
-                >
-                  Leave
-                </button>
-              </div>
-            </div>
-          </div>
+        {showBackWarning && (
+          <ConfirmationModal
+            message="Are you sure you want to leave? Your progress will be lost, and the timer will keep running!"
+            onConfirm={() => {
+              window.removeEventListener("beforeunload", () => {});
+              navigate("/dashboard");
+            }}
+            onCancel={() => setShowBackWarning(false)}
+          />
         )}
       </div>
       {currentQuestionIndex === quizData.questions.length - 1 && (

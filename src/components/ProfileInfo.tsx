@@ -40,7 +40,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
           PROFILE
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-10 w-full">
+        <div className="flex flex-col items-center w-full gap-6 sm:flex-row sm:items-start sm:gap-10">
           <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[9vh] sm:space-y-12">
             <p>
               <span className="font-bold">Username : </span>{" "}
@@ -80,7 +80,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
 
       <button
         onClick={handleSignOut}
-        className="text-white bg-transparent px-4 py-2 rounded-lg tracking-wide text-xs sm:text-lg md:text-xl transition"
+        className="px-4 py-2 text-xs tracking-wide text-white transition bg-transparent rounded-lg sm:text-lg md:text-xl"
       >
         &lt;Sign Out&gt;
       </button>
