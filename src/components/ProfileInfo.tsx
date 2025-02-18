@@ -26,7 +26,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
       showToastSuccess("Signed out successfully");
 
       // Redirect to landing page after sign out
-      navigate("/landing");
+      navigate("/");
       window.location.reload(); // Ensure auth state resets
     } catch (error) {
       console.error("Error during sign out:", error);
@@ -54,7 +54,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
               <span className="font-bold">Mail ID : </span>{" "}
               <span className="break-all">{profileData?.email}</span>
             </p>
-            <p>
+            <div>
               <span className="font-bold">Selected Domains : </span>
               <div className="mt-2 space-y-2">
                 {profileData?.domain &&
@@ -73,7 +73,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                       )
                   )}
               </div>
-            </p>
+            </div>
           </div>
         </div>
       </div>

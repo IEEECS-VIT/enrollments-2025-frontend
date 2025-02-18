@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect } from 'react';
 import Domainselection from "./components/Domainselection";
 import Designdomain from "./components/Designdomain";
 import Technicaldomain from "./components/Technicaldomain";
@@ -14,9 +15,14 @@ import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
+import { disableDevTools, disableRightClick } from './utils/securityUtils';
 
 const AppContent = () => {
-  const location = useLocation(); // Get current route
+  const location = useLocation(); 
+  useEffect(() => {
+    disableDevTools();
+    disableRightClick();
+  }, []);
 
   return (
     <div className="bg-black relative min-h-screen">
@@ -26,8 +32,7 @@ const AppContent = () => {
 
       <div className="relative z-20">
         <Routes>
-          <Route index element={<Start />} />
-          <Route path="/landing" element={<Landing />} />
+          <Route path="/" element={<Landing />} />
 
           <Route
             path="/"

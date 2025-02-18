@@ -6,7 +6,10 @@ import { SubmitAnswers, LoadQuestions } from "../api/user.ts";
 import Loader from "./Loader";
 import { ToastContainer } from "react-toastify";
 import { showToastSuccess, showToastWarning } from "../Toast.ts";
+import CryptoJS from "crypto-js";
 import { useTimer } from "react-timer-hook";
+import { disableDevTools, disableRightClick } from "../utils/securityUtils.tsx";
+
 
 interface QuizData {
   questions: {
@@ -19,12 +22,12 @@ interface QuizData {
 
 export default function Questions() {
   const location = useLocation();
-    const [showLeaveModal, setShowLeaveModal] = useState(false);
-    const [allowLeave, setAllowLeave] = useState(false);
-
   const navigate = useNavigate();
   const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domain = location.state?.quiz?.domain;
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -33,25 +36,20 @@ export default function Questions() {
   }>({});
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
+  const [notSubmitted, setNotSubmitted] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  
+  const [showFullScreenModal, setShowFullScreenModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showBackWarning, setShowBackWarning] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
+
   const round = 1;
+  const secretKey = "your-secret-key";
 
-  const expiryTimeFromCookie = Cookies.get(`${subdomain}ExpiryTime`);
-
-  const expiryTimestamp = expiryTimeFromCookie
-    ? new Date(Number(expiryTimeFromCookie))
-    : new Date(new Date().getTime() + 30 * 60 * 1000);
-
-  const { seconds, minutes } = useTimer({
-    expiryTimestamp,
-    onExpire: () => {
-      alert("Time's up! The quiz will be submitted automatically.");
-      handleSubmit();
-    },
-  });
+  // const expiryTimeFromCookie = Cookies.get(`${subdomain}ExpiryTime`);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -75,95 +73,209 @@ export default function Questions() {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
 
-    // Set up back button handling
     const handleBackButton = (e: PopStateEvent) => {
-      // Prevent the default back action
+      
       e.preventDefault();
       
-      // Show the warning modal
+      
       setShowBackWarning(true);
       
-      // Push a new state to prevent immediate navigation
+      
       window.history.pushState(null, '', window.location.pathname);
     };
 
-    // Push an initial state so we have something to go back to
+    
     window.history.pushState(null, '', window.location.pathname);
     
-    // Add the event listener for popstate (back button)
+    
     window.addEventListener('popstate', handleBackButton);
     
-    // Clean up the event listener when component unmounts
+    
     return () => {
       window.removeEventListener('popstate', handleBackButton);
     };
   }, [subdomain]);
 
-  // Add beforeunload event listener to catch page refreshes and tab closes
-  
-
-  
   useEffect(() => {
-    // Function to check if fullscreen is active
-    const checkFullscreen = () => {
-      if (!document.fullscreenElement) {
-        setShowModal(true);
+    const fetchExpiryTime = async () => {
+      const dbRequest = indexedDB.open("secureDB", 1);
+
+      dbRequest.onsuccess = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        const transaction = db.transaction("cookies", "readonly");
+        const store = transaction.objectStore("cookies");
+        const getRequest = store.get("ExpiryTime");
+
+        getRequest.onsuccess = () => {
+          if (getRequest.result) {
+            const [expiryTime, signature] = getRequest.result.value.split(".");
+            const computedSignature = CryptoJS.HmacSHA256(
+              expiryTime,
+              secretKey
+            ).toString(CryptoJS.enc.Hex);
+
+            if (computedSignature === signature) {
+              setExpiryTimestamp(new Date(Number(expiryTime))); // ✅ Valid Date
+            } else {
+              console.error(
+                "❌ Signature mismatch. Possible tampering detected."
+              );
+              setExpiryTimestamp(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
+            }
+          } else {
+            setExpiryTimestamp(new Date(Date.now() + 30 * 60 * 1000)); // Default fallback
+          }
+        };
+      };
+
+      dbRequest.onerror = () => {
+        console.error("❌ Failed to access IndexedDB.");
+        setExpiryTimestamp(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
+      };
+    };
+
+    fetchExpiryTime();
+  }, []);
+
+  const [timeLeft, setTimeLeft] = useState<{
+    minutes: number;
+    seconds: number;
+  }>({ minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    if (!expiryTimestamp) return;
+
+    const updateTimer = () => {
+      const now = new Date();
+      const timeDiff = Math.max(
+        0,
+        Math.floor((expiryTimestamp.getTime() - now.getTime()) / 1000)
+      );
+
+      setTimeLeft({
+        minutes: Math.floor(timeDiff / 60),
+        seconds: timeDiff % 60,
+      });
+
+      if (timeDiff <= 0) {
+        handleSubmit();
+        // showToastSuccess("Time's up! Quiz submitted successfully");
+        return;
       }
     };
+
+    updateTimer(); // Initial update
+
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, [expiryTimestamp]);
   
-    // Check fullscreen on load
+
+  useEffect(() => {
+    const checkFullscreen = () => {
+      if (!document.fullscreenElement && notSubmitted && !showBackWarning) {
+        if (!showLeaveModal) {
+          setShowFullScreenModal(true);
+        }
+      }
+    };
+
     checkFullscreen();
-  
-    // Event listener to detect fullscreen exit
-    document.addEventListener("fullscreenchange", checkFullscreen);
-  
+
+    if (notSubmitted) {
+      checkFullscreen();
+      document.addEventListener("fullscreenchange", checkFullscreen);
+    }
+
     return () => {
       document.removeEventListener("fullscreenchange", checkFullscreen);
     };
-  }, []);
-  
+  }, [notSubmitted, showBackWarning, showLeaveModal]);
 
   useEffect(() => {
-    const disableRightClick = (e: MouseEvent) => e.preventDefault();
-    document.addEventListener("contextmenu", disableRightClick);
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!confirmed) {
+        event.preventDefault();
+        event.returnValue = '';
+        setShowLeaveModal(true);
+      }
+    };
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
   
     return () => {
-      document.removeEventListener("contextmenu", disableRightClick);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [confirmed]);
+  
+  
+
+
+  useEffect(() => {
+    
+    setHasUnsavedChanges(Object.keys(selectedAnswers).length > 0);
+  }, [selectedAnswers]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges && notSubmitted) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    const handlePopState = (e: PopStateEvent) => {
+      if (hasUnsavedChanges && notSubmitted) {
+        e.preventDefault();
+        window.history.pushState(null, '', window.location.pathname);
+        setShowLeaveModal(true);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    
+    window.history.pushState(null, '', window.location.pathname);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [hasUnsavedChanges, notSubmitted]);
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      
+      event.preventDefault(); 
+      alert("Are you sure you want to leave the quiz?");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
   useEffect(() => {
-  const blockDevTools = (e: KeyboardEvent) => {
-    if (
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) || // Ctrl+Shift+I/J/C
-      (e.ctrlKey && e.key === "U") || // Ctrl+U (View Source)
-      e.key === "F12" // F12
-    ) {
-      e.preventDefault();
-    }
-  };
-
-  document.addEventListener("keydown", blockDevTools);
-
-  return () => {
-    document.removeEventListener("keydown", blockDevTools);
-  };
+  
+    disableDevTools();
+    disableRightClick();
 }, []);
 
-  
+
 
   const handleReEnterFullscreen = () => {
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
-      elem.requestFullscreen().then(() => setShowModal(false));
+      elem.requestFullscreen().then(() => setShowFullScreenModal(false));
     }
   };
 
-  
-
-  if (showModal) {
+  if (showFullScreenModal && notSubmitted && !isLeaving) {
     return (
-      <div className="fixed inset-0 flex flex-col relative z-80 items-center justify-center bg-black bg-opacity-90 text-white text-center p-8">
+      <div className="fixed inset-0 flex flex-col relative z-80  items-center justify-center bg-black bg-opacity-40 text-white text-center p-8">
         <h2 className="text-3xl font-bold mb-4">Enter Fullscreen to Continue</h2>
         <button
           className="bg-[#F8B95A] bg-opacity-50 border-4 border-[#F8B95A]  text-white px-6 py-3 rounded-md text-lg"
@@ -173,6 +285,7 @@ export default function Questions() {
         </button>
       </div>
     );
+
   }
 
   const handleAnswerChange = (questionIndex: number, answer: string) => {
@@ -183,7 +296,7 @@ export default function Questions() {
 
   const handleSubmit = async () => {
     if (!quizData) return;
-
+    setLoadingSubmit(true);
     let score = 0;
     quizData.questions.forEach((question, index) => {
       if (!question.correctAnswer) {
@@ -192,7 +305,7 @@ export default function Questions() {
 
       if (
         (question.options &&
-          selectedAnswers[index] + 1 === question.correctAnswer) ||
+          Number(selectedAnswers[index]) + 1 === question.correctAnswer) ||
         (!question.options &&
           selectedAnswers[index]?.toString().trim().toLowerCase() ===
             question.correctAnswer.toString().trim().toLowerCase())
@@ -202,13 +315,18 @@ export default function Questions() {
     });
 
     setScore(score);
-
     setShowScore(true);
+    setNotSubmitted(false);
+
+  if (document.fullscreenElement) {
+    await document.exitFullscreen();
+  }
 
     const questions = quizData.questions.map((q) => q.question);
-    const answers = quizData.questions.map((q, index) =>
-      selectedAnswers[index] !== undefined ? selectedAnswers[index] : ""
-    );
+    const answers = quizData.questions.map((q, i) => {
+      console.log(q);
+      selectedAnswers[i] !== undefined ? selectedAnswers[i] : [];
+    });
 
     try {
       console.log({
@@ -219,16 +337,26 @@ export default function Questions() {
       });
 
       domain = subdomain.toUpperCase();
+
       const result = await SubmitAnswers(round, domain, questions, answers);
-      showToastSuccess("Quiz submitted successfully");
+      setLoadingSubmit(false);
+      setTimeout(() => {
+        showToastSuccess("Quiz submitted successfully");
+      }, 500);
+      
 
       if (result.status !== 200) {
-        alert("Error submitting answers. Please try again.");
-        showToastWarning("Please try again");
+        setLoadingSubmit(false);
+        setTimeout(() => {
+          showToastWarning("Please try again");
+        }, 500);
       }
     } catch (error) {
       console.error("Error submitting answers:", error);
-      alert("Error submitting answers. Please try again.");
+      setLoadingSubmit(false);
+        setTimeout(() => {
+          showToastWarning("Please try again");
+        }, 500);
     }
   };
 
@@ -241,7 +369,7 @@ export default function Questions() {
   const attemptedQuestions = Object.keys(selectedAnswers).length;
   const totalQuestions = quizData?.questions.length || 0;
 
-  if (loading) {
+  if (loading || loadingSubmit) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
         <Loader />
@@ -275,11 +403,19 @@ export default function Questions() {
             {subdomain.toUpperCase()}
           </h2>
           <div className="border hidden sm:block border-white rounded-xl p-4 ml-auto">
-            {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+            {timeLeft.minutes}:{timeLeft.seconds}
+          </div>
+          <div className="absolute group mt-4 sm:mt-0 left-4">
+            <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
+              ℹ
+            </span>
+            <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Leaving this site will Submit the Quiz
+            </div>
           </div>
         </div>
         <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
-          {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+          {timeLeft.minutes}:{timeLeft.seconds}
         </div>
         <div className="relative flex flex-col justify-start sm:mt-4 items-center p-2 h-full w-[80vw] max-w-full font-retro-gaming">
           <div id="questionBox" className="p-4 w-100 sm:w-full rounded-xl">
@@ -298,44 +434,29 @@ export default function Questions() {
                 </button>
               )}
             </div>
-            {showLeaveModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded-lg">
-            <p>Changes made will not be saved. Are you sure you want to leave?</p>
-            <div className="mt-4 flex justify-between">
-              <button onClick={handleStay} className="p-2 bg-gray-500 text-white rounded">
-                Stay on Page
-              </button>
-              <button onClick={handleLeave} className="p-2 bg-red-500 text-white rounded">
-                Leave Anyway
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+           
 
             {showImageModal && (
-  <>
-    <div className="fixed inset-0 bg-black opacity-90 z-40 rounded-3xl"></div>
+              <>
+                <div className="fixed inset-0 bg-black opacity-90 z-40 rounded-3xl"></div>
 
-    <div className="fixed inset-0 flex justify-center items-center z-50">
-      <div className="bg-black p-6 rounded-3xl shadow-lg relative border-4 border-yellow-400">
-        <button
-          className="absolute top-2 right-1 text-3xl text-yellow-400 hover:text-white transition"
-          onClick={() => setShowImageModal(false)}
-        >
-          &times;
-        </button>
-        <img
-          src={quizData.questions[currentQuestionIndex].image_url}
-          alt="Question Image"
-          className="max-w-full max-h-[50vh] rounded-2xl"
-        />
-      </div>
-    </div>
-  </>
-)}
-
+                <div className="fixed inset-0 flex justify-center items-center z-50">
+                  <div className="bg-black p-6 rounded-3xl shadow-lg relative border-4 border-yellow-400">
+                    <button
+                      className="absolute top-2 right-1 text-3xl text-yellow-400 hover:text-white transition"
+                      onClick={() => setShowImageModal(false)}
+                    >
+                      &times;
+                    </button>
+                    <img
+                      src={quizData.questions[currentQuestionIndex].image_url}
+                      alt="Question Image"
+                      className="max-w-full max-h-[50vh] rounded-2xl"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions[currentQuestionIndex].options ? (
@@ -359,7 +480,6 @@ export default function Questions() {
                 )}
               </div>
             ) : (
-              // If no options, show a text input field
               <div className="mt-4">
                 <textarea
                   className="w-full h-60 mt-8 sm:mt-1 sm:h-72 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
@@ -384,7 +504,6 @@ export default function Questions() {
             />
           </div>
         </div>
-
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
@@ -415,7 +534,8 @@ export default function Questions() {
             </div>
           </div>
         )}
-        {showBackWarning && (
+
+{showBackWarning && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-lg font-semibold font-retro-gaming">
@@ -427,7 +547,8 @@ export default function Questions() {
                   className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setShowBackWarning(false)}}
+                    setShowBackWarning(false);
+                  }}
                 >
                   Cancel
                 </button>
@@ -436,6 +557,10 @@ export default function Questions() {
                   onClick={() => {
                     window.removeEventListener("beforeunload", () => {});
                     navigate("/dashboard");
+                    if (document.fullscreenElement) {
+                      document.exitFullscreen();
+                    }
+                    
                   }}
                 >
                   Leave
