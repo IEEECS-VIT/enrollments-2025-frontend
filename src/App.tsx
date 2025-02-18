@@ -15,6 +15,7 @@ import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
+import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from './utils/securityUtils';
 
 const AppContent = () => {
@@ -23,6 +24,7 @@ const AppContent = () => {
     disableDevTools();
     disableRightClick();
   }, []);
+
 
   return (
     <div className="bg-black relative min-h-screen">
@@ -52,6 +54,7 @@ const AppContent = () => {
             <Route path="faqs" element={<Faq />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="task" element={<Tasks />} />
+            <Route path="quiz-complete" element={<QuizComplete />} />
           </Route>
         </Routes>
       </div>

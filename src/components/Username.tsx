@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { SubmitUsername } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import { showToastSuccess, showToastWarning } from "../Toast";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
 const UsernameForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -13,7 +13,6 @@ const UsernameForm: React.FC = () => {
     event.preventDefault();
     const response = await SubmitUsername(username);
     if (response.status == 200) {
-      
       setTimeout(() => {
         navigate("/domain");
       }, 3000);
@@ -24,7 +23,7 @@ const UsernameForm: React.FC = () => {
     }
     setUsername("");
   };
-  
+
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +74,6 @@ const UsernameForm: React.FC = () => {
             <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold leading-[0.5rem] sm:leading-[5rem]">
               USERNAME
             </p>
-            
           </div>
 
           <div>
@@ -85,15 +83,15 @@ const UsernameForm: React.FC = () => {
               value={username}
               className="bg-black border-white border rounded-lg p-2 text-center h-20 sm:w-72 w-56 text-xl font-retro-gaming"
               onChange={(e) => setUsername(e.target.value)}
+              required
             />
             <p className="text-red-700 text-center mt-2">{message}</p>
           </div>
-          <div>
-              
-            </div>
+          <div></div>
         </div>
 
-        <button onClick={handleSubmit}
+        <button
+          onClick={handleSubmit}
           type="submit"
           tabIndex={0}
           className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[20vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
