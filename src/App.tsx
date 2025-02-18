@@ -16,6 +16,7 @@ import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 
 import { toast } from "react-toastify";
+import QuizComplete from "./components/QuizCompleted";
 
 export const showToastWarning = (message: string) => {
   toast.warning(message, {
@@ -47,7 +48,7 @@ const App = () => {
       <div className="bg-black relative min-h-screen">
         <Bg />
         <Navbar />
-        
+
         <div className="relative z-20">
           <Routes>
             <Route index element={<Start />} />
@@ -71,6 +72,7 @@ const App = () => {
               <Route path="faqs" element={<Faq />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="task" element={<Tasks />} />
+              <Route path="quiz-complete" element={<QuizComplete />} />
             </Route>
           </Routes>
         </div>
