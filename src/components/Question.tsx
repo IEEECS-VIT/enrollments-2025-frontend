@@ -3,15 +3,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers, LoadQuestions } from "../api/user.ts";
 import Loader from "./Loader";
-import { ToastContainer } from "react-toastify";
 import { showToastSuccess, showToastWarning } from "../Toast.ts";
 import ConfirmationModal from "./Modal.tsx";
-import { fetchExpiryTime } from "../utils/indexedDb.ts";
+import Cookies from "js-cookie";
+import {
+  fetchExpiryTime,
+  getQuizData,
+  storeQuizData,
+} from "../utils/indexedDb.ts";
 import {
   saveAnswersToLocalStorage,
   loadAnswersFromLocalStorage,
   clearAnswersFromLocalStorage,
 } from "../utils/localStorage.ts";
+import ImageModal from "./ImageModal.tsx";
 
 interface QuizData {
   questions: {
@@ -25,18 +30,15 @@ interface QuizData {
 export default function Questions() {
   const location = useLocation();
   const navigate = useNavigate();
-  const subdomain =
-    location.state?.quiz?.subDomain || localStorage.getItem("subdomain");
+  const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   const domain = subdomain?.toUpperCase();
   const [quizData, setQuizData] = useState<QuizData>({ questions: [] });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | number;
   }>({});
-  const [showScore, setShowScore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showBackWarning, setShowBackWarning] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
@@ -45,17 +47,40 @@ export default function Questions() {
   // Load questions and initialize answers
   useEffect(() => {
     const fetchQuizData = async () => {
+      setLoading(true);
+
+      // Try to fetch from IndexedDB first
+      const cachedQuizData = await getQuizData(subdomain);
+      if (cachedQuizData) {
+        setQuizData(cachedQuizData);
+
+        // Load answers from localStorage
+        const savedAnswers = loadAnswersFromLocalStorage(subdomain);
+        if (savedAnswers) {
+          setSelectedAnswers(savedAnswers);
+        }
+
+        setLoading(false);
+        return;
+      }
+
       try {
+        // Fetch from backend if not found in IndexedDB
         const data = await LoadQuestions({ subdomain });
         setQuizData(data);
 
-        // Load saved answers from localStorage
+        // Store fetched questions securely
+        await storeQuizData(subdomain, data);
+
+        // Load answers from localStorage
         const savedAnswers = loadAnswersFromLocalStorage(subdomain);
-        setSelectedAnswers(savedAnswers);
+        if (savedAnswers) {
+          setSelectedAnswers(savedAnswers);
+        }
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       } finally {
-        setTimeout(() => setLoading(false), 2000);
+        setLoading(false);
       }
     };
 
@@ -68,8 +93,8 @@ export default function Questions() {
 
   // Unified submit function for both manual and automatic submission
   const handleSubmit = async (isAutoSubmit = false) => {
+    setLoading(true);
     try {
-      // Fetch fresh quiz data and latest answers
       const currentQuizData = await LoadQuestions({ subdomain });
       const savedAnswers = loadAnswersFromLocalStorage(subdomain);
 
@@ -94,12 +119,15 @@ export default function Questions() {
 
       if (result.status === 200) {
         clearAnswersFromLocalStorage(subdomain);
-        setShowScore(true);
         showToastSuccess(
           isAutoSubmit
             ? "Time's up! Quiz submitted automatically"
             : "Quiz submitted successfully"
         );
+
+        setTimeout(() => {
+          navigate("/quiz-complete");
+        }, 100);
       }
     } catch (error) {
       console.error("Submission error:", error);
@@ -108,6 +136,8 @@ export default function Questions() {
           ? "Automatic submission failed. Please try manual submission."
           : "Submission failed. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -162,20 +192,6 @@ export default function Questions() {
     return <div className="text-center text-lg">Loading quiz...</div>;
   }
 
-  if (showScore) {
-    return (
-      <div className="flex flex-col items-center justify-center text-xs sm:text-lg h-full p-4">
-        <p className="w-full text-center tracking-tight whitespace-wrap">
-          Quiz answers submitted successfully.
-        </p>
-        <ToastContainer />
-        <button className="mt-16" onClick={() => navigate("/dashboard")}>
-          &lt; GO TO DASHBOARD &gt;
-        </button>
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
@@ -209,25 +225,10 @@ export default function Questions() {
             </div>
 
             {showImageModal && (
-              <>
-                <div className="fixed inset-0 bg-black opacity-90 z-40 rounded-3xl"></div>
-
-                <div className="fixed inset-0 flex justify-center items-center z-50">
-                  <div className="bg-black p-6 rounded-3xl shadow-lg relative border-4 border-yellow-400">
-                    <button
-                      className="absolute top-2 right-1 text-3xl text-yellow-400 hover:text-white transition"
-                      onClick={() => setShowImageModal(false)}
-                    >
-                      &times;
-                    </button>
-                    <img
-                      src={quizData.questions[currentQuestionIndex].image_url}
-                      alt="Question Image"
-                      className="max-w-full max-h-[50vh] rounded-2xl"
-                    />
-                  </div>
-                </div>
-              </>
+              <ImageModal
+                imageUrl={quizData.questions[currentQuestionIndex].image_url}
+                onClose={() => setShowImageModal(false)}
+              />
             )}
 
             {/* If options exist, show multiple-choice buttons */}
@@ -286,16 +287,6 @@ export default function Questions() {
               handleSubmit();
             }}
             onCancel={() => setShowModal(false)}
-          />
-        )}
-        {showBackWarning && (
-          <ConfirmationModal
-            message="Are you sure you want to leave? Your progress will be lost, and the timer will keep running!"
-            onConfirm={() => {
-              window.removeEventListener("beforeunload", () => {});
-              navigate("/dashboard");
-            }}
-            onCancel={() => setShowBackWarning(false)}
           />
         )}
       </div>

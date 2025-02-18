@@ -1,4 +1,6 @@
 import CryptoJS from "crypto-js";
+import { openDB } from "idb";
+import { encryptData, decryptData } from "./crypto";
 
 const secretKey = "your-secret-key";
 
@@ -39,4 +41,58 @@ export const fetchExpiryTime = (): Promise<Date> => {
       resolve(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
     };
   });
+};
+
+const DB_NAME = "QuizDB";
+const STORE_NAME = "QuizData";
+const EXPIRY_TIME_MS = 60 * 60 * 1000; // 1 hour
+
+// Open IndexedDB
+const getDb = async () => {
+  return openDB(DB_NAME, 1, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    },
+  });
+};
+
+// Store quiz data with timestamp
+export const storeQuizData = async (subdomain: string, data: any) => {
+  const db = await getDb();
+  const encryptedData = encryptData({
+    quiz: data,
+    timestamp: Date.now(), // Store current time
+  });
+  await db.put(STORE_NAME, encryptedData, subdomain);
+
+  // Schedule auto-delete after 1 hour
+  setTimeout(async () => {
+    await deleteQuizData(subdomain);
+  }, EXPIRY_TIME_MS);
+};
+
+// Retrieve quiz data (only if not expired)
+export const getQuizData = async (subdomain: string) => {
+  const db = await getDb();
+  const encryptedData = await db.get(STORE_NAME, subdomain);
+
+  if (!encryptedData) return null; // No data found
+
+  const decryptedData = decryptData(encryptedData);
+
+  // Check if expired
+  if (!decryptedData || Date.now() - decryptedData.timestamp > EXPIRY_TIME_MS) {
+    await deleteQuizData(subdomain);
+    return null;
+  }
+
+  return decryptedData.quiz; // Return quiz questions
+};
+
+// Delete quiz data manually
+export const deleteQuizData = async (subdomain: string) => {
+  const db = await getDb();
+  await db.delete(STORE_NAME, subdomain);
 };
