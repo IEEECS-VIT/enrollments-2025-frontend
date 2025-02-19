@@ -4,7 +4,7 @@ import { encryptData, decryptData } from "./crypto";
 
 const secretKey = "your-secret-key";
 
-export const fetchExpiryTime = (): Promise<Date> => {
+export const fetchExpiryTime = (subdomain: string): Promise<Date> => {
   return new Promise((resolve) => {
     const dbRequest = indexedDB.open("secureDB", 1);
 
@@ -12,7 +12,7 @@ export const fetchExpiryTime = (): Promise<Date> => {
       const db = (event.target as IDBOpenDBRequest).result;
       const transaction = db.transaction("cookies", "readonly");
       const store = transaction.objectStore("cookies");
-      const getRequest = store.get("ExpiryTime");
+      const getRequest = store.get(`${subdomain}Expiry`);
 
       getRequest.onsuccess = () => {
         if (getRequest.result) {
