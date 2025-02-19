@@ -78,6 +78,7 @@ export default function Dashboard(): JSX.Element {
   const secretKey = "your-secret-key";
 
   const confirmStartQuiz = () => {
+    
     if (selectedQuiz) {
       const subdomain = selectedQuiz.subDomain?.trim();
       if (subdomain) {
@@ -126,7 +127,16 @@ export default function Dashboard(): JSX.Element {
             console.log("⏳ Using existing expiry time from IndexedDB.");
           }
 
-          navigate("/quiz", { state: { quiz: selectedQuiz } });
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().then(() => {
+              navigate("/quiz", { state: { quiz: selectedQuiz } });
+            }).catch((err) => {
+              console.error("❌ Fullscreen request failed:", err);
+              navigate("/quiz", { state: { quiz: selectedQuiz } }); // Navigate even if fullscreen fails
+            });
+          } else {
+            navigate("/quiz", { state: { quiz: selectedQuiz } }); // Fallback if fullscreen isn't supported
+          }
         };
       };
     }

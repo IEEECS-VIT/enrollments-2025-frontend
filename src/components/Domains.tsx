@@ -108,7 +108,7 @@ export default function Domains() {
       if (response.status === 200) {
         setTimeout(() => {
           navigate("/profile");
-        }, 1500);
+        }, 1000);
         showToastSuccess("Domains selected successfully");
       }
     }
