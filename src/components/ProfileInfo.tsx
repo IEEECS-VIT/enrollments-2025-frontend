@@ -26,7 +26,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
       showToastSuccess("Signed out successfully");
 
       // Redirect to landing page after sign out
-      navigate("/landing");
+      navigate("/");
       window.location.reload(); // Ensure auth state resets
     } catch (error) {
       console.error("Error during sign out:", error);

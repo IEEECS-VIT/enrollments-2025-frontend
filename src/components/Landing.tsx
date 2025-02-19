@@ -56,7 +56,7 @@ const Landing: React.FC = () => {
       if (response.status === 200) {
         setTimeout(() => {
           navigate("/domain");
-        }, 3000);
+        }, 1500);
         showToastSuccess("Successfully signed In");
       } else if (response.status === 201) {
         navigate("/username");
