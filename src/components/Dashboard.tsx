@@ -78,7 +78,6 @@ export default function Dashboard(): JSX.Element {
   const secretKey = "your-secret-key";
 
   const confirmStartQuiz = () => {
-    
     if (selectedQuiz) {
       const subdomain = selectedQuiz.subDomain?.trim();
       if (subdomain) {
@@ -112,7 +111,7 @@ export default function Dashboard(): JSX.Element {
         getRequest.onsuccess = function () {
           let expiryTime = getRequest.result?.value;
           if (!expiryTime) {
-            expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
+            expiryTime = String(new Date().getTime() + 1 * 40 * 1000);
             const signature = CryptoJS.HmacSHA256(
               expiryTime,
               secretKey
@@ -128,12 +127,15 @@ export default function Dashboard(): JSX.Element {
           }
 
           if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen().then(() => {
-              navigate("/quiz", { state: { quiz: selectedQuiz } });
-            }).catch((err) => {
-              console.error("❌ Fullscreen request failed:", err);
-              navigate("/quiz", { state: { quiz: selectedQuiz } }); // Navigate even if fullscreen fails
-            });
+            document.documentElement
+              .requestFullscreen()
+              .then(() => {
+                navigate("/quiz", { state: { quiz: selectedQuiz } });
+              })
+              .catch((err) => {
+                console.error("❌ Fullscreen request failed:", err);
+                navigate("/quiz", { state: { quiz: selectedQuiz } }); // Navigate even if fullscreen fails
+              });
           } else {
             navigate("/quiz", { state: { quiz: selectedQuiz } }); // Fallback if fullscreen isn't supported
           }
