@@ -133,44 +133,6 @@ export default function Questions() {
     return cleanupBeforeUnload;
   }, [confirmed, hasUnsavedChanges, notSubmitted]);
 
-  // useEffect(() => {
-  //   const startScreenSharing = async () => {
-  //     try {
-  //       const stream = await navigator.mediaDevices.getDisplayMedia({
-  //         video: true,
-  //         audio: false,
-  //       });
-  //       setScreenStream(stream);
-  //       stream.getVideoTracks()[0].onended = () => startScreenSharing();
-  //     } catch (error) {
-  //       console.error("Error starting screen sharing:", error);
-  //     }
-  //   };
-
-  //   startScreenSharing();
-
-  //   return () => {
-  //     screenStream?.getTracks().forEach((track) => track.stop());
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   navigator.mediaDevices
-  //     .getUserMedia({ video: true, audio: true })
-  //     .then((stream) => {
-  //       // If permission granted, stop all tracks immediately
-  //       stream.getTracks().forEach((track) => track.stop());
-  //     })
-  //     .catch((error) => {
-  //       if (
-  //         error.name === "NotAllowedError" ||
-  //         error.name === "PermissionDeniedError"
-  //       ) {
-  //         setShowPermissionModal(true);
-  //       }
-  //     });
-  // }, []);
-
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -202,7 +164,7 @@ export default function Questions() {
         throw new Error("Quiz data not loaded properly.");
       }
 
-      if (Object.keys(savedAnswers).length === 0) {
+      if (Object.keys(savedAnswers).length === 0 && !isAutoSubmit) {
         throw new Error("No answers to submit.");
       }
 
