@@ -111,7 +111,7 @@ export default function Dashboard(): JSX.Element {
         getRequest.onsuccess = function () {
           let expiryTime = getRequest.result?.value;
           if (!expiryTime) {
-            expiryTime = String(new Date().getTime() + 1 * 20 * 1000);
+            expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
             const signature = CryptoJS.HmacSHA256(
               expiryTime,
               secretKey

@@ -26,8 +26,8 @@ import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 const AppContent = () => {
   const location = useLocation();
   useEffect(() => {
-    // disableDevTools();
-    // disableRightClick();
+    disableDevTools();
+    disableRightClick();
   }, []);
 
   return (

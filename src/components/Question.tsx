@@ -118,8 +118,8 @@ export default function Questions() {
 
   useEffect(() => {
     fetchExpiryTime(subdomain).then(setExpiryTimestamp);
-    // disableDevTools();
-    // disableRightClick();
+    disableDevTools();
+    disableRightClick();
   }, []);
 
   useEffect(() => {
