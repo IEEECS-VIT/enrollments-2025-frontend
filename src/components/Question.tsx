@@ -43,15 +43,14 @@ export default function Questions() {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [isReloading, setIsReloading] = useState(false);
-
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [ShowScreenSharingModal, setShowScreenSharingModal] = useState(false);
   const [quizData, setQuizData] = useState<QuizData>({ questions: [] });
-
+  const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | number;
   }>({});
-  const [showScore, setShowScore] = useState(false);
   const [notSubmitted, setNotSubmitted] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showFullScreenModal, setShowFullScreenModal] = useState(false);
@@ -61,6 +60,8 @@ export default function Questions() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
+  const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
+
   const [confirmed, setConfirmed] = useState(false);
 
   const round = 1;
@@ -112,7 +113,7 @@ export default function Questions() {
     }
 
     const cleanupBackButtonWarning =
-      handleBackButtonWarning(setShowBackWarning);
+      handleBackButtonWarning(setShowBackWarning,setShowFullScreenModal);
     return cleanupBackButtonWarning;
   }, [subdomain]);
 
@@ -132,6 +133,65 @@ export default function Questions() {
     return cleanupBeforeUnload;
   }, [confirmed, hasUnsavedChanges, notSubmitted]);
 
+
+  useEffect(() => {
+    const startScreenSharing = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { cursor: "always" },
+          audio: false,
+        });
+        setScreenStream(stream);
+        stream.getVideoTracks()[0].onended = () => startScreenSharing();
+      } catch (error) {
+        console.error("Error starting screen sharing:", error);
+      }
+    };
+
+    startScreenSharing();
+
+    return () => {
+      screenStream?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        // If permission granted, stop all tracks immediately
+        stream.getTracks().forEach(track => track.stop());
+      })
+      .catch((error) => {
+        if (
+          error.name === "NotAllowedError" ||
+          error.name === "PermissionDeniedError"
+        ) {
+          setShowPermissionModal(true);
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setShowTabSwitchModal(true);
+      }
+    };
+
+    const handleBlur = () => {
+      setShowTabSwitchModal(true);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, []);
+  
   const handleSubmit = async (isAutoSubmit = false) => {
     setLoadingSubmit(true);
 
@@ -285,7 +345,7 @@ export default function Questions() {
               ℹ
             </span>
             <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Leaving this site will Submit the Quiz
+            Timer will continue if you leave the site .
             </div>
           </div>
         </div>
@@ -356,6 +416,71 @@ export default function Questions() {
             />
           </div>
         </div>
+
+
+
+        {showPermissionModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
+    <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
+      <p className="text-lg font-semibold font-retro-gaming">
+        Access to your microphone and camera is required to continue.
+        <br />
+        Please enable permissions in settings.
+      </p>
+      <div className="flex justify-center mt-4">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+          onClick={() => window.location.reload()}
+        >
+          Grant Permissions
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{showTabSwitchModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
+          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
+            <p className="text-md tracking-wide font-semibold font-retro-gaming">
+            Tab Switching is Not Allowed
+              <br />
+              Tab Switch Counts will be monitored during evaluation
+            </p>
+            <div className="flex justify-center mt-4">
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={() => setShowTabSwitchModal(false)}
+              >
+                Okay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+{showFullScreenModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
+          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
+            <p className="text-md tracking-wide font-semibold font-retro-gaming">
+            Screen Sharing is Mandatory
+              <br />
+              Please allow screen sharing to continue the quiz.
+            </p>
+            <div className="flex justify-center mt-4">
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                onClick={() => window.location.reload()}
+              >
+                Reload Page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
         {showModal && (
           <ConfirmationModal
             message={`Are you sure you want to submit?${"  "}
@@ -382,7 +507,9 @@ export default function Questions() {
                   className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
                   onClick={(e) => {
                     e.stopPropagation();
+                    
                     setShowBackWarning(false);
+
                     window.location.reload();
                   }}
                 >

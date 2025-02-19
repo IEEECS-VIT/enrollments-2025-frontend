@@ -1,9 +1,11 @@
 export const handleBackButtonWarning = (
-  setShowBackWarning: (value: boolean) => void
+  setShowBackWarning: (value: boolean ) => void,
+  setShowFullScreenModal: (value: boolean) => void
 ) => {
   const handleBackButton = (e: PopStateEvent) => {
     e.preventDefault();
     setShowBackWarning(true);
+    setShowFullScreenModal(false);
     window.history.pushState(null, "", window.location.pathname);
   };
 
@@ -56,3 +58,4 @@ export const addBeforeUnloadListener = (
     window.removeEventListener("beforeunload", listener);
   };
 };
+
