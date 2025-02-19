@@ -1,5 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { useEffect } from "react";
 import Domainselection from "./components/Domainselection";
 import Designdomain from "./components/Designdomain";
 import Technicaldomain from "./components/Technicaldomain";
@@ -7,7 +12,7 @@ import Managementdomain from "./components/Managementdomain";
 import Bg from "./components/bg";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
-import Start from "./components/Start";
+// import Start from "./components/Start";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Quiz1 from "./components/Quiz1";
@@ -16,15 +21,14 @@ import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 import QuizComplete from "./components/QuizCompleted";
-import { disableDevTools, disableRightClick } from './utils/securityUtils';
+import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 
 const AppContent = () => {
-  const location = useLocation(); 
+  const location = useLocation();
   useEffect(() => {
-    disableDevTools();
-    disableRightClick();
+    // disableDevTools();
+    // disableRightClick();
   }, []);
-
 
   return (
     <div className="bg-black relative min-h-screen">

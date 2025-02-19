@@ -4,20 +4,27 @@ import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
 import { SubmitAnswers, LoadQuestions } from "../api/user.ts";
 import Loader from "./Loader";
-import { ToastContainer } from "react-toastify";
 import ConfirmationModal from "./Modal.tsx";
 import { showToastSuccess, showToastWarning } from "../Toast.ts";
 import { disableDevTools, disableRightClick } from "../utils/SecurityUtils.tsx";
 import {
   fetchExpiryTime,
   getQuizData,
-  storeQuizData
+  storeQuizData,
 } from "../utils/indexedDb.ts";
 import {
   saveAnswersToLocalStorage,
   loadAnswersFromLocalStorage,
   clearAnswersFromLocalStorage,
 } from "../utils/localStorage.ts";
+import {
+  handleBackButtonWarning,
+  addBeforeUnloadListener,
+} from "../utils/navigation.ts";
+import {
+  addFullscreenListener,
+  handleReEnterFullscreen,
+} from "../utils/fullscreen.ts";
 
 interface QuizData {
   questions: {
@@ -104,52 +111,26 @@ export default function Questions() {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
 
-    const handleBackButton = (e: PopStateEvent) => {
-      
-      e.preventDefault();
-      
-      
-      setShowBackWarning(true);
-      
-      
-      window.history.pushState(null, '', window.location.pathname);
-    };
-
-    
-    window.history.pushState(null, '', window.location.pathname);
-    
-    
-    window.addEventListener('popstate', handleBackButton);
-    
-    
-    return () => {
-      window.removeEventListener('popstate', handleBackButton);
-    };
+    const cleanupBackButtonWarning =
+      handleBackButtonWarning(setShowBackWarning);
+    return cleanupBackButtonWarning;
   }, [subdomain]);
-  
+
   useEffect(() => {
-    fetchExpiryTime().then(setExpiryTimestamp);
+    fetchExpiryTime(subdomain).then(setExpiryTimestamp);
+    // disableDevTools();
+    // disableRightClick();
   }, []);
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
-        return; // Skip confirmation if the page is reloaded
-      }
-  
-      if (!confirmed && hasUnsavedChanges && notSubmitted) {
-        event.preventDefault();
-        event.returnValue = "Are you sure you want to leave the quiz?";
-      }
-    };
-  
-    window.addEventListener("beforeunload", handleBeforeUnload);
-  
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    const cleanupBeforeUnload = addBeforeUnloadListener(
+      confirmed,
+      hasUnsavedChanges,
+      notSubmitted
+    );
+
+    return cleanupBeforeUnload;
   }, [confirmed, hasUnsavedChanges, notSubmitted]);
-  
 
   const handleSubmit = async (isAutoSubmit = false) => {
     setLoadingSubmit(true);
@@ -234,63 +215,35 @@ export default function Questions() {
   const formattedTime = `${String(timeLeft.minutes).padStart(2, "0")}:${String(
     timeLeft.seconds
   ).padStart(2, "0")}`;
-  
+
   useEffect(() => {
-    const checkFullscreen = () => {
-      if (!document.fullscreenElement && notSubmitted && !showBackWarning) {
-        if (!showLeaveModal) {
-          setShowFullScreenModal(true);
-        }
-      }
-    };
+    const cleanupFullscreenListener = addFullscreenListener(
+      notSubmitted,
+      showBackWarning,
+      showLeaveModal,
+      setShowFullScreenModal
+    );
 
-    
-    checkFullscreen();
-    
-
-    if (notSubmitted) {
-      checkFullscreen();
-      document.addEventListener("fullscreenchange", checkFullscreen);
-    }
-
-    return () => {
-      document.removeEventListener("fullscreenchange", checkFullscreen);
-    };
+    return cleanupFullscreenListener;
   }, [notSubmitted, showBackWarning, showLeaveModal]);
 
-  useEffect(() => {
-    
-    setHasUnsavedChanges(Object.keys(selectedAnswers).length > 0);
-  }, [selectedAnswers]);
-
-  useEffect(() => {
-  
-    disableDevTools();
-    disableRightClick();
-}, []);
-
-
-
-  const handleReEnterFullscreen = () => {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen().then(() => setShowFullScreenModal(false));
-    }
-  };
+  const reEnterFullscreen = () =>
+    handleReEnterFullscreen(setShowFullScreenModal);
 
   if (showFullScreenModal && notSubmitted && !isLeaving) {
     return (
       <div className="fixed inset-0 flex flex-col relative z-80  items-center justify-center bg-black bg-opacity-40 text-white text-center p-8">
-        <h2 className="text-3xl font-bold mb-4">Enter Fullscreen to Continue</h2>
+        <h2 className="text-3xl font-bold mb-4">
+          Enter Fullscreen to Continue
+        </h2>
         <button
           className="bg-[#F8B95A] bg-opacity-50 border-4 border-[#F8B95A]  text-white px-6 py-3 rounded-md text-lg"
-          onClick={handleReEnterFullscreen}
+          onClick={reEnterFullscreen}
         >
           Enter Fullscreen
         </button>
       </div>
     );
-
   }
 
   const handleAnswerChange = (questionIndex: number, answer: string) => {
@@ -299,16 +252,11 @@ export default function Questions() {
     saveAnswersToLocalStorage(subdomain, updatedAnswers);
   };
 
-  
-
   const handlePreventCopyPaste = (
     e: React.ClipboardEvent<HTMLTextAreaElement>
   ) => {
     e.preventDefault();
   };
-
-  const attemptedQuestions = Object.keys(selectedAnswers).length;
-  const totalQuestions = quizData?.questions.length || 0;
 
   if (loading || loadingSubmit) {
     return (
@@ -322,20 +270,6 @@ export default function Questions() {
     return <div className="text-center text-lg">Loading quiz...</div>;
   }
 
-  if (showScore) {
-    return (
-      <div className="flex flex-col items-center justify-center text-xs sm:text-lg h-full p-4">
-        <p className="w-full text-center tracking-tight whitespace-wrap">
-          Quiz answers submitted successfully.
-        </p>
-        <ToastContainer />
-        <button className="mt-16" onClick={() => navigate("/dashboard")}>
-          &lt; GO TO DASHBOARD &gt;
-        </button>
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
@@ -344,30 +278,30 @@ export default function Questions() {
             {subdomain.toUpperCase()}
           </h2>
           <div className="border hidden sm:block border-white rounded-xl p-4 ml-auto">
-          {formattedTime}
-
+            {formattedTime}
           </div>
           <div className="absolute group mt-4 sm:mt-0 left-4">
             <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
               ℹ
             </span>
             <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Leaving this site will Submit the Quiz
+              Leaving this site will Submit the Quiz
             </div>
           </div>
         </div>
         <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
-        {formattedTime}
+          {formattedTime}
         </div>
         <div className="relative flex flex-col justify-start sm:mt-4 items-center p-2 h-full w-[80vw] max-w-full font-retro-gaming">
           <div id="questionBox" className="p-4 w-100 sm:w-full rounded-xl">
-          <div id="question" className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-between">
-
+            <div
+              id="question"
+              className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-between"
+            >
               {quizData.questions[currentQuestionIndex].question}
 
               {quizData.questions[currentQuestionIndex].image_url && (
                 <button
-
                   className=" bg-blue-500 text-white px-2 py-2 rounded "
                   onClick={() => setShowImageModal(true)}
                 >
@@ -375,30 +309,6 @@ export default function Questions() {
                 </button>
               )}
             </div>
-           
-
-            {/* {showImageModal && (
-  <>
-    <div className="fixed inset-0 bg-black opacity-90 z-40 rounded-3xl"></div>
-
-    <div className="fixed inset-0 flex justify-center items-center z-50">
-      <div className="bg-black p-6 rounded-3xl shadow-lg relative border-4 border-yellow-400">
-        <button
-          className="absolute top-2 right-1 text-3xl text-yellow-400 hover:text-white transition"
-          onClick={() => setShowImageModal(false)}
-        >
-          &times;
-        </button>
-        <img
-          src={quizData.questions[currentQuestionIndex].image_url}
-          alt="Question Image"
-          className="max-w-full max-h-[50vh] rounded-2xl"
-        />
-      </div>
-    </div>
-  </>
-)} */}
-
 
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions[currentQuestionIndex].options ? (
@@ -424,7 +334,7 @@ export default function Questions() {
             ) : (
               <div className="mt-4">
                 <textarea
-                  className="w-full h-60 mt-8 sm:mt-1 sm:h-72 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
+                  className="w-full h-60 mt-8 sm:mt-1 sm:h-56 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
                   placeholder="Type your answer here"
                   onCopy={handlePreventCopyPaste}
                   onCut={handlePreventCopyPaste}
@@ -455,14 +365,12 @@ export default function Questions() {
             onConfirm={() => {
               setShowModal(false);
               handleSubmit();
-              
             }}
             onCancel={() => setShowModal(false)}
           />
-
         )}
 
-{showBackWarning && (
+        {showBackWarning && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-lg font-semibold font-retro-gaming">
@@ -475,8 +383,8 @@ export default function Questions() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowBackWarning(false);
-                  window.location.reload()}}
-                    
+                    window.location.reload();
+                  }}
                 >
                   Cancel
                 </button>
@@ -488,7 +396,6 @@ export default function Questions() {
                     if (document.fullscreenElement) {
                       document.exitFullscreen();
                     }
-                    
                   }}
                 >
                   Leave

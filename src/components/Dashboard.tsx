@@ -21,7 +21,7 @@ export default function Dashboard(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
-  const [deviceWarningModal, setDeviceWarningModal] = useState(false  );
+  const [deviceWarningModal, setDeviceWarningModal] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
@@ -29,7 +29,6 @@ export default function Dashboard(): JSX.Element {
   });
 
   useEffect(() => {
-   
     const fetchQuizData = async () => {
       try {
         const response = await LoadDashboard(1);
@@ -45,45 +44,38 @@ export default function Dashboard(): JSX.Element {
   }, []);
 
   const handleStartQuiz = (quiz: Quiz) => {
-    const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 1024;
-    
+    const isMobileDevice =
+      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      window.innerWidth < 1024;
+
     if (isMobileDevice) {
       setDeviceWarningModal(true);
       return; // Prevent quiz start on mobile
-    }
-    else{
-    setSelectedQuiz(quiz);
-    setPermissionModal(true);
+    } else {
+      setSelectedQuiz(quiz);
+      setPermissionModal(true);
     } // Show permission request modal first
   };
 
   const requestPermissions = async () => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    
-    if (stream) {
-      console.log("Permissions granted");
-      setPermissionModal(false); // Hide modal if permissions are granted
-      setShowModal(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      if (stream) {
+        console.log("Permissions granted");
+        setPermissionModal(false); // Hide modal if permissions are granted
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error("Permission denied:", error);
+      alert("Camera and microphone access is required to continue.");
     }
-  } catch (error) {
-    console.error("Permission denied:", error);
-    alert("Camera and microphone access is required to continue.");
-  }
-  
-};
+  };
 
-
-  const secretKey = "your-secret-key"; // Keep this secret & obfuscated
-  const expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
-
-  // Create an HMAC signature
-  const signature = CryptoJS.HmacSHA256(expiryTime, secretKey).toString(
-    CryptoJS.enc.Hex
-  );
-
-  // Store both expiryTime & signature
-  const cookieValue = `${expiryTime}.${signature}`;
+  const secretKey = "your-secret-key";
 
   const confirmStartQuiz = () => {
     if (selectedQuiz) {
@@ -100,7 +92,7 @@ export default function Dashboard(): JSX.Element {
       dbRequest.onupgradeneeded = function (event) {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains("cookies")) {
-          db.createObjectStore("cookies", { keyPath: "key" }); // Ensure object store exists
+          db.createObjectStore("cookies", { keyPath: "key" });
         }
       };
 
@@ -110,22 +102,36 @@ export default function Dashboard(): JSX.Element {
 
       dbRequest.onsuccess = function (event) {
         const db = (event.target as IDBOpenDBRequest).result;
-
-        // Ensure the transaction and store exist
         const transaction = db.transaction("cookies", "readwrite");
         const store = transaction.objectStore("cookies");
 
-        // Store signed expiry time in IndexedDB
-        store.put({ key: "ExpiryTime", value: cookieValue });
+        // Check if expiry time already exists for the quiz domain
+        const getRequest = store.get(`${selectedQuiz.subDomain}Expiry`);
 
-        console.log("✅ Expiry time saved in IndexedDB.");
+        getRequest.onsuccess = function () {
+          let expiryTime = getRequest.result?.value;
+          if (!expiryTime) {
+            expiryTime = String(new Date().getTime() + 1 * 20 * 1000);
+            const signature = CryptoJS.HmacSHA256(
+              expiryTime,
+              secretKey
+            ).toString(CryptoJS.enc.Hex);
+            const cookieValue = `${expiryTime}.${signature}`;
+            store.put({
+              key: `${selectedQuiz.subDomain}Expiry`,
+              value: cookieValue,
+            });
+            console.log("✅ New expiry time saved in IndexedDB.");
+          } else {
+            console.log("⏳ Using existing expiry time from IndexedDB.");
+          }
+
+          navigate("/quiz", { state: { quiz: selectedQuiz } });
+        };
       };
-
-      navigate("/quiz", { state: { quiz: selectedQuiz } });
     }
     setShowModal(false);
   };
-
   return (
     <div className="relative min-h-screen flex items-center justify-center">
       <div className="absolute w-full pointer-events-none">
@@ -137,16 +143,16 @@ export default function Dashboard(): JSX.Element {
           <Loader />
         </div>
       )}
-      
+
       <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
-      <div className="absolute group mt-4 sm:mt-0 mb-96 left-[65vw]">
-            <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
-              ℹ
-            </span>
-            <div className="absolute left-12 tracking-widest bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-md px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute group mt-4 sm:mt-0 mb-96 left-[65vw]">
+          <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
+            ℹ
+          </span>
+          <div className="absolute left-12 tracking-widest bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-md px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             You can attempt Quiz in Laptop Only .
-            </div>
           </div>
+        </div>
         <div className="flex flex-col items-center">
           <h2 className="text-2xl sm:text-4xl mb-8  ">PENDING QUIZZES</h2>
           <div className="flex gap-4 md:flex-row flex-col">
@@ -155,7 +161,7 @@ export default function Dashboard(): JSX.Element {
                 <div
                   key={index}
                   className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white hover:border-orange-500 transition duration-300 cursor-pointer"
-                  onClick={() =>!deviceWarningModal && handleStartQuiz(quiz)}
+                  onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
                 >
                   <h3 className="text-xl">{quiz.domain}</h3>
                   {quiz.subDomain && (
@@ -194,22 +200,21 @@ export default function Dashboard(): JSX.Element {
       </div>
 
       {deviceWarningModal && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
-    <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-red-500 w-80">
-      <p className="text-lg tracking-wider font-semibold text-red-500">
-        ⚠️ Quiz can only be taken on a laptop or desktop.
-      </p>
-      <p className="mt-2">Please switch to a laptop to continue.</p>
-      <button
-        className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg"
-        onClick={() => setDeviceWarningModal(false)}
-      >
-        OK
-      </button>
-    </div>
-  </div>
-)}
-
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
+          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-red-500 w-80">
+            <p className="text-lg tracking-wider font-semibold text-red-500">
+              ⚠️ Quiz can only be taken on a laptop or desktop.
+            </p>
+            <p className="mt-2">Please switch to a laptop to continue.</p>
+            <button
+              className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg"
+              onClick={() => setDeviceWarningModal(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Camera & Microphone Permission Modal */}
       {permissionModal && (
