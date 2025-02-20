@@ -35,13 +35,13 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start p-4 space-y-6 relative">
-      <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-8 px-6 space-y-6 font-retro-gaming">
-        <p className="text-xl sm:text-3xl md:text-4xl tracking-widest text-center">
+      <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-12 sm:py-8 px-6 space-y-6 font-retro-gaming">
+        <p className="text-2xl sm:text-3xl md:text-4xl tracking-widest text-center">
           PROFILE
         </p>
 
-        <div className="flex flex-col items-center w-full gap-6 sm:flex-row sm:items-start sm:gap-10">
-          <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[9vh] sm:space-y-12">
+        <div className="flex py-8 sm:py-0 flex-col items-center w-full sm:flex-row sm:items-start sm:gap-10">
+          <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[5vh] sm:space-y-12">
             <p>
               <span className="font-bold">Username : </span>{" "}
               {profileData?.username}

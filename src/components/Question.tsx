@@ -41,6 +41,7 @@ export default function Questions() {
   const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domain = subdomain?.toUpperCase();
   const [showLeaveModal] = useState(false);
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [hasUnsavedChanges] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [showPermissionModal] = useState(false);
@@ -134,24 +135,41 @@ export default function Questions() {
   }, [confirmed, hasUnsavedChanges, notSubmitted]);
 
   useEffect(() => {
+    // Load tab switch count from localStorage on component mount
+    const savedTabSwitchCount = localStorage.getItem("tabSwitchCount");
+    if (savedTabSwitchCount) {
+      setTabSwitchCount(parseInt(savedTabSwitchCount, 10));
+    }
+  
     const handleVisibilityChange = () => {
       if (document.hidden) {
+        setTabSwitchCount((prevCount) => {
+          const newCount = prevCount + 1;
+          localStorage.setItem("tabSwitchCount", newCount.toString()); // Store updated value
+          return newCount;
+        });
         setShowTabSwitchModal(true);
       }
     };
-
+  
     const handleBlur = () => {
+      setTabSwitchCount((prevCount) => {
+        const newCount = prevCount + 1;
+        localStorage.setItem("tabSwitchCount", newCount.toString()); // Store updated value
+        return newCount;
+      });
       setShowTabSwitchModal(true);
     };
-
+  
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("blur", handleBlur);
-
+  
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("blur", handleBlur);
     };
   }, []);
+  
 
   const handleSubmit = async (isAutoSubmit = false) => {
     setLoadingSubmit(true);
@@ -333,15 +351,15 @@ export default function Questions() {
 
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions[currentQuestionIndex].options ? (
-              <div className="text-xs md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
+              <div className="text-xs text-center items-center justify-center md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
                 {quizData.questions[currentQuestionIndex].options.map(
                   (option, index) => (
                     <div
                       key={index}
-                      className={`p-2 mt-4 sm:mt-8 h-16 border rounded-xl cursor-pointer ${
+                      className={`p-2 mt-8 h-16 text-center border text-lg rounded-xl cursor-pointer flex items-center justify-center  ${
                         selectedAnswers[currentQuestionIndex] === option
                           ? "bg-[#f8770f] text-white"
-                          : "hover:bg-gray-900"
+                          : "hover:bg-gray-900" 
                       }`}
                       onClick={() =>
                         handleAnswerChange(currentQuestionIndex, option)
@@ -401,10 +419,10 @@ export default function Questions() {
         {showTabSwitchModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-              <p className="text-md tracking-wide font-semibold font-retro-gaming">
-                Tab Switching is Not Allowed
+              <p className="text-md tracking-widest font-normal font-retro-gaming">
+              You have switched tabs {tabSwitchCount} {tabSwitchCount === 1 ? "time" : "times"}!
                 <br />
-                Tab Switch Counts will be monitored during evaluation
+                Please stay on this tab to avoid potential disqualification.
               </p>
               <div className="flex justify-center mt-4">
                 <button
@@ -453,10 +471,10 @@ export default function Questions() {
         )}
 
         {showBackWarning && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
+          <div className="fixed inset-0 bg-black bg-opacity-100 border-4 rounded-2xl  backdrop-blur-[25px] flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-lg font-semibold font-retro-gaming">
-                Are you sure you want to leave? <br /> Your progress will be
+                Are you sure you want to leave? <br /> Your progress    will be
                 lost, and the timer will keep running!
               </p>
               <div className="flex justify-center mt-4">
@@ -485,7 +503,7 @@ export default function Questions() {
                   Leave
                 </button>
               </div>
-            </div>
+            </div>  
           </div>
         )}
       </div>

@@ -111,9 +111,9 @@ export default function Dashboard(): JSX.Element {
         getRequest.onsuccess = function () {
           let expiryTime = getRequest.result?.value;
           if (!expiryTime) {
-            expiryTime = String(new Date().getTime() + 1 * 40 * 1000);
+            expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
             const signature = CryptoJS.HmacSHA256(
-              expiryTime,
+                expiryTime,
               secretKey
             ).toString(CryptoJS.enc.Hex);
             const cookieValue = `${expiryTime}.${signature}`;
@@ -157,7 +157,7 @@ export default function Dashboard(): JSX.Element {
       )}
 
       <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
-        <div className="absolute group mt-4 sm:mt-0 mb-96 left-[65vw]">
+        <div className="absolute group sm:mt-0 mb-[62vh] sm:mb-96 left-[65vw]">
           <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
             ℹ
           </span>
