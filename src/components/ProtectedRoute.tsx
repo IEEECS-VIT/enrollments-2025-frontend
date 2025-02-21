@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import React, { useEffect, useState } from "react";
+import { useNavigate, Outlet } from "react-router-dom";
+import Cookies from "js-cookie";
+import { showToastWarning } from "../Toast";
 
 interface ProtectedRouteProps {
   children?: React.ReactNode;
@@ -11,11 +12,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get("authToken");
     if (token) {
-      setIsAuthenticated(true); 
+      setIsAuthenticated(true);
     } else {
-      navigate('/landing'); 
+      setTimeout(() => {
+        showToastWarning("You are not logged in.");
+      }, 100);
+
+      navigate("/");
     }
   }, [navigate]);
 

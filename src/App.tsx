@@ -12,7 +12,6 @@ import Managementdomain from "./components/Managementdomain";
 import Bg from "./components/bg";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
-// import Start from "./components/Start";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Quiz1 from "./components/Quiz1";
@@ -22,12 +21,24 @@ import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
+import { initGA, logPageView } from "./analytics";
+import NotFound from "./components/NotFound";
+
+const PageTracker: React.FC = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    logPageView();
+  }, [location]);
+
+  return null;
+};
 
 const AppContent = () => {
   const location = useLocation();
   useEffect(() => {
-    disableDevTools();
-    disableRightClick();
+    // disableDevTools();
+    // disableRightClick();
   }, []);
 
   return (
@@ -60,15 +71,23 @@ const AppContent = () => {
             <Route path="task" element={<Tasks />} />
             <Route path="quiz-complete" element={<QuizComplete />} />
           </Route>
+
+          {/* Catch-all route for non-existent pages */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
   );
 };
 
-const App = () => {
+const App: React.FC = () => {
+  useEffect(() => {
+    initGA(); // Initialize Google Analytics once when app loads
+  }, []);
+
   return (
     <Router>
+      <PageTracker /> {/* Tracks page views */}
       <AppContent />
     </Router>
   );
