@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useRef } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 import { showToastWarning } from "../Toast";
 
-interface ProtectedRouteProps {
-  children?: React.ReactNode;
-}
-
-const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
+const ProtectedRoute: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const hasCheckedAuth = useRef(false); // Prevents double execution
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (hasCheckedAuth.current) return;
+    hasCheckedAuth.current = true;
+
     const token = Cookies.get("authToken");
+
     if (token) {
       setIsAuthenticated(true);
     } else {
       setTimeout(() => {
         showToastWarning("You are not logged in.");
       }, 100);
-
       navigate("/");
     }
   }, [navigate]);
@@ -32,11 +32,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
     );
   }
 
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

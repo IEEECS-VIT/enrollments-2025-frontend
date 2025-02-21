@@ -208,8 +208,11 @@ export default function Questions() {
       if (result.status === 200) {
         setLoadingSubmit(false);
         clearAnswersFromLocalStorage(subdomain);
+
+        localStorage.setItem("tabSwitchCount", "0"); 
+        setTabSwitchCount(0); 
         setTimeout(() => {
-          navigate("/quiz-complete"); // Redirect after success
+          navigate("/quiz-complete");
         }, 100);
         setTimeout(() => {
           showToastSuccess(
@@ -325,7 +328,7 @@ export default function Questions() {
             {formattedTime}
           </div>
           <div className="absolute group mt-4 sm:mt-0 left-4">
-            <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
+            <span className="text-white pb-2 text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
               ℹ
             </span>
             <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
