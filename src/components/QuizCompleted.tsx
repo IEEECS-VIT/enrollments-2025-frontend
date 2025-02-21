@@ -19,7 +19,7 @@ export default function QuizComplete() {
         </p>
         <ToastContainer />
         <button
-          className="mt-10 px-6 py-3 bg-[#f8770f] text-white text-lg rounded-lg shadow-lg hover:bg-orange-600 transition-all"
+          className="mt-10 px-6 py-3 bg-[#F8B95A] bg-opacity-50 border-2 border-[#F8B95A] text-white text-lg rounded-lg shadow-lg transition-all"
           onClick={() => navigate("/dashboard")}
         >
           &lt; GO TO DASHBOARD &gt;
