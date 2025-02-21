@@ -51,14 +51,7 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<Landing />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <div />
-              </ProtectedRoute>
-            }
-          >
+          <Route element={<ProtectedRoute />}>
             <Route path="domain" element={<Domainselection />} />
             <Route path="design" element={<Designdomain />} />
             <Route path="technical" element={<Technicaldomain />} />

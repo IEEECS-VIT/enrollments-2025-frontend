@@ -25,6 +25,7 @@ import {
   addFullscreenListener,
   handleReEnterFullscreen,
 } from "../utils/fullscreen.ts";
+import ImageModal from "./ImageModal.tsx";
 
 interface QuizData {
   questions: {
@@ -56,7 +57,7 @@ export default function Questions() {
   const [loading, setLoading] = useState(true);
   const [showBackWarning, setShowBackWarning] = useState(false);
   const [isLeaving] = useState(false);
-  const [, setShowImageModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
   const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
@@ -93,7 +94,7 @@ export default function Questions() {
         // ).length;
         // Cookies.set("count", count.toString(), { expires: 1 / 24 });
         // setCount(count);
-        // setQuizData(data);
+        setQuizData(data);
 
         // Store fetched questions securely
         await storeQuizData(subdomain, data);
@@ -209,8 +210,8 @@ export default function Questions() {
         setLoadingSubmit(false);
         clearAnswersFromLocalStorage(subdomain);
 
-        localStorage.setItem("tabSwitchCount", "0"); 
-        setTabSwitchCount(0); 
+        localStorage.setItem("tabSwitchCount", "0");
+        setTabSwitchCount(0);
         setTimeout(() => {
           navigate("/quiz-complete");
         }, 100);
@@ -340,10 +341,13 @@ export default function Questions() {
           {formattedTime}
         </div>
         <div className="relative flex flex-col justify-start sm:mt-4 items-center p-2 h-full w-[80vw] max-w-full font-retro-gaming">
-          <div id="questionBox" className="p-4 w-100 sm:w-full rounded-xl">
+          <div
+            id="questionBox"
+            className="p-4 w-100 sm:w-full rounded-xl h-full justify-center flex flex-col"
+          >
             <div
               id="question"
-              className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-between"
+              className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-between max-h-40 min-h-32 overflow-auto"
             >
               {quizData.questions[currentQuestionIndex].question}
 
@@ -355,6 +359,12 @@ export default function Questions() {
                   View Image
                 </button>
               )}
+              {showImageModal && (
+                <ImageModal
+                  imageUrl={quizData.questions[currentQuestionIndex].image_url}
+                  onClose={() => setShowImageModal(false)}
+                />
+              )}
             </div>
 
             {/* If options exist, show multiple-choice buttons */}
@@ -364,7 +374,7 @@ export default function Questions() {
                   (option, index) => (
                     <div
                       key={index}
-                      className={`p-2 mt-8 h-16 text-center border text-lg rounded-xl cursor-pointer flex items-center justify-center  ${
+                      className={`p-2  max-h-fit min-h-20 text-center border text-lg rounded-xl cursor-pointer flex items-center justify-center  ${
                         selectedAnswers[currentQuestionIndex] === option
                           ? "bg-[#f8770f] text-white"
                           : "hover:bg-gray-900"
@@ -393,14 +403,6 @@ export default function Questions() {
                 />
               </div>
             )}
-          </div>
-
-          <div className="absolute bottom-0 mb-2">
-            <QuestionNumber
-              totalQuestions={quizData.questions.length}
-              currentQuestionIndex={currentQuestionIndex}
-              onQuestionChange={setCurrentQuestionIndex}
-            />
           </div>
         </div>
 
@@ -516,9 +518,16 @@ export default function Questions() {
           </div>
         )}
       </div>
+      <div className="font-retro-gaming">
+        <QuestionNumber
+          totalQuestions={quizData.questions.length}
+          currentQuestionIndex={currentQuestionIndex}
+          onQuestionChange={setCurrentQuestionIndex}
+        />
+      </div>
       {currentQuestionIndex === quizData.questions.length - 1 && (
         <button
-          className="absolute md:bottom-8 bottom-4 text-white font-retro-gaming text-lg md:text-xl"
+          className="absolute md:bottom-4 bottom-4 text-white font-retro-gaming text-lg md:text-xl"
           onClick={() => setShowModal(true)}
         >
           &lt; Submit &gt;
