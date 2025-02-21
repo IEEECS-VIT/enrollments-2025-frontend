@@ -9,32 +9,42 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 lg:justify-around justify-between items-center flex">
+      <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 justify-between items-center flex">
         <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block" />
-        <button           
-          onClick={() => navigate("/")}
-          className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
-        >
-          HOME
-        </button>
-        <button
-          onClick={() => navigate("/faqs")}
-          className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
-        >
-          FAQS
-        </button>
-        {/* <button
+        <div className="flex gap-x-12 pr-24">
+          <button
+            onClick={() => navigate("/")}
+            className="text-white text-2xl hover:text-[#F87D10] hover:underline hidden lg:block"
+          >
+            HOME
+          </button>
+
+          {/* <button
           onClick={() => navigate("/profile")}
           className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
         >
           PROFILE
         </button> */}
-        <button
-          onClick={() => navigate("/domain")}
-          className="text-white text-3xl hover:text-[#F87D10] hover:underline hidden lg:block"
-        >
-          DOMAINS
-        </button> 
+          <button
+            onClick={() => navigate("/domain")}
+            className="text-white text-2xl hover:text-[#F87D10] hover:underline hidden lg:block"
+          >
+            DOMAINS
+          </button>
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="text-white text-2xl hover:text-[#F87D10] hover:underline hidden lg:block"
+          >
+            DASHBOARD
+          </button>
+          <button
+            onClick={() => navigate("/faqs")}
+            className="text-white text-2xl hover:text-[#F87D10] hover:underline hidden lg:block"
+          >
+            FAQS
+          </button>
+        </div>
+
         <button
           className="lg:hidden z-50 transition-all duration-500 ease-in-out"
           onClick={toggleMenu}
@@ -57,14 +67,29 @@ export default function Navbar() {
         >
           <nav className="p-8 pt-32">
             <ul className="space-y-6 text-2xl text-white font-press-start">
-              <li onClick={() => navigate("/")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
+              <li
+                onClick={() => navigate("/")}
+                className="hover:text-[#F87D10] hover:underline cursor-pointer"
+              >
                 HOME
               </li>
-              <li onClick={() => navigate("/faqs")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
+              <li
+                onClick={() => navigate("/faqs")}
+                className="hover:text-[#F87D10] hover:underline cursor-pointer"
+              >
                 FAQS
               </li>
-              <li onClick={() => navigate("/domain")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
+              <li
+                onClick={() => navigate("/domain")}
+                className="hover:text-[#F87D10] hover:underline cursor-pointer"
+              >
                 DOMAINS
+              </li>
+              <li
+                onClick={() => navigate("/dashboard")}
+                className="hover:text-[#F87D10] hover:underline cursor-pointer"
+              >
+                DASHBOARD
               </li>
             </ul>
           </nav>
@@ -73,13 +98,10 @@ export default function Navbar() {
           src="logo2.svg"
           className="h-[5vh] mr-6 relative left-[7vw] lg:hidden"
         />
-        <button onClick={() => navigate("/profile")} className="ring-2 ring-[#F8B95A] rounded-md shadow-red-glow flex flex-wrap text-white lg:text-xl text-xs px-2 gap-x-4 mr-3 sm:mr-0 lg:h-14 lg:w-20 h-[6vh] w-[6vh] border border-solid border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 items-center justify-center relative left-[7vw] lg:left-[0vw]">
-        <img  className="h-8 w-8 sm:h-12 sm:w-12" src="profile.png"></img>
-
-
-          
+        <button onClick={() => navigate("/profile")} className="">
+          <img className="h-8 w-8 sm:h-12 sm:w-12" src="profile.png"></img>
         </button>
-      </div>  
+      </div>
     </>
   );
 }
