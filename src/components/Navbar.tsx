@@ -71,7 +71,7 @@ export default function Navbar() {
         </div>
         <img
           src="logo2.svg"
-          className="h-[5vh] relative left-[7vw] lg:hidden"
+          className="h-[5vh] mr-6 relative left-[7vw] lg:hidden"
         />
         <button onClick={() => navigate("/profile")} className="ring-2 ring-[#F8B95A] rounded-md shadow-red-glow flex flex-wrap text-white lg:text-xl text-xs px-2 gap-x-4 mr-3 sm:mr-0 lg:h-14 lg:w-20 h-[6vh] w-[6vh] border border-solid border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 items-center justify-center relative left-[7vw] lg:left-[0vw]">
         <img  className="h-8 w-8 sm:h-12 sm:w-12" src="profile.png"></img>

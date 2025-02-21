@@ -22,12 +22,12 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
   const handleSignOut = async () => {
     try {
       await firebaseSignOut(auth);
-      Cookies.remove("authToken");
-      showToastSuccess("Signed out successfully");
-
-      // Redirect to landing page after sign out
       navigate("/");
-      window.location.reload(); // Ensure auth state resets
+      setTimeout(()=>{
+        showToastSuccess("Signed out successfully .");
+      },200)
+      Cookies.remove("authToken");
+        
     } catch (error) {
       console.error("Error during sign out:", error);
     }
@@ -35,11 +35,11 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start p-4 space-y-6 relative">
+
       <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-12 sm:py-8 px-6 space-y-6 font-retro-gaming">
         <p className="text-2xl sm:text-3xl md:text-4xl tracking-widest text-center">
           PROFILE
         </p>
-
         <div className="flex py-8 sm:py-0 flex-col items-center w-full sm:flex-row sm:items-start sm:gap-10">
           <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[5vh] sm:space-y-12">
             <p>
@@ -57,21 +57,31 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
             <div>
               <span className="font-bold">Selected Domains : </span>
               <div className="mt-2 space-y-2">
-                {profileData?.domain &&
-                  Object.entries(profileData.domain).map(
-                    ([key, domainList]) =>
-                      domainList.length > 0 && (
-                        <div key={key} className="text-sm sm:text-2xl">
-                          <strong>{key} : </strong>
-                          {domainList.map((domain, i) => (
-                            <span key={i}>
-                              {domain}
-                              {i < domainList.length - 1 && ", "}
-                            </span>
-                          ))}
-                        </div>
-                      )
-                  )}
+              {profileData?.domain &&
+  Object.entries(profileData.domain).map(([key, domainList]) =>
+    domainList.length > 0 && (
+      <div key={key} className="text-sm sm:text-2xl">
+        <strong>{key} : </strong>
+        {domainList.map((domain, i) => {
+          // Keep "AI/ML" and "UI/UX" fully uppercase
+          const formattedDomain =
+            domain === "AI/ML" || domain === "UI/UX"
+              ? domain
+              : domain
+                  .toLowerCase()
+                  .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of other domains
+
+          return (
+            <span key={i}>
+              {formattedDomain}
+              {i < domainList.length - 1 && ", "}
+            </span>
+          );
+        })}
+      </div>
+    )
+  )}
+
               </div>
             </div>
           </div>
