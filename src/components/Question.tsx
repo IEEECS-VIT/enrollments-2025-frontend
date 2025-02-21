@@ -60,6 +60,7 @@ export default function Questions() {
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
   const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
+  // const [count, setCount] = useState(0);
 
   const [confirmed] = useState(false);
 
@@ -87,7 +88,12 @@ export default function Questions() {
       try {
         // Fetch from backend if not found in IndexedDB
         const data = await LoadQuestions({ subdomain });
-        setQuizData(data);
+        // const count = data.questions.filter(
+        //   (question) => !question.options
+        // ).length;
+        // Cookies.set("count", count.toString(), { expires: 1 / 24 });
+        // setCount(count);
+        // setQuizData(data);
 
         // Store fetched questions securely
         await storeQuizData(subdomain, data);
@@ -140,7 +146,7 @@ export default function Questions() {
     if (savedTabSwitchCount) {
       setTabSwitchCount(parseInt(savedTabSwitchCount, 10));
     }
-  
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setTabSwitchCount((prevCount) => {
@@ -151,7 +157,7 @@ export default function Questions() {
         setShowTabSwitchModal(true);
       }
     };
-  
+
     const handleBlur = () => {
       setTabSwitchCount((prevCount) => {
         const newCount = prevCount + 1;
@@ -160,16 +166,15 @@ export default function Questions() {
       });
       setShowTabSwitchModal(true);
     };
-  
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("blur", handleBlur);
-  
+
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("blur", handleBlur);
     };
   }, []);
-  
 
   const handleSubmit = async (isAutoSubmit = false) => {
     setLoadingSubmit(true);
@@ -359,7 +364,7 @@ export default function Questions() {
                       className={`p-2 mt-8 h-16 text-center border text-lg rounded-xl cursor-pointer flex items-center justify-center  ${
                         selectedAnswers[currentQuestionIndex] === option
                           ? "bg-[#f8770f] text-white"
-                          : "hover:bg-gray-900" 
+                          : "hover:bg-gray-900"
                       }`}
                       onClick={() =>
                         handleAnswerChange(currentQuestionIndex, option)
@@ -420,7 +425,8 @@ export default function Questions() {
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-md tracking-widest font-normal font-retro-gaming">
-              You have switched tabs {tabSwitchCount} {tabSwitchCount === 1 ? "time" : "times"}!
+                You have switched tabs {tabSwitchCount}{" "}
+                {tabSwitchCount === 1 ? "time" : "times"}!
                 <br />
                 Please stay on this tab to avoid potential disqualification.
               </p>
@@ -474,7 +480,7 @@ export default function Questions() {
           <div className="fixed inset-0 bg-black bg-opacity-100 border-4 rounded-2xl  backdrop-blur-[25px] flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-lg font-semibold font-retro-gaming">
-                Are you sure you want to leave? <br /> Your progress    will be
+                Are you sure you want to leave? <br /> Your progress will be
                 lost, and the timer will keep running!
               </p>
               <div className="flex justify-center mt-4">
@@ -503,7 +509,7 @@ export default function Questions() {
                   Leave
                 </button>
               </div>
-            </div>  
+            </div>
           </div>
         )}
       </div>
