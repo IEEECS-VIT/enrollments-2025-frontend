@@ -73,7 +73,7 @@ const Landing: React.FC = () => {
 
   return (
     <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-10 relative z-10">
-      <h1 className="text-[#e8b974] mt-4 md:mt-16 xl:text-7xl lg:text-6xl text-shadow-glow hidden lg:block">
+      <h1 className="text-[#e8b974] mt-4 md:mt-16 xl:text-8xl lg:text-6xl text-shadow-glow hidden lg:block">
         IEEE-CS
       </h1>
       <ToastContainer className="custom-toast-container" />
@@ -134,12 +134,12 @@ const Landing: React.FC = () => {
           <h2 className="text-white text-sm sm:text-xl mt-[7.5vh] lg:text-2xl relative z-20">
             Welcome, {user.name}
           </h2>
-          <button
+          {/* <button
             onClick={() => navigate("/dashboard")}
             className="text-white  tracking-wide text-sm sm:text-xl"
           >
             &lt; GO TO DASHBOARD &gt;
-          </button>
+          </button> */}
         </>
       ) : (
         <>

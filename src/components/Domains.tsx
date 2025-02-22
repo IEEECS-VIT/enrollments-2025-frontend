@@ -88,22 +88,28 @@ export default function Domains() {
   };
 
   const handleSubmit = async () => {
-    const managementData = JSON.parse(localStorage.getItem("management") || "[]");
+    const managementData = JSON.parse(
+      localStorage.getItem("management") || "[]"
+    );
     const technicalData = JSON.parse(localStorage.getItem("technical") || "[]");
     const designData = JSON.parse(localStorage.getItem("design") || "[]");
-  
-    if (managementData.length === 0 && technicalData.length === 0 && designData.length === 0) {
+
+    if (
+      managementData.length === 0 &&
+      technicalData.length === 0 &&
+      designData.length === 0
+    ) {
       showToastWarning("Choose at least one domain!");
-      return; 
+      return;
     } else {
       const allSelectedData = {
         ...(managementData.length > 0 && { Management: managementData }),
         ...(technicalData.length > 0 && { Technical: technicalData }),
         ...(designData.length > 0 && { Design: designData }),
       };
-  
+
       console.log(allSelectedData);
-      
+
       const response = await SubmitDomains(allSelectedData);
       if (response.status === 200) {
         setTimeout(() => {
@@ -114,7 +120,6 @@ export default function Domains() {
     }
     localStorage.clear();
   };
-  
 
   return (
     <div
@@ -126,28 +131,26 @@ export default function Domains() {
       <ToastContainer className="custom-toast-container" />
       <div className="border-2 mt-[15vh] rounded-3xl backdrop-blur-[4.5px] w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[60vh] h-[70vh] flex flex-col items-center">
         <div className="flex justify-between w-full ">
-          <div className="ml-8 sm:ml-16">
+          <div className="ml-8 sm:ml-16"></div>
+          <div className="text-center mt-[6vh] sm:mt-[6vh]">
+            <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">
+              CHOOSE YOUR
+            </p>
 
+            <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold leading-[0.5rem] sm:leading-[5rem]">
+              ELEMENT
+            </p>
           </div>
-        <div className="text-center mt-[6vh] sm:mt-[6vh]">
-          <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold sm:leading-[5rem]">
-            CHOOSE YOUR
-          </p>
-          
-          <p className="sm:text-[6.06vw] tracking-wider text-[3.5vh] font-bold leading-[0.5rem] sm:leading-[5rem]">
-            ELEMENT
-          </p>
-        </div>
-        <div className="relative group mt-4 sm:mt-8 right-4">
-            <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
-              ℹ️
+          <div className="relative group mt-4 sm:mt-8 right-4">
+            <span className="p-1 text-2xl pt-2 cursor-pointer ml-4 border-[0.15rem]  bg-[#FFFFFF] text-black rounded-full w-8 h-8 flex items-center justify-center">
+              ℹ
             </span>
             <div className="absolute left-12 tracking-widest bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-md px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Only Final Submission will be considered .
+              Only Final Submission will be considered .
             </div>
           </div>
         </div>
-        <div  
+        <div
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
           tabIndex={0}
         >
