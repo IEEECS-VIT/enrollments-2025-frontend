@@ -142,8 +142,8 @@ export default function Domains() {
             </p>
           </div>
           <div className="relative group mt-4 sm:mt-8 right-4">
-            <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#FFFFFF] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#FFFFFF] rounded-full w-8 h-8 flex items-center justify-center">
-              ℹ️
+            <span className="p-1 text-2xl pt-2 cursor-pointer ml-4 border-[0.15rem]  bg-[#FFFFFF] text-black rounded-full w-8 h-8 flex items-center justify-center">
+              ℹ
             </span>
             <div className="absolute left-12 tracking-widest bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-md px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Only Final Submission will be considered .
