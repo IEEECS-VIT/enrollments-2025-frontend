@@ -62,27 +62,41 @@ export default function Domains() {
     setHoveredIndex((current) => (current !== null ? current : 0));
 
   const handleClick = (index: number) => {
+    const domainKeys = ["management", "technical", "design"];
+    const selectedDomain = domainKeys[index];
+
     const managementData = JSON.parse(
       localStorage.getItem("management") || "[]"
     );
     const technicalData = JSON.parse(localStorage.getItem("technical") || "[]");
     const designData = JSON.parse(localStorage.getItem("design") || "[]");
 
-    const nonEmptyCount =
-      (managementData.length > 0 ? 1 : 0) +
-      (technicalData.length > 0 ? 1 : 0) +
-      (designData.length > 0 ? 1 : 0);
+    const selectedDomains = [
+      managementData.length > 0 ? "management" : null,
+      technicalData.length > 0 ? "technical" : null,
+      designData.length > 0 ? "design" : null,
+    ].filter(Boolean); // Get only selected ones
 
-    if (
-      nonEmptyCount >= 2 &&
-      ![managementData, technicalData, designData][index].length
-    ) {
-      showToastWarning("You can select 2 Domains only");
+    const paths = ["/management", "/technical", "/design"];
+
+    // ✅ Allow navigation if domain is already selected
+    if (selectedDomains.includes(selectedDomain)) {
+      setCurrentIndex(index);
+      navigate(paths[index]);
+      localStorage.setItem("lastVisited", paths[index]);
       return;
     }
 
+    // ❌ Restrict new selections if already 2 are chosen and the third is NOT "technical"
+    if (selectedDomains.length >= 2 && selectedDomain !== "technical") {
+      showToastWarning(
+        "You can select only 2 domains unless the third is Technical."
+      );
+      return;
+    }
+
+    // ✅ Otherwise, allow selection
     setCurrentIndex(index);
-    const paths = ["/management", "/technical", "/design"];
     navigate(paths[index]);
     localStorage.setItem("lastVisited", paths[index]);
   };
@@ -150,8 +164,12 @@ export default function Domains() {
             </div>
           </div>
         </div>
+        <div className="text-yellow-400 text-lg">
+          *CC (Competitive Coding) can be chosen as an additional subdomain
+          under tech.
+        </div>
         <div
-          className="flex flex-col sm:flex-row justify-center items-center w-full mt-[6vh]"
+          className="flex flex-col sm:flex-row justify-center items-center w-full mt-[4vh]"
           tabIndex={0}
         >
           {["MANAGEMENT", "TECHNICAL", "DESIGN"].map((label, index) => (

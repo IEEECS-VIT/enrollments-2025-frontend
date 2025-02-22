@@ -83,21 +83,21 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                                       char.toUpperCase()
                                     ); // Capitalize first letter of other domains
 
-                            return (
-                              <span key={i}>
-                                {formattedDomain}
-                                {i < domainList.length - 1 && ", "}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      )
-                  )}
+                              return (
+                                <span key={i}>
+                                  {formattedDomain}
+                                  {i < domainList.length - 1 && ", "}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )
+                    )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
       <button
         onClick={handleSignOut}
