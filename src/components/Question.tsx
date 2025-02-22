@@ -354,7 +354,7 @@ export default function Questions() {
 
               {quizData.questions[currentQuestionIndex].image_url && (
                 <button
-                  className=" bg-[#F8770f] bg-opacity-500 border-[#f8b95a] border-2 text-white px-2 py-2 rounded max-h-14 "
+                  className=" bg-[#F8770f] bg-opacity-500 border-[#f8b95a] border-2 text-white px-2 py-2 rounded max-h-14 max-w-14"
                   onClick={() => setShowImageModal(true)}
                 >
                   <img src="../../public/imgIcon.png" alt="img" className="" />

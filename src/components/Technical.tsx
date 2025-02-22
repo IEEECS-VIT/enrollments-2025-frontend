@@ -12,6 +12,15 @@ export default function Technical() {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  const DOMAINS = [
+    { label: "WEB", icon: "/computer.svg" },
+    { label: "IOT", icon: "/drone.svg" },
+    { label: "APP", icon: "/App.svg" },
+    { label: "AI/ML", icon: "/AI.svg" },
+    { label: "RND", icon: "/book.svg" },
+    { label: "CC", icon: "/computer.svg" }, // Added Cloud Computing
+  ];
+
   useEffect(() => {
     setHoveredIndex(0);
     if (containerRef.current) {
@@ -20,32 +29,39 @@ export default function Technical() {
   }, []);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const totalButtons = 5;
+    const totalButtons = DOMAINS.length;
     const submitButtonIndex = totalButtons;
 
-    if (event.key === "ArrowLeft") {
-      const prevIndex =
-        (hoveredIndex === null ? 0 : hoveredIndex - 1 + totalButtons) %
-        totalButtons;
-      setHoveredIndex(prevIndex);
-    } else if (event.key === "ArrowRight") {
-      const nextIndex =
-        (hoveredIndex === null ? 0 : hoveredIndex + 1) % totalButtons;
-      setHoveredIndex(nextIndex);
-    } else if (event.key === "ArrowDown") {
-      setHoveredIndex(submitButtonIndex);
-    } else if (event.key === "ArrowUp") {
-      if (hoveredIndex === submitButtonIndex) {
-        setHoveredIndex(0);
-      }
-    } else if (event.key === "Enter") {
-      if (hoveredIndex !== null) {
+    switch (event.key) {
+      case "ArrowLeft":
+        setHoveredIndex((prev) =>
+          prev === null ? 0 : (prev - 1 + totalButtons) % totalButtons
+        );
+        break;
+      case "ArrowRight":
+        setHoveredIndex((prev) =>
+          prev === null ? 0 : (prev + 1) % totalButtons
+        );
+        break;
+      case "ArrowDown":
+        setHoveredIndex(submitButtonIndex);
+        break;
+      case "ArrowUp":
         if (hoveredIndex === submitButtonIndex) {
-          handleOkClick();
-        } else {
-          handleClick(hoveredIndex);
+          setHoveredIndex(0);
         }
-      }
+        break;
+      case "Enter":
+        if (hoveredIndex !== null) {
+          if (hoveredIndex === submitButtonIndex) {
+            handleOkClick();
+          } else {
+            handleClick(hoveredIndex);
+          }
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -58,20 +74,30 @@ export default function Technical() {
   };
 
   const handleClick = (index: number) => {
-    const labels = ["WEB", "IOT", "APP", "AI/ML", "RND"];
-    const selectedLabel = labels[index];
+    const selectedLabel = DOMAINS[index].label;
 
-    if (
-      currentSelections.length < 2 &&
-      !currentSelections.includes(selectedLabel)
-    ) {
-      setCurrentSelections([...currentSelections, selectedLabel]);
-    } else if (currentSelections.includes(selectedLabel)) {
-      setCurrentSelections(
-        currentSelections.filter((label) => label !== selectedLabel)
-      );
+    // Check if "design" and "management" exist in localStorage
+    const isDesignPresent = localStorage.getItem("design") !== null;
+    const isManagementPresent = localStorage.getItem("management") !== null;
+
+    if (isDesignPresent && isManagementPresent) {
+      // Only allow CC, restrict others
+      if (selectedLabel === "CC") {
+        setCurrentSelections(["CC"]);
+      } else {
+        showToastWarning("Only Cloud Computing is allowed in Technical.");
+      }
     } else {
-      showToastWarning("Only 2 Sub-Domains Allowed");
+      // Normal selection logic (2 domains + CC as extra)
+      if (currentSelections.includes(selectedLabel)) {
+        setCurrentSelections(
+          currentSelections.filter((label) => label !== selectedLabel)
+        );
+      } else if (currentSelections.length < 2 || selectedLabel === "CC") {
+        setCurrentSelections([...currentSelections, selectedLabel]);
+      } else {
+        showToastWarning("Only 2 Sub-Domains Allowed (unless one is CC)");
+      }
     }
   };
 
@@ -94,56 +120,41 @@ export default function Technical() {
           </p>
         </div>
 
-        <div
-          className="w-full mt-[4vh] grid grid-cols-2 grid-rows-3 sm:flex sm:flex-wrap justify-center items-center "
-          onKeyDown={handleKeyNavigation}
-          tabIndex={0}
-        >
-          {["WEB", "IOT", "APP", "AI/ML", "RND"].map((label, index) => (
+        <div className="w-full mt-[4vh] grid grid-cols-2 sm:grid-cols-3 gap-4 px-4">
+          {DOMAINS.map((domain, index) => (
             <div
               key={index}
-              className={`${
-                index === 2 ? "col-span-2 " : ""
-              } sm:basis-1/3 sm:flex-col mb-[2.5vh] mt-[2.5vh] sm:mt-0 sm:mb-0 sm:p-4 basis-auto flex flex-col items-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
-                index >= 3 ? "sm:basis-1/2" : ""
-              } transform ${
-                hoveredIndex === index || currentSelections.includes(label)
+              className={`flex flex-col items-center justify-center cursor-pointer p-2 rounded-lg transition-transform duration-300 ${
+                hoveredIndex === index ||
+                currentSelections.includes(domain.label)
                   ? "scale-110"
                   : "scale-100"
               }`}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
               onMouseLeave={handleLeave}
+              role="button"
+              tabIndex={0}
             >
               <img
                 className="h-[7.5vh] sm:h-[12.5vh]"
-                src={
-                  index === 0
-                    ? "/computer.svg"
-                    : index === 1
-                    ? "/drone.svg"
-                    : index === 2
-                    ? "/App.svg"
-                    : index === 3
-                    ? "/AI.svg"
-                    : "/book.svg"
-                }
-                alt={label}
+                src={domain.icon}
+                alt={domain.label}
               />
               <p
                 className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
-                  currentSelections.includes(label)
+                  currentSelections.includes(domain.label)
                     ? "text-[#65C54E] font-bold underline underline-offset-4"
                     : "font-normal no-underline"
                 } ${
                   hoveredIndex === index
-                    ? currentSelections.includes(label)
+                    ? currentSelections.includes(domain.label)
                       ? "text-[#65C54E] animate-blink"
                       : "text-white animate-blink"
                     : ""
                 }`}
               >
-                {hoveredIndex === index ? `> ${label} <` : label}
+                {hoveredIndex === index ? `> ${domain.label} <` : domain.label}
               </p>
             </div>
           ))}
@@ -153,10 +164,12 @@ export default function Technical() {
         onClick={handleOkClick}
         tabIndex={0}
         className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 5 ? "scale-110 bg-opacity-70" : "scale-100"
+          hoveredIndex === DOMAINS.length
+            ? "scale-110 bg-opacity-70"
+            : "scale-100"
         }`}
-        onMouseEnter={() => setHoveredIndex(5)}
-        onMouseLeave={() => setHoveredIndex(null)}
+        onMouseEnter={() => handleHover(DOMAINS.length)}
+        onMouseLeave={handleLeave}
       >
         OK
       </button>

@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 justify-between items-center flex">
+      <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 justify-between items-center flex ">
         <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block" />
         <div className="flex gap-x-12 pr-36">
           <button
@@ -99,10 +99,7 @@ export default function Navbar() {
           className="h-[5vh] mr-6 relative left-[7vw] lg:hidden"
         />
         <button onClick={() => navigate("/profile")} className="">
-          <img
-            className="h-8 w-8 text-white"
-            src="../../public/user-solid.svg"
-          ></img>
+          <img className="h-8 w-8 text-white" src="user-solid.svg"></img>
         </button>
       </div>
     </>
