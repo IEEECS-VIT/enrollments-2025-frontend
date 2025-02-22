@@ -21,13 +21,12 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
   console.log(profileData);
   const handleSignOut = async () => {
     try {
-      await firebaseSignOut(auth);
-      navigate("/");
-      setTimeout(()=>{
-        showToastSuccess("Signed out successfully .");
-      },200)
       Cookies.remove("authToken");
-        
+      await firebaseSignOut(auth); // Ensure sign out completes first
+
+      showToastSuccess("Signed out successfully.");
+      navigate("/", { replace: true });
+      window.location.reload();
     } catch (error) {
       console.error("Error during sign out:", error);
     }
@@ -35,7 +34,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start p-4 space-y-6 relative">
-
       <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-12 sm:py-8 px-6 space-y-6 font-retro-gaming">
         <p className="text-2xl sm:text-3xl md:text-4xl tracking-widest text-center">
           PROFILE
@@ -57,31 +55,37 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
             <div>
               <span className="font-bold">Selected Domains : </span>
               <div className="mt-2 space-y-2">
-              {profileData?.domain &&
-  Object.entries(profileData.domain).map(([key, domainList]) =>
-    domainList.length > 0 && (
-      <div key={key} className="text-sm sm:text-2xl">
-        <strong>{key} : </strong>
-        {domainList.map((domain, i) => {
-          // Keep "AI/ML" and "UI/UX" fully uppercase
-          const formattedDomain =
-            domain === "AI/ML" || domain === "UI/UX"
-              ? domain
-              : domain
-                  .toLowerCase()
-                  .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of other domains
+                {profileData?.domain &&
+                  Object.entries(profileData.domain).map(
+                    ([key, domainList]) =>
+                      domainList.length > 0 && (
+                        <div key={key} className="text-sm sm:text-2xl">
+                          <strong>{key} : </strong>
+                          {domainList.map((domain, i) => {
+                            // Keep "AI/ML" and "UI/UX" fully uppercase
+                            const formattedDomain =
+                              domain === "AI/ML" ||
+                              domain === "UI/UX" ||
+                              domain === "RND" ||
+                              domain === "PNM" ||
+                              domain === "IOT"
+                                ? domain
+                                : domain
+                                    .toLowerCase()
+                                    .replace(/\b\w/g, (char) =>
+                                      char.toUpperCase()
+                                    ); // Capitalize first letter of other domains
 
-          return (
-            <span key={i}>
-              {formattedDomain}
-              {i < domainList.length - 1 && ", "}
-            </span>
-          );
-        })}
-      </div>
-    )
-  )}
-
+                            return (
+                              <span key={i}>
+                                {formattedDomain}
+                                {i < domainList.length - 1 && ", "}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )
+                  )}
               </div>
             </div>
           </div>
@@ -92,7 +96,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
         onClick={handleSignOut}
         className="px-4 py-2 text-xs tracking-wide text-white transition bg-transparent rounded-lg sm:text-lg md:text-xl"
       >
-        &lt;Sign Out&gt;
+        &lt; SIGN OUT &gt;
       </button>
     </div>
   );

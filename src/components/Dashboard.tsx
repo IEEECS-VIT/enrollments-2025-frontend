@@ -113,7 +113,7 @@ export default function Dashboard(): JSX.Element {
           if (!expiryTime) {
             expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
             const signature = CryptoJS.HmacSHA256(
-                expiryTime,
+              expiryTime,
               secretKey
             ).toString(CryptoJS.enc.Hex);
             const cookieValue = `${expiryTime}.${signature}`;
@@ -158,7 +158,7 @@ export default function Dashboard(): JSX.Element {
 
       <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
         <div className="absolute group sm:mt-0 mb-[62vh] sm:mb-96 left-[65vw]">
-          <span className="text-white text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
+          <span className="p-1 text-2xl pt-2 cursor-pointer ml-4 border-[0.15rem]  bg-[#FFFFFF] text-black rounded-full w-8 h-8 flex items-center justify-center">
             ℹ
           </span>
           <div className="absolute left-12 tracking-widest bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-md px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">

@@ -11,7 +11,7 @@ export default function Navbar() {
     <>
       <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 justify-between items-center flex">
         <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block" />
-        <div className="flex gap-x-12 pr-24">
+        <div className="flex gap-x-12 pr-36">
           <button
             onClick={() => navigate("/")}
             className="text-white text-2xl hover:text-[#F87D10] hover:underline hidden lg:block"
@@ -87,7 +87,7 @@ export default function Navbar() {
               </li>
               <li
                 onClick={() => navigate("/dashboard")}
-                className="hover:text-[#F87D10] hover:underline cursor-pointer"
+                className="hover:text-[#F87D10] hover:underline cursor-pointer md:hidden"
               >
                 DASHBOARD
               </li>
@@ -99,7 +99,10 @@ export default function Navbar() {
           className="h-[5vh] mr-6 relative left-[7vw] lg:hidden"
         />
         <button onClick={() => navigate("/profile")} className="">
-          <img className="h-8 w-8 sm:h-12 sm:w-12" src="profile.png"></img>
+          <img
+            className="h-8 w-8 text-white"
+            src="../../public/user-solid.svg"
+          ></img>
         </button>
       </div>
     </>

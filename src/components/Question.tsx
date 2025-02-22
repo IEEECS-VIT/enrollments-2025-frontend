@@ -61,6 +61,7 @@ export default function Questions() {
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
   const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
+
   // const [count, setCount] = useState(0);
 
   const [confirmed] = useState(false);
@@ -329,10 +330,10 @@ export default function Questions() {
             {formattedTime}
           </div>
           <div className="absolute group mt-4 sm:mt-0 left-4">
-            <span className="text-white pb-2 text-lg cursor-pointer bg-opacity-50 border-[#F8B95A] border-[0.15rem] shadow-[2px_2px_0px_#FF0000] bg-[#F8B95A] rounded-full w-8 h-8 flex items-center justify-center">
+            <span className="pb-2 text-2xl cursor-pointer ml-4 border-[0.15rem]  bg-[#FFFFFF] text-black rounded-full w-8 h-8 flex items-center justify-center">
               ℹ
             </span>
-            <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-retro-gaming">
               Timer will continue if you leave the site .
             </div>
           </div>
@@ -340,10 +341,10 @@ export default function Questions() {
         <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
           {formattedTime}
         </div>
-        <div className="relative flex flex-col justify-start sm:mt-4 items-center p-2 h-full w-[80vw] max-w-full font-retro-gaming">
+        <div className="relative flex flex-col justify-start sm:mt-4 items-center h-full w-[80vw] max-w-full font-retro-gaming">
           <div
             id="questionBox"
-            className="p-4 w-100 sm:w-full rounded-xl h-full justify-center flex flex-col"
+            className=" w-100 sm:w-full rounded-xl h-full justify-center flex flex-col"
           >
             <div
               id="question"
@@ -353,10 +354,10 @@ export default function Questions() {
 
               {quizData.questions[currentQuestionIndex].image_url && (
                 <button
-                  className=" bg-blue-500 text-white px-2 py-2 rounded "
+                  className=" bg-[#F8770f] bg-opacity-500 border-[#f8b95a] border-2 text-white px-2 py-2 rounded max-h-14 "
                   onClick={() => setShowImageModal(true)}
                 >
-                  View Image
+                  <img src="../../public/imgIcon.png" alt="img" className="" />
                 </button>
               )}
               {showImageModal && (
@@ -369,12 +370,12 @@ export default function Questions() {
 
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions[currentQuestionIndex].options ? (
-              <div className="text-xs text-center items-center justify-center md:text-lg grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
+              <div className="text-xs text-center items-center justify-center md:text-lg grid sm:grid-cols-1  md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
                 {quizData.questions[currentQuestionIndex].options.map(
                   (option, index) => (
                     <div
                       key={index}
-                      className={`p-2  max-h-fit min-h-20 text-center border text-lg rounded-xl cursor-pointer flex items-center justify-center  ${
+                      className={`p-2  max-h-fit min-h-24 text-center border text-lg rounded-xl flex-1 relative cursor-pointer flex items-center justify-center  ${
                         selectedAnswers[currentQuestionIndex] === option
                           ? "bg-[#f8770f] text-white"
                           : "hover:bg-gray-900"
@@ -530,7 +531,7 @@ export default function Questions() {
           className="absolute md:bottom-4 bottom-4 text-white font-retro-gaming text-lg md:text-xl"
           onClick={() => setShowModal(true)}
         >
-          &lt; Submit &gt;
+          &lt; SUBMIT &gt;
         </button>
       )}
     </>
