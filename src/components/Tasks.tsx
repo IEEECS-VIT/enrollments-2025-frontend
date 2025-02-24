@@ -5,7 +5,7 @@ export default function Task() {
   return (
     <>
       <div className="relative min-h-screen flex items-center justify-center">
-        <div className="absolute w-full pointer-events-none z-20">
+        <div className="absolute w-full pointer-events-none">
           <Treecloud />
         </div>
 

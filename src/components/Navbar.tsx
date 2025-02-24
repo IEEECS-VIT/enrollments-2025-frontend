@@ -11,7 +11,7 @@ export default function Navbar() {
     <>
       <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 p-10 pt-16 lg:justify-around justify-between items-center flex">
         <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block" />
-        <button
+        <button           
           onClick={() => navigate("/")}
           className="text-white text-2xl hover:text-[#F87D10] hover:underline hidden lg:block"
         >
@@ -63,10 +63,7 @@ export default function Navbar() {
         >
           <nav className="p-8 pt-32">
             <ul className="space-y-6 text-2xl text-white font-press-start">
-              <li
-                onClick={() => navigate("/")}
-                className="hover:text-[#F87D10] hover:underline cursor-pointer"
-              >
+              <li onClick={() => navigate("/")} className="hover:text-[#F87D10] hover:underline cursor-pointer">
                 HOME
               </li>
               <li
@@ -92,7 +89,7 @@ export default function Navbar() {
         </div>
         <img
           src="logo2.svg"
-          className="h-[5vh] relative left-[7vw] lg:hidden"
+          className="h-[5vh] mr-6 relative left-[7vw] lg:hidden"
         />
         <button
           onClick={() => navigate("/profile")}
