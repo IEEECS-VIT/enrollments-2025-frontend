@@ -22,6 +22,8 @@ export default function Management() {
   const [currentSelections, setCurrentSelections] = usePersistentState<
     string[]
   >("management", []);
+  const [hoverText, setHoverText] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,10 +65,21 @@ export default function Management() {
     }
   };
 
-  const handleHover = (index: number) => setHoveredIndex(index);
+  const handleHover = (index: number) => {
+    setHoveredIndex(index);
+    if (index === 1) {
+      setHoverText("Publicity, Outreach, Finance"); // Show text when hovering PNM
+    } else {
+      setHoverText(null); // Reset for other cases
+    }
+  };
 
-  const handleLeave = () =>
+  const handleLeave = () => {
     setHoveredIndex((current) => (current !== null ? current : 0));
+    setTimeout(() => {
+      setHoverText(null); // Slight delay to prevent flicker
+    }, 100);
+  };
 
   const handleClick = (index: number) => {
     const labels = ["EVENTS", "PNM"];
@@ -110,7 +123,7 @@ export default function Management() {
           {["EVENTS", "PNM"].map((label, index) => (
             <div
               key={index}
-              className={`flex flex-col mb-[3vh] items-center sm:basis-1/2 cursor-pointer nav-button p-4 transition-transform duration-300 ${
+              className={`relative flex flex-col mb-[3vh] items-center sm:basis-1/2 cursor-pointer nav-button p-4 transition-transform duration-300 ${
                 currentSelections.includes(label) ? "scale-110" : "scale-100"
               }`}
               onClick={() => handleClick(index)}
@@ -131,6 +144,14 @@ export default function Management() {
               >
                 {hoveredIndex === index ? `> ${label} <` : label}
               </p>
+
+              {index === 1 &&
+                (hoveredIndex === index ||
+                  currentSelections.includes(label)) && (
+                  <p className="absolute top-full mt-1 text-xs sm:text-sm text-white">
+                    {hoverText}
+                  </p>
+                )}
             </div>
           ))}
         </div>

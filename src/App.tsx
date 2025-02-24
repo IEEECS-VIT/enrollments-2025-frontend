@@ -50,6 +50,7 @@ const AppContent = () => {
       <div className="relative z-20">
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="faqs" element={<Faq />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="domain" element={<Domainselection />} />
@@ -59,9 +60,8 @@ const AppContent = () => {
             <Route path="profile" element={<Profile />} />
             <Route path="username" element={<UsernameSection />} />
             <Route path="quiz" element={<Quiz1 />} />
-            <Route path="faqs" element={<Faq />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="task" element={<Tasks />} />
+            <Route path="noaccess" element={<Tasks />} />
             <Route path="quiz-complete" element={<QuizComplete />} />
           </Route>
 

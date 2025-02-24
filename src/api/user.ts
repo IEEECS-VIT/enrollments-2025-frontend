@@ -159,7 +159,8 @@ export async function SubmitAnswers(
   round: number,
   domain: string,
   questions: string[],
-  answers: (string | number)[] | void[]
+  answers: (string | number)[] | void[],
+  score: number
 ) {
   if (questions.length !== answers?.length) {
     throw new Error("question and answer count not same");
@@ -170,6 +171,7 @@ export async function SubmitAnswers(
     domain,
     questions,
     answers,
+    score,
   };
 
   const response = await ProtectedRequest<DomainResponse>(
@@ -204,7 +206,7 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
 export interface Question {
   question: string;
   options: string[];
-  correctAnswer: number;
+  correctIndex: number;
   image_url: string;
 }
 
