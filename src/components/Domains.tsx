@@ -164,10 +164,7 @@ export default function Domains() {
             </div>
           </div>
         </div>
-        <div className="text-yellow-400 text-lg">
-          *CC (Competitive Coding) can be chosen as an additional subdomain
-          under tech.
-        </div>
+        
         <div
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[4vh]"
           tabIndex={0}

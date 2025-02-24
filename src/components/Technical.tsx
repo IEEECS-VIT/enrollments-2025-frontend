@@ -133,13 +133,16 @@ export default function Technical() {
       tabIndex={0}
     >
       <ToastContainer />
-      <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
-        <div className="text-center mt-[6vh] sm:mt-[6vh]">
+      <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
+        <div className="text-center mt-[6vh] sm:mt-[4vh]">
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
             TECHNICAL
           </p>
         </div>
-
+        <div className="text-yellow-400 text-lg mt-8 ml-2 sm:mt-0 sm:ml-0">
+          *CC ( Competitive Coding ) can be chosen as an additional subdomain
+          under Tech.
+        </div>
         <div className="w-full mt-[4vh] grid grid-cols-2 sm:grid-cols-3 gap-4 px-4">
           {DOMAINS.map((domain, index) => (
             <div
