@@ -32,7 +32,7 @@ interface QuizData {
     image_url: any;
     question: string;
     options?: string[];
-    correctAnswer: number | string;
+    correctIndex: number | string;
   }[];
 }
 
@@ -182,8 +182,12 @@ export default function Questions() {
     setLoadingSubmit(true);
 
     try {
-      const currentQuizData = await LoadQuestions({ subdomain });
+      const currentQuizData = await await getQuizData(subdomain);
       const savedAnswers = loadAnswersFromLocalStorage(subdomain);
+
+      const score = calculateScore(currentQuizData, savedAnswers);
+
+      // console.log(score);
 
       if (!currentQuizData || !currentQuizData.questions) {
         throw new Error("Quiz data not loaded properly.");
@@ -194,14 +198,15 @@ export default function Questions() {
       }
 
       const answers = currentQuizData.questions.map(
-        (_, index) => savedAnswers[index]?.toString().trim() || ""
+        (_: any, index: number) => savedAnswers[index]?.toString().trim() || ""
       );
 
       const result = await SubmitAnswers(
         round,
         domain,
-        currentQuizData.questions.map((q) => q.question),
-        answers
+        currentQuizData.questions.map((q: { question: string }) => q.question),
+        answers,
+        score
       );
       if (document.fullscreenElement) {
         document.exitFullscreen();
@@ -295,6 +300,30 @@ export default function Questions() {
     );
   }
 
+  const calculateScore = (
+    quizData: QuizData,
+    selectedAnswers: { [key: number]: string | number }
+  ) => {
+    let totalScore = 0;
+
+    quizData.questions.forEach((question, index) => {
+      if (selectedAnswers[index] === undefined) return;
+
+      if (question.options) {
+        // If options exist, compare selected answer with correct index
+        const correctIndex = question.correctIndex;
+        const ans = question.options[Number(correctIndex) - 37];
+        const selectedAnswer = selectedAnswers[index];
+
+        if (selectedAnswer == ans) {
+          totalScore++;
+        }
+      }
+    });
+
+    return totalScore;
+  };
+
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
     setSelectedAnswers(updatedAnswers);
@@ -375,11 +404,16 @@ export default function Questions() {
                   (option, index) => (
                     <div
                       key={index}
-                      className={`p-2  max-h-fit min-h-24 text-center border text-lg rounded-xl flex-1 relative cursor-pointer flex items-center justify-center  ${
-                        selectedAnswers[currentQuestionIndex] === option
-                          ? "bg-[#f8770f] text-white"
-                          : "hover:bg-gray-900"
-                      }`}
+                      className={`p-2 overflow-auto min-h-24 max-h-24 text-center border text-lg rounded-xl flex-1 relative cursor-pointer flex justify-center  
+                        ${
+                          selectedAnswers[currentQuestionIndex] === option
+                            ? "bg-[#f8770f] text-white"
+                            : "hover:bg-gray-900"
+                        }
+                        items-start ${
+                          option.length < 80 ? "items-center" : "pt-2"
+                        } 
+                      `}
                       onClick={() =>
                         handleAnswerChange(currentQuestionIndex, option)
                       }

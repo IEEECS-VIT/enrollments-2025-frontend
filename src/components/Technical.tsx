@@ -18,7 +18,7 @@ export default function Technical() {
     { label: "APP", icon: "/App.svg" },
     { label: "AI/ML", icon: "/AI.svg" },
     { label: "RND", icon: "/book.svg" },
-    { label: "CC", icon: "/computer.svg" }, // Added Cloud Computing
+    { label: "CC", icon: "/cc.svg" },
   ];
 
   useEffect(() => {
@@ -76,28 +76,48 @@ export default function Technical() {
   const handleClick = (index: number) => {
     const selectedLabel = DOMAINS[index].label;
 
-    // Check if "design" and "management" exist in localStorage
-    const isDesignPresent = localStorage.getItem("design") !== null;
-    const isManagementPresent = localStorage.getItem("management") !== null;
+    const isDesignPresent = (() => {
+      const item = localStorage.getItem("design");
+      return item !== null && item !== "[]";
+    })();
+
+    const isManagementPresent = (() => {
+      const item = localStorage.getItem("management");
+      return item !== null && item !== "[]";
+    })();
 
     if (isDesignPresent && isManagementPresent) {
-      // Only allow CC, restrict others
+      // Only allow "CC" if both design & management are selected
       if (selectedLabel === "CC") {
-        setCurrentSelections(["CC"]);
+        setCurrentSelections((prev) => (prev.includes("CC") ? [] : ["CC"]));
       } else {
-        showToastWarning("Only Cloud Computing is allowed in Technical.");
+        showToastWarning("Only CC is allowed in Technical.");
       }
     } else {
-      // Normal selection logic (2 domains + CC as extra)
-      if (currentSelections.includes(selectedLabel)) {
-        setCurrentSelections(
-          currentSelections.filter((label) => label !== selectedLabel)
-        );
-      } else if (currentSelections.length < 2 || selectedLabel === "CC") {
-        setCurrentSelections([...currentSelections, selectedLabel]);
-      } else {
-        showToastWarning("Only 2 Sub-Domains Allowed (unless one is CC)");
-      }
+      setCurrentSelections((prev) => {
+        const isCCSelected = prev.includes("CC");
+
+        if (prev.includes(selectedLabel)) {
+          // Deselect the clicked domain
+          return prev.filter((label) => label !== selectedLabel);
+        } else if (isCCSelected) {
+          // If CC is already selected, allow up to 2 more domains
+          if (prev.length < 3) {
+            return [...prev, selectedLabel];
+          } else {
+            showToastWarning("Only 2 Sub-Domains Allowed (plus CC)");
+            return prev;
+          }
+        } else {
+          // If CC is not selected, enforce normal 2-domain limit
+          if (prev.length < 2 || selectedLabel === "CC") {
+            return [...prev, selectedLabel];
+          } else {
+            showToastWarning("Only 2 Sub-Domains Allowed (unless one is CC)");
+            return prev;
+          }
+        }
+      });
     }
   };
 
