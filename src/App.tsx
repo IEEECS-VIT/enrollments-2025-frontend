@@ -5,6 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Domainselection from "./components/Domainselection";
 import Designdomain from "./components/Designdomain";
 import Technicaldomain from "./components/Technicaldomain";
@@ -14,15 +15,22 @@ import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Quiz1 from "./components/Quiz1";
+//import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
-import Tasks from "./components/Tasks";
+//import Tasks from "./components/Tasks";
 import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
+
+const pageVariants = {
+  initial: { opacity: 0, scale: 0.98 },
+  animate: { opacity: 1, scale: 1.02, transition: { duration: 0.5, ease: "easeOut" } },
+  exit: { opacity: 0, scale: 0.98, transition: { duration: 0.3, ease: "easeIn" } },
+};
+
 
 const PageTracker: React.FC = () => {
   const location = useLocation();
@@ -42,32 +50,41 @@ const AppContent = () => {
   }, []);
 
   return (
-    <div className="bg-black relative min-h-screen">
+    <div className="bg-black relative min-h-screen overflow-hidden">
       <Bg />
-      {/* Hide Navbar if the path is "/quiz" */}
       {location.pathname !== "/quiz" && <Navbar />}
 
       <div className="relative z-20">
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="faqs" element={<Faq />} />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageVariants}
+            className="absolute w-full"
+          >
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Landing />} />
+              <Route path="faqs" element={<Faq />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="domain" element={<Domainselection />} />
-            <Route path="design" element={<Designdomain />} />
-            <Route path="technical" element={<Technicaldomain />} />
-            <Route path="management" element={<Managementdomain />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="username" element={<UsernameSection />} />
-            <Route path="quiz" element={<Quiz1 />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="noaccess" element={<Tasks />} />
-            <Route path="quiz-complete" element={<QuizComplete />} />
-          </Route>
+              <Route element={<ProtectedRoute />}>
+                <Route path="domain" element={<Domainselection />} />
+                <Route path="design" element={<Designdomain />} />
+                <Route path="technical" element={<Technicaldomain />} />
+                <Route path="management" element={<Managementdomain />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="username" element={<UsernameSection />} />
+                {/* <Route path="quiz" element={<Quiz1 />} /> */}
+                <Route path="dashboard" element={<Dashboard />} />
+                {/* <Route path="task" element={<Tasks />} /> */}
+                <Route path="quiz-complete" element={<QuizComplete />} />
+              </Route>
 
-          {/* Catch-all route for non-existent pages */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -75,12 +92,12 @@ const AppContent = () => {
 
 const App: React.FC = () => {
   useEffect(() => {
-    initGA(); // Initialize Google Analytics once when app loads
+    initGA();
   }, []);
 
   return (
     <Router>
-      <PageTracker /> {/* Tracks page views */}
+      <PageTracker />
       <AppContent />
     </Router>
   );

@@ -22,7 +22,6 @@ export default function Management() {
   const [currentSelections, setCurrentSelections] = usePersistentState<
     string[]
   >("management", []);
-  const [hoverText, setHoverText] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -65,20 +64,10 @@ export default function Management() {
     }
   };
 
-  const handleHover = (index: number) => {
-    setHoveredIndex(index);
-    if (index === 1) {
-      setHoverText("Publicity, Outreach, Finance"); // Show text when hovering PNM
-    } else {
-      setHoverText(null); // Reset for other cases
-    }
-  };
+  const handleHover = (index: number) => setHoveredIndex(index);
 
   const handleLeave = () => {
     setHoveredIndex((current) => (current !== null ? current : 0));
-    setTimeout(() => {
-      setHoverText(null); // Slight delay to prevent flicker
-    }, 100);
   };
 
   const handleClick = (index: number) => {
@@ -120,40 +109,37 @@ export default function Management() {
           onKeyDown={handleKeyNavigation}
           tabIndex={0}
         >
-          {["EVENTS", "PNM"].map((label, index) => (
-            <div
-              key={index}
-              className={`relative flex flex-col mb-[3vh] items-center sm:basis-1/2 cursor-pointer nav-button p-4 transition-transform duration-300 ${
-                currentSelections.includes(label) ? "scale-110" : "scale-100"
-              }`}
-              onClick={() => handleClick(index)}
-              onMouseEnter={() => handleHover(index)}
-              onMouseLeave={handleLeave}
-            >
-              <img
-                className="h-[7.5vh] sm:h-[12.5vh]"
-                src={index === 0 ? "/calendar.svg" : "/microphone.svg"}
-                alt={label}
-              />
-              <p
-                className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
-                  currentSelections.includes(label)
-                    ? "text-[#FF0004] font-bold underline underline-offset-4"
-                    : "font-normal no-underline"
-                } ${hoveredIndex === index ? "animate-blink" : ""}`}
-              >
-                {hoveredIndex === index ? `> ${label} <` : label}
-              </p>
+          {["EVENTS", "PNM"].map((label, index) => {
+  const displayLabel = label === "PNM" ? "PUBLICITY, OUTREACH & FINANCE" : label;
+  
+  return (
+    <div
+      key={index}
+      className={`relative flex flex-col mb-[3vh] items-center sm:basis-1/2 cursor-pointer nav-button p-4 transition-transform duration-300 ${
+        currentSelections.includes(label) ? "scale-110" : "scale-100"
+      }`}
+      onClick={() => handleClick(index)}
+      onMouseEnter={() => handleHover(index)}
+      onMouseLeave={handleLeave}
+    >
+      <img
+        className="h-[7.5vh] sm:h-[12.5vh]"
+        src={index === 0 ? "/calendar.svg" : "/microphone.svg"}
+        alt={displayLabel}
+      />
+      <p
+        className={`text-[2.75vh] sm:text-[1.85vh] text-center md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
+          currentSelections.includes(label)
+            ? "text-[#FF0004] font-bold underline underline-offset-4"
+            : "font-normal no-underline"
+        } ${hoveredIndex === index ? "animate-blink" : ""}`}
+      >
+        {hoveredIndex === index ? `> ${displayLabel} <` : displayLabel}
+      </p>
+    </div>
+  );
+})}
 
-              {index === 1 &&
-                (hoveredIndex === index ||
-                  currentSelections.includes(label)) && (
-                  <p className="absolute top-full mt-1 text-xs sm:text-sm text-white">
-                    {hoverText}
-                  </p>
-                )}
-            </div>
-          ))}
         </div>
       </div>
       <button

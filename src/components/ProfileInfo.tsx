@@ -19,7 +19,6 @@ interface ProfileInfoProps {
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
   const navigate = useNavigate();
-  console.log(profileData);
   const handleSignOut = async () => {
     try {
       showToastSuccess("Signed out successfully.");
@@ -32,7 +31,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
       }, 1000);
   
     } catch (error) {
-      console.error("Error during sign out:", error);
     }
   };
 
