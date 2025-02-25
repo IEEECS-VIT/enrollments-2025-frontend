@@ -57,7 +57,7 @@ const AppContent = () => {
   }, []);
 
   return (
-    <div className="bg-black relative min-h-[100dvh] overflow-hidden">
+    <div className="bg-black relative min-h-screen overflow-hidden">
       <Bg />
       {location.pathname !== "/quiz" && <Navbar />}
 
