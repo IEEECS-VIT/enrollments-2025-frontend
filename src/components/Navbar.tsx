@@ -114,7 +114,10 @@ export default function Navbar() {
           />
         </button>
 
-        <img src="IEEE-CS.svg" className="h-[5vh] sm:h-[7vh] relative lg:hidden" />
+        <img
+          src="IEEE-CS.svg"
+          className="h-[5vh] sm:h-[7vh] relative lg:hidden"
+        />
 
         <button
           onClick={() => navigate("/profile")}

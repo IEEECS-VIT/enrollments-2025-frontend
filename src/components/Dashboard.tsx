@@ -24,7 +24,7 @@ export default function Dashboard(): JSX.Element {
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
   const [selectedQuiz] = useState<Quiz | null>(null);
-  // const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null); - USE THIS LINE AFTER DOMAIN SELECTION DELETE ABOVE LINE 
+  // const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null); - USE THIS LINE AFTER DOMAIN SELECTION DELETE ABOVE LINE
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -66,7 +66,6 @@ export default function Dashboard(): JSX.Element {
       });
 
       if (stream) {
-        
         setPermissionModal(false); // Hide modal if permissions are granted
         setShowModal(true);
       }
@@ -138,135 +137,154 @@ export default function Dashboard(): JSX.Element {
   };
   return (
     <>
-    <ToastContainer />
-    <div className="relative min-h-screen flex items-center justify-center">
-      <div className="absolute w-full pointer-events-none">
-        <Treecloud />
-      </div>
-
-      {loading && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50">
-          <Loader />
+      <ToastContainer />
+      <div className="relative flex items-center justify-center min-h-screen">
+        <div className="absolute w-full pointer-events-none">
+          <Treecloud />
         </div>
-      )}
 
-      <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
-        
-        <div className="flex flex-col items-center">
-          <h2 className="text-xl sm:text-4xl mb-4 sm:mb-8">PENDING QUIZZES</h2>
-          <div className="flex gap-4 md:flex-row flex-col">
-            {quizData.pending.length > 0 ? (
-              quizData.pending.map((quiz, index) => (
-                <div
-                  key={index}
-                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center h-16 md:h-24 justify-center text-white hover:border-orange-500 transition duration-300 cursor-pointer"
-                  //onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
+        {loading && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
+            <Loader />
+          </div>
+        )}
+
+        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
+          <div className="flex flex-col items-center">
+            <div className="mb:4 sm:mb-8">
+              <h2 className="text-xl text-center sm:text-4xl">
+                PENDING QUIZZES
+              </h2>
+              <span className="font-sans text-lg text-yellow-400">
+                *Quizzes will start soon , join{" "}
+                <a
+                  href="https://discord.gg/j2Pt6A4YNK"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-bold underline"
                 >
-                  <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
-                  {quiz.subDomain && (
-                    <p className="text-md sm:text-xl text-gray-400">{quiz.subDomain}</p>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-400 sm:text-2xl">No pending tasks</p>
-            )}
+                  Discord
+                </a>{" "}
+                for updates.
+              </span>
+            </div>
+            <div className="flex flex-col gap-4 md:flex-row">
+              {quizData.pending.length > 0 ? (
+                quizData.pending.map((quiz, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 cursor-pointer rounded-3xl md:h-24 hover:border-orange-500"
+                    //onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
+                  >
+                    <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
+                    {quiz.subDomain && (
+                      <p className="text-gray-400 text-md sm:text-xl">
+                        {quiz.subDomain}
+                      </p>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400 sm:text-2xl">No pending tasks</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <h2 className="mt-8 mb-4 text-xl sm:text-4xl md:mt-12">
+              COMPLETED QUIZZES
+            </h2>
+            <div className="flex flex-col gap-4 md:flex-row">
+              {quizData.completed.length > 0 ? (
+                quizData.completed.map((quiz, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center justify-center px-8 py-4 text-white transition duration-300 border-2 rounded-3xl hover:border-white"
+                  >
+                    <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
+                    {quiz.subDomain && (
+                      <p className="text-gray-400 text-md sm:text-xl">
+                        {quiz.subDomain}
+                      </p>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400 sm:text-2xl">No completed tasks</p>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col items-center">
-          <h2 className="text-xl sm:text-4xl mt-8 md:mt-12 mb-4">
-            COMPLETED QUIZZES
-          </h2>
-          <div className="flex gap-4 md:flex-row flex-col">
-            {quizData.completed.length > 0 ? (
-              quizData.completed.map((quiz, index) => (
-                <div
-                  key={index}
-                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white hover:border-white transition duration-300"
-                >
-                  <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
-                  {quiz.subDomain && (
-                    <p className="text-md sm:text-xl text-gray-400">{quiz.subDomain}</p>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-400 sm:text-2xl">No completed tasks</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {deviceWarningModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
-          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-red-500 w-80">
-            <p className="text-lg tracking-wider font-semibold text-red-500">
-              ⚠️ Quiz can only be taken on a laptop or desktop.
-            </p>
-            <p className="mt-2">Please switch to a laptop to continue.</p>
-            <button
-              className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg"
-              onClick={() => setDeviceWarningModal(false)}
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Camera & Microphone Permission Modal */}
-      {permissionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
-          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-            <p className="text-lg tracking-wider font-semibold">
-              This quiz requires camera and microphone access.
-            </p>
-            <p className="mt-2">Please grant permissions to continue.</p>
-            <div className="flex justify-center mt-4">
+        {deviceWarningModal && (
+          <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+            <div className="p-6 text-center bg-black border-2 border-red-500 shadow-lg rounded-xl w-80">
+              <p className="text-lg font-semibold tracking-wider text-red-500">
+                ⚠️ Quiz can only be taken on a laptop or desktop.
+              </p>
+              <p className="mt-2">Please switch to a laptop to continue.</p>
               <button
-                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                onClick={requestPermissions}
+                className="px-4 py-2 mt-4 text-white bg-green-500 rounded-lg"
+                onClick={() => setDeviceWarningModal(false)}
               >
                 OK
               </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
-                onClick={() => setPermissionModal(false)}
-              >
-                Cancel
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Confirmation Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming text-white">
-          <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-            <p className="text-lg font-semibold">
-              Are you sure you want to start the quiz?
-            </p>
-            <p className="mt-2">You will have 30 minutes to finish it.</p>
-            <div className="flex justify-center mt-4">
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                onClick={confirmStartQuiz}
-              >
-                Yes
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
-              </button>
+        {/* Camera & Microphone Permission Modal */}
+        {permissionModal && (
+          <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+            <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
+              <p className="text-lg font-semibold tracking-wider">
+                This quiz requires camera and microphone access.
+              </p>
+              <p className="mt-2">Please grant permissions to continue.</p>
+              <div className="flex justify-center mt-4">
+                <button
+                  className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
+                  onClick={requestPermissions}
+                >
+                  OK
+                </button>
+                <button
+                  className="px-4 py-2 mx-2 text-white bg-red-500 rounded-lg"
+                  onClick={() => setPermissionModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Confirmation Modal */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+            <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
+              <p className="text-lg font-semibold">
+                Are you sure you want to start the quiz?
+              </p>
+              <p className="mt-2">You will have 30 minutes to finish it.</p>
+              <div className="flex justify-center mt-4">
+                <button
+                  className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
+                  onClick={confirmStartQuiz}
+                >
+                  Yes
+                </button>
+                <button
+                  className="px-4 py-2 mx-2 text-white bg-red-500 rounded-lg"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 }

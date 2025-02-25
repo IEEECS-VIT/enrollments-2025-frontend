@@ -8,7 +8,8 @@ interface FAQ {
 const faqs: FAQ[] = [
   {
     question: "How many domains can we select?",
-    answer: "You can select 3 domains.",
+    answer:
+      "You can select a total of 4 subdomains across any two domains, with a maximum of 2 subdomains per domain. Regardless of your choices, you are allowed to select Competitive Coding under the Technical domain.",
   },
   {
     question: "What will be asked in the quiz?",
@@ -44,7 +45,7 @@ export default function FaqQuestion() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col gap-4 z-20">
+    <div className="z-20 flex flex-col gap-4">
       {faqs.map((faq, index) => (
         <div key={index} className="w-[55vw]">
           <div
@@ -53,7 +54,7 @@ export default function FaqQuestion() {
             }`}
           >
             <button
-              className="p-4 bg-black rounded-3xl text-white w-full"
+              className="w-full p-4 text-white bg-black rounded-3xl"
               onClick={() =>
                 setExpandedIndex(expandedIndex === index ? null : index)
               }

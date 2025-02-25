@@ -75,27 +75,31 @@ export default function Domains() {
       managementData.length > 0 ? "management" : null,
       technicalData.length > 0 ? "technical" : null,
       designData.length > 0 ? "design" : null,
-    ].filter(Boolean); // Get only selected ones
+    ].filter(Boolean);
 
     const paths = ["/management", "/technical", "/design"];
 
-    // ✅ Allow navigation if domain is already selected
     if (selectedDomains.includes(selectedDomain)) {
       setCurrentIndex(index);
       navigate(paths[index]);
       localStorage.setItem("lastVisited", paths[index]);
       return;
     }
+    const techDomains = localStorage.getItem("technical") || "[]";
+    console.log(techDomains.length);
 
-    // ❌ Restrict new selections if already 2 are chosen and the third is NOT "technical"
-    if (selectedDomains.length >= 2 && selectedDomain !== "technical") {
-      showToastWarning(
-        "You can select only 2 domains unless the third is Technical."
-      );
+    const flag = techDomains == '["CC"]';
+    console.log(flag);
+
+    if (
+      !flag &&
+      selectedDomains.length >= 2 &&
+      !(selectedDomain == "technical")
+    ) {
+      showToastWarning("You can select upto 2 domains.");
       return;
     }
 
-    // ✅ Otherwise, allow selection
     setCurrentIndex(index);
     navigate(paths[index]);
     localStorage.setItem("lastVisited", paths[index]);
@@ -122,7 +126,6 @@ export default function Domains() {
         ...(designData.length > 0 && { Design: designData }),
       };
 
-
       const response = await SubmitDomains(allSelectedData);
       if (response.status === 200) {
         setTimeout(() => {
@@ -130,7 +133,7 @@ export default function Domains() {
         }, 500);
         showToastSuccess("Domains selected successfully");
         setTimeout(() => {
-          showToastWarning("Quiz will be starting soon")
+          showToastWarning("Quiz will be starting soon");
         }, 2000);
       }
     }
@@ -139,7 +142,7 @@ export default function Domains() {
 
   return (
     <div
-      className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
+      className="flex flex-col items-center justify-center min-h-screen text-white font-playmegames"
       ref={containerRef}
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
@@ -157,7 +160,7 @@ export default function Domains() {
               ELEMENT
             </p>
           </div>
-          <div className="relative group mt-4 sm:mt-8 right-4">
+          <div className="relative mt-4 group sm:mt-8 right-4">
             <span className="p-1 text-2xl pt-2 cursor-pointer ml-4 border-[0.15rem]  bg-[#FFFFFF] text-black rounded-full w-8 h-8 flex items-center justify-center">
               ℹ
             </span>
@@ -166,7 +169,7 @@ export default function Domains() {
             </div>
           </div>
         </div>
-        
+
         <div
           className="flex flex-col sm:flex-row justify-center items-center w-full mt-[4vh]"
           tabIndex={0}

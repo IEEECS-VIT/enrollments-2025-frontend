@@ -87,21 +87,20 @@ export default function Technical() {
     })();
 
     if (isDesignPresent && isManagementPresent) {
-      // Only allow "CC" if both design & management are selected
       if (selectedLabel === "CC") {
         setCurrentSelections((prev) => (prev.includes("CC") ? [] : ["CC"]));
       } else {
-        showToastWarning("Only CC is allowed in Technical.");
+        showToastWarning(
+          "Only CC is allowed in Technical when selecting three domains.To proceed with this sub-domain, deselect one of the other domains."
+        );
       }
     } else {
       setCurrentSelections((prev) => {
         const isCCSelected = prev.includes("CC");
 
         if (prev.includes(selectedLabel)) {
-          // Deselect the clicked domain
           return prev.filter((label) => label !== selectedLabel);
         } else if (isCCSelected) {
-          // If CC is already selected, allow up to 2 more domains
           if (prev.length < 3) {
             return [...prev, selectedLabel];
           } else {
@@ -109,7 +108,6 @@ export default function Technical() {
             return prev;
           }
         } else {
-          // If CC is not selected, enforce normal 2-domain limit
           if (prev.length < 2 || selectedLabel === "CC") {
             return [...prev, selectedLabel];
           } else {
@@ -127,7 +125,7 @@ export default function Technical() {
 
   return (
     <div
-      className="text-white min-h-screen flex flex-col items-center justify-center font-playmegames"
+      className="flex flex-col items-center justify-center min-h-screen text-white font-playmegames"
       ref={containerRef}
       onKeyDown={handleKeyNavigation}
       tabIndex={0}
@@ -139,7 +137,7 @@ export default function Technical() {
             TECHNICAL
           </p>
         </div>
-        <div className="text-yellow-400 text-sm text-center sm:text-lg mt-8 ml-2 sm:mt-0 sm:ml-0">
+        <div className="mt-8 ml-2 text-sm text-center text-yellow-400 sm:text-lg sm:mt-0 sm:ml-0">
           *CC ( Competitive Coding ) can be chosen as an additional subdomain
           under Tech.
         </div>
