@@ -63,6 +63,7 @@ const Landing: React.FC = () => {
         navigate("/username");
       } else if (response.status === 204) {
         setError("User not registered on VTOP");
+        Cookies.remove("authToken");
         showToastWarning("User not registered in VTOP");
       }
     } catch (error) {
