@@ -164,7 +164,7 @@ const Landing: React.FC = () => {
 
       {user ? (
         <>
-          <h2 className="text-white text-sm sm:text-xl mt-[7.5vh] lg:text-2xl relative z-20">
+          <h2 className="text-white text-sm sm:text-xl mt-[7.5vh] lg:text-2xl relative z-20 text-center leading-7">
             Welcome, {user.name}
           </h2>
         </>

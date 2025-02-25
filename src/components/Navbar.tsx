@@ -6,7 +6,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [, setScrolled] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState<boolean>(false);
 
   const toggleMenu = (): void => setIsOpen(!isOpen);
 
@@ -86,7 +86,11 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 sm:px-6 px-4 py-10 pt-16 lg:justify-around justify-between items-center flex">
+      <div
+        className={`fixed w-[100vw] h-[8vh] overflow-hidden font-press-start z-30 sm:px-6 px-4 py-10 pt-16 lg:justify-around justify-between items-center flex transition-colors duration-300 ${
+          scrolled ? "bg-black bg-opacity-90" : "bg-transparent"
+        }`}
+      >
         <img src="IEEE-CS.svg" className="h-[8vh] hidden lg:block" />
 
         {navLinks.map((link) => (
@@ -114,7 +118,10 @@ export default function Navbar() {
           />
         </button>
 
-        <img src="IEEE-CS.svg" className="h-[5vh] sm:h-[7vh] relative lg:hidden" />
+        <img
+          src="IEEE-CS.svg"
+          className="h-[5vh] sm:h-[7vh] relative lg:hidden"
+        />
 
         <button
           onClick={() => navigate("/profile")}
