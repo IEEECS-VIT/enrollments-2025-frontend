@@ -63,7 +63,6 @@ const Landing: React.FC = () => {
         navigate("/username");
       } else if (response.status === 204) {
         setError("User not registered on VTOP");
-        Cookies.remove("authToken");
         showToastWarning("User not registered in VTOP");
       }
     } catch (error) {
@@ -172,29 +171,55 @@ const Landing: React.FC = () => {
       ) : (
         <>
           <motion.button
-            onClick={handleLogin}
-            disabled={loading}
-            className={`text-white text-sm sm:text-xl mt-[5vh] lg:hidden tracking-tighter ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            {loading ? "Signing In..." : "<Sign In with Google>"}
-          </motion.button>
-          <motion.button
-            onClick={handleLogin}
-            disabled={loading}
-            className={`text-white text-2xl mt-[5vh] hidden lg:block ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            {loading ? "Signing In..." : "<Sign In with Google>"}
-          </motion.button>
+  onClick={handleLogin}
+  disabled={loading}
+  className={`text-white text-sm sm:text-xl mt-[5vh] lg:hidden tracking-tighter ${
+    loading ? "opacity-50 cursor-not-allowed" : ""
+  }`}
+>
+  <motion.span
+    className="inline-block mr-2" // Fix for scaling text
+    animate={{ scale: [1, 1.5, 1] }}
+    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+  >
+    {"<"}
+  </motion.span>
+  Sign In with Google
+  <motion.span
+    className="inline-block ml-2" // Fix for scaling text
+    animate={{ scale: [1, 1.5, 1] }}
+    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+  >
+    {" > "}
+  </motion.span>
+</motion.button>
+
+<motion.button
+  onClick={handleLogin}
+  disabled={loading}
+  className={`text-white text-2xl mt-[5vh] hidden lg:block ${
+    loading ? "opacity-50 cursor-not-allowed" : ""
+  }`}
+>
+  <motion.span
+    className="inline-block mr-2" // Fix for scaling text
+    animate={{ scale: [1, 1.5, 1] }}
+    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+  >
+    {"<"}
+  </motion.span>
+  Sign In with Google
+  <motion.span
+    className="inline-block ml-2" // Fix for scaling text
+    animate={{ scale: [1, 1.5, 1] }}
+    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+  >
+    {" >"}
+  </motion.span>
+</motion.button>
+
+
+
         </>
       )}
 
