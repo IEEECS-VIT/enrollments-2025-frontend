@@ -5,6 +5,7 @@ import { LoadDashboard } from "../api/user";
 import Loader from "./Loader";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import { ToastContainer } from "react-toastify";
 
 interface Quiz {
   domain: string;
@@ -22,7 +23,8 @@ export default function Dashboard(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [selectedQuiz] = useState<Quiz | null>(null);
+  // const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null); - USE THIS LINE AFTER DOMAIN SELECTION DELETE ABOVE LINE 
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -34,7 +36,6 @@ export default function Dashboard(): JSX.Element {
         const response = await LoadDashboard(1);
         setQuizData(response);
       } catch (error) {
-        console.error("Error fetching quiz data:", error);
       } finally {
         setLoading(false);
       }
@@ -43,19 +44,19 @@ export default function Dashboard(): JSX.Element {
     fetchQuizData();
   }, []);
 
-  const handleStartQuiz = (quiz: Quiz) => {
-    const isMobileDevice =
-      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-      window.innerWidth < 1024;
+  // const handleStartQuiz = (quiz: Quiz) => {
+  //   const isMobileDevice =
+  //     /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  //     window.innerWidth < 1024;
 
-    if (isMobileDevice) {
-      setDeviceWarningModal(true);
-      return; // Prevent quiz start on mobile
-    } else {
-      setSelectedQuiz(quiz);
-      setPermissionModal(true);
-    } // Show permission request modal first
-  };
+  //   if (isMobileDevice) {
+  //     setDeviceWarningModal(true);
+  //     return; // Prevent quiz start on mobile
+  //   } else {
+  //     setSelectedQuiz(quiz);
+  //     setPermissionModal(true);
+  //   } // Show permission request modal first
+  // };
 
   const requestPermissions = async () => {
     try {
@@ -65,12 +66,11 @@ export default function Dashboard(): JSX.Element {
       });
 
       if (stream) {
-        console.log("Permissions granted");
+        
         setPermissionModal(false); // Hide modal if permissions are granted
         setShowModal(true);
       }
     } catch (error) {
-      console.error("Permission denied:", error);
       alert("Camera and microphone access is required to continue.");
     }
   };
@@ -96,10 +96,6 @@ export default function Dashboard(): JSX.Element {
         }
       };
 
-      dbRequest.onerror = function () {
-        console.error("❌ Failed to open IndexedDB.");
-      };
-
       dbRequest.onsuccess = function (event) {
         const db = (event.target as IDBOpenDBRequest).result;
         const transaction = db.transaction("cookies", "readwrite");
@@ -121,9 +117,6 @@ export default function Dashboard(): JSX.Element {
               key: `${selectedQuiz.subDomain}Expiry`,
               value: cookieValue,
             });
-            console.log("✅ New expiry time saved in IndexedDB.");
-          } else {
-            console.log("⏳ Using existing expiry time from IndexedDB.");
           }
 
           if (document.documentElement.requestFullscreen) {
@@ -132,8 +125,7 @@ export default function Dashboard(): JSX.Element {
               .then(() => {
                 navigate("/quiz", { state: { quiz: selectedQuiz } });
               })
-              .catch((err) => {
-                console.error("❌ Fullscreen request failed:", err);
+              .catch(() => {
                 navigate("/quiz", { state: { quiz: selectedQuiz } }); // Navigate even if fullscreen fails
               });
           } else {
@@ -145,6 +137,8 @@ export default function Dashboard(): JSX.Element {
     setShowModal(false);
   };
   return (
+    <>
+    <ToastContainer />
     <div className="relative min-h-screen flex items-center justify-center">
       <div className="absolute w-full pointer-events-none">
         <Treecloud />
@@ -157,19 +151,20 @@ export default function Dashboard(): JSX.Element {
       )}
 
       <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
+        
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl sm:text-4xl mb-8  ">PENDING QUIZZES</h2>
+          <h2 className="text-xl sm:text-4xl mb-4 sm:mb-8">PENDING QUIZZES</h2>
           <div className="flex gap-4 md:flex-row flex-col">
             {quizData.pending.length > 0 ? (
               quizData.pending.map((quiz, index) => (
                 <div
                   key={index}
-                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white hover:border-orange-500 transition duration-300 cursor-pointer"
-                  onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
+                  className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center h-16 md:h-24 justify-center text-white hover:border-orange-500 transition duration-300 cursor-pointer"
+                  //onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
                 >
-                  <h3 className="text-xl">{quiz.domain}</h3>
+                  <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                   {quiz.subDomain && (
-                    <p className="text-xl text-gray-400">{quiz.subDomain}</p>
+                    <p className="text-md sm:text-xl text-gray-400">{quiz.subDomain}</p>
                   )}
                 </div>
               ))
@@ -180,7 +175,7 @@ export default function Dashboard(): JSX.Element {
         </div>
 
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl sm:text-4xl mt-8 md:mt-12 mb-4">
+          <h2 className="text-xl sm:text-4xl mt-8 md:mt-12 mb-4">
             COMPLETED QUIZZES
           </h2>
           <div className="flex gap-4 md:flex-row flex-col">
@@ -190,9 +185,9 @@ export default function Dashboard(): JSX.Element {
                   key={index}
                   className="border-2 rounded-3xl px-8 py-4 flex flex-col items-center justify-center text-white hover:border-white transition duration-300"
                 >
-                  <h3 className="text-xl">{quiz.domain}</h3>
+                  <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                   {quiz.subDomain && (
-                    <p className="text-xl text-gray-400">{quiz.subDomain}</p>
+                    <p className="text-md sm:text-xl text-gray-400">{quiz.subDomain}</p>
                   )}
                 </div>
               ))
@@ -272,5 +267,6 @@ export default function Dashboard(): JSX.Element {
         </div>
       )}
     </div>
+    </>
   );
 }

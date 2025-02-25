@@ -46,11 +46,9 @@ export async function getAuthToken(): Promise<string> {
           });
           resolve(freshToken);
         } catch (error) {
-          console.error("Error refreshing token:", error);
           reject("Failed to refresh token");
         }
       } else {
-        console.warn("User not authenticated, signing in...");
         try {
           const result = await signInWithPopup(auth, provider);
           const idToken = await result.user.getIdToken();
@@ -60,7 +58,6 @@ export async function getAuthToken(): Promise<string> {
           });
           resolve(idToken);
         } catch (error) {
-          console.error("Sign-in error:", error);
           reject("Sign-in failed");
         }
       }
@@ -91,10 +88,7 @@ const ProtectedRequest = async <T = unknown>(
     return response;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(
-        `Error with protected request to ${endpoint}:`,
-        error.message
-      );
+      
     }
     throw error;
   }
@@ -111,10 +105,8 @@ export async function Login(): Promise<ResponseData> {
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
-  console.log("in api");
   const response = await ProtectedRequest<ProfileData>("GET", "/user/profile");
   const data = response.data;
-  console.log(data, "in api");
   return {
     username: data.username,
     mobile: data.mobile,

@@ -139,7 +139,7 @@ export default function Technical() {
             TECHNICAL
           </p>
         </div>
-        <div className="text-yellow-400 text-lg mt-8 ml-2 sm:mt-0 sm:ml-0">
+        <div className="text-yellow-400 text-sm text-center sm:text-lg mt-8 ml-2 sm:mt-0 sm:ml-0">
           *CC ( Competitive Coding ) can be chosen as an additional subdomain
           under Tech.
         </div>

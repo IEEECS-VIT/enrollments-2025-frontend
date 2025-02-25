@@ -23,7 +23,6 @@ export default function Profile() {
         const data: ProfileData = await LoadProfile();
         setProfileData(data);
       } catch (error: any) {
-        console.error("Failed to load profile data:", error);
 
         // Check if the error is a 404 and redirect
         if (error.response && error.response.status === 401) {

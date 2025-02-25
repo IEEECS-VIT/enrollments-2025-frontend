@@ -122,14 +122,16 @@ export default function Domains() {
         ...(designData.length > 0 && { Design: designData }),
       };
 
-      console.log(allSelectedData);
 
       const response = await SubmitDomains(allSelectedData);
       if (response.status === 200) {
         setTimeout(() => {
-          navigate("/profile");
-        }, 1000);
+          navigate("/dashboard");
+        }, 500);
         showToastSuccess("Domains selected successfully");
+        setTimeout(() => {
+          showToastWarning("Quiz will be starting soon")
+        }, 2000);
       }
     }
     localStorage.clear();
