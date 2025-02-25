@@ -91,7 +91,7 @@ export const getQuizData = async (subdomain: string) => {
   return decryptedData.quiz; // Return quiz questions
 };
 
-// Delete quiz data manually
+// Delete quiz data manually  
 export const deleteQuizData = async (subdomain: string) => {
   const db = await getDb();
   await db.delete(STORE_NAME, subdomain);
