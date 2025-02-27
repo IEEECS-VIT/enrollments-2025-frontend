@@ -24,7 +24,7 @@ import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
-// import { ToastContainer } from "react-toastify";
+import { Navigate } from "react-router-dom";
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.98 },
@@ -87,6 +87,12 @@ const AppContent = () => {
                 <Route path="dashboard" element={<Dashboard />} />
                 {/* <Route path="task" element={<Tasks />} /> */}
                 <Route path="quiz-complete" element={<QuizComplete />} />
+                <Route
+                  path="domain"
+                  element={(() => {
+                    return <Navigate to="/dashboard" />;
+                  })()}
+                />
               </Route>
 
               <Route path="*" element={<NotFound />} />

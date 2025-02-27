@@ -181,7 +181,7 @@ export default function Dashboard(): JSX.Element {
                 PENDING QUIZZES
               </h2>
               <span className="font-sans text-lg text-yellow-400">
-                *Round 1 is Live Now , join{" "}
+                *Round-1 is live. Join{" "}
                 <a
                   href="https://discord.gg/j2Pt6A4YNK"
                   target="_blank"

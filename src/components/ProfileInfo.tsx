@@ -77,7 +77,8 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                                 domain === "UI/UX" ||
                                 domain === "RND" ||
                                 domain === "PNM" ||
-                                domain === "IOT"
+                                domain === "IOT" ||
+                                domain === "CC"
                                   ? domain
                                   : domain
                                       .toLowerCase()
