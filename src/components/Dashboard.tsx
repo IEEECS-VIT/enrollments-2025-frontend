@@ -180,7 +180,7 @@ export default function Dashboard(): JSX.Element {
               <h2 className="text-xl text-center sm:text-4xl">
                 PENDING QUIZZES
               </h2>
-              <span className="font-sans text-lg text-yellow-400">
+              <span className="font-sans text-center text-lg text-yellow-400">
                 *Round-1 is live. Join{" "}
                 <a
                   href="https://discord.gg/j2Pt6A4YNK"

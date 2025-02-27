@@ -27,6 +27,7 @@ import {
 import handleSubmit from "../utils/quizUtils.ts";
 import ImageModal from "./ImageModal.tsx";
 import { showToastWarning } from "../Toast.ts";
+import { ToastContainer } from "react-toastify";
 // import findCorrectAnswerIndex from "../utils/calculateScore.ts";
 
 interface QuizData {
@@ -189,45 +190,52 @@ export default function Questions() {
     if (savedTabSwitchCount) {
       setTabSwitchCount(parseInt(savedTabSwitchCount, 10));
     }
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        setTabSwitchCount((prevCount) => {
-          const newCount = prevCount + 1;
-          localStorage.setItem("tabSwitchCount", newCount.toString());
-          if (newCount >= 4) {
-            handleSubmit(
-              subdomain,
-              domain,
-              round,
-              navigate,
-              true,
-              setLoadingSubmit
-            );
-          }
-          return newCount;
-        });
-        setShowTabSwitchModal(true);
-      }
-    };
-
-    const handleBlur = () => {
+  
+    let hasSwitched = false; // Prevents double counting
+  
+    const incrementTabSwitchCount = () => {
       setTabSwitchCount((prevCount) => {
         const newCount = prevCount + 1;
         localStorage.setItem("tabSwitchCount", newCount.toString());
+  
+        if (newCount >= 4) {
+          handleSubmit(
+            subdomain,
+            domain,
+            round,
+            navigate,
+            true,
+            setLoadingSubmit
+          );
+        }
         return newCount;
       });
+  
       setShowTabSwitchModal(true);
     };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("blur", handleBlur);
-
+  
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (!hasSwitched) {
+          hasSwitched = true;
+          incrementTabSwitchCount();
+        }
+      }
+    };
+  
+    const handleFocus = () => {
+      hasSwitched = false; // Reset when user comes back
+    };
+  
+    window.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+  
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
     };
   }, []);
+  
 
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   useEffect(() => {
@@ -357,6 +365,7 @@ export default function Questions() {
 
   return (
     <>
+    <ToastContainer />
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
         <div className="flex items-center justify-center w-full">
           <h2 className="absolute flex-col my-4 mt-20 text-5xl md:m-1 font-playmegames">
@@ -531,6 +540,12 @@ export default function Questions() {
           Object.values(selectedAnswers).filter((v) => v !== "").length
         }/${quizData.questions.length} questions.`}
             onConfirm={() => {
+              if (Object.values(selectedAnswers).filter((v) => v !== "").length === 0) {
+                // Show toast notification when no answers selected
+                showToastWarning("Please select at least one answer before submitting");
+                setShowModal(false);
+                return; // Don't proceed with submission
+              }
               setShowModal(false);
               // Call the imported handleSubmit function
               handleSubmit(
