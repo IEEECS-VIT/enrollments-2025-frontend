@@ -105,7 +105,7 @@ export const handleSubmit = async (
       setTimeout(() => {
         showToastSuccess(
           isAutoSubmit
-            ? "Time's up! Quiz submitted automatically"
+            ? "Quiz submitted automatically"
             : "Quiz submitted successfully"
         );
       }, 500);

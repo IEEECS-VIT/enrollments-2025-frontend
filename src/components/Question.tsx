@@ -44,10 +44,10 @@ export default function Questions() {
   const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domain = subdomain?.toUpperCase();
   const [showLeaveModal] = useState(false);
-  const [, setTabSwitchCount] = useState(0);
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [hasUnsavedChanges] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [showPermissionModal] = useState(false);
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [quizData, setQuizData] = useState<QuizData>({ questions: [] });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -62,7 +62,7 @@ export default function Questions() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
-  const [, setShowTabSwitchModal] = useState(false);
+  const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
 
   // const [count, setCount] = useState(0);
 
@@ -141,6 +141,27 @@ export default function Questions() {
   }, [subdomain]);
 
   useEffect(() => {
+    const handlePermissionChange = async () => {
+      try {
+        const cameraPermission = await navigator.permissions.query({ name: "camera" as PermissionName });
+        const microphonePermission = await navigator.permissions.query({ name: "microphone" as PermissionName });
+  
+        const reloadOnChange = () => window.location.reload();
+  
+        cameraPermission.onchange = reloadOnChange;
+        microphonePermission.onchange = reloadOnChange;
+        if (cameraPermission.state === "denied" || microphonePermission.state === "denied") {
+          setShowPermissionModal(true);
+        }
+      } catch (error) {
+        console.error("Permission API not supported or error occurred:", error);
+      }
+    };
+  
+    handlePermissionChange();
+  }, []);
+
+  useEffect(() => {
     fetchExpiryTime(subdomain).then(setExpiryTimestamp);
     disableDevTools();
     disableRightClick();
@@ -157,7 +178,6 @@ export default function Questions() {
   }, [confirmed, hasUnsavedChanges, notSubmitted]);
 
   useEffect(() => {
-    // Load tab switch count from localStorage on component mount
     const savedTabSwitchCount = localStorage.getItem("tabSwitchCount");
     if (savedTabSwitchCount) {
       setTabSwitchCount(parseInt(savedTabSwitchCount, 10));
@@ -167,7 +187,17 @@ export default function Questions() {
       if (document.hidden) {
         setTabSwitchCount((prevCount) => {
           const newCount = prevCount + 1;
-          localStorage.setItem("tabSwitchCount", newCount.toString()); // Store updated value
+          localStorage.setItem("tabSwitchCount", newCount.toString());
+          if (newCount >= 5) {
+            handleSubmit(
+              subdomain,
+              domain,
+              round,
+              navigate,
+              true,
+              setLoadingSubmit
+            );
+          } 
           return newCount;
         });
         setShowTabSwitchModal(true);
@@ -177,7 +207,7 @@ export default function Questions() {
     const handleBlur = () => {
       setTabSwitchCount((prevCount) => {
         const newCount = prevCount + 1;
-        localStorage.setItem("tabSwitchCount", newCount.toString()); // Store updated value
+        localStorage.setItem("tabSwitchCount", newCount.toString()); 
         return newCount;
       });
       setShowTabSwitchModal(true);
@@ -225,6 +255,21 @@ export default function Questions() {
 
     return () => clearInterval(timerInterval);
   }, [expiryTimestamp, isTimerExpired]);
+
+  useEffect(() => {
+    if (isTimerExpired) {
+      console.log("Timer expired, force-submitting quiz.");
+      handleSubmit(
+        subdomain,
+        domain,
+        round,
+        navigate,
+        true,
+        setLoadingSubmit
+      );
+    }
+  }, [isTimerExpired]);
+  
 
   const formattedTime = `${String(timeLeft.minutes).padStart(2, "0")}:${String(
     timeLeft.seconds
@@ -427,17 +472,17 @@ export default function Questions() {
           </div>
         )}
 
-        {/* {showTabSwitchModal && (
+{showTabSwitchModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-md tracking-widest font-normal font-retro-gaming">
                 You have switched tabs {tabSwitchCount}{" "}
                 {tabSwitchCount === 1 ? "time" : "times"}!
                 <br />
-                Please stay on this tab to avoid potential disqualification.
+                Quiz will AutoSubmit after 5 tab switches .
               </p>
               <div className="flex justify-center mt-4">
-                <button
+                <button 
                   className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
                   onClick={() => setShowTabSwitchModal(false)}
                 >
@@ -446,7 +491,9 @@ export default function Questions() {
               </div>
             </div>
           </div>
-        )} */}
+        )}
+
+
 
         {showFullScreenModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
