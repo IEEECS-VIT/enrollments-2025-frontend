@@ -28,17 +28,19 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "HOME", path: "/" },
-    { name: "DOMAINS", path: "/domain" },
+    // { name: "DOMAINS", path: "/domain" },
     { name: "DASHBOARD", path: "/dashboard" },
     { name: "FAQS", path: "/faqs" },
   ];
 
   const navLinksMobile = [
     { name: "HOME", path: "/" },
-    { name: "DOMAINS", path: "/domain" },
+    // { name: "DOMAINS", path: "/domain" },
+    
     { name: "DASHBOARD", path: "/dashboard" },
     { name: "PROFILE", path: "/profile" },
     { name: "FAQS", path: "/faqs" },
+    
   ];
 
   const container = {

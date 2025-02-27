@@ -32,7 +32,7 @@ const QuestionNumber: React.FC<QuestionNumberProps> = ({
           <div
             key={number}
             onClick={() => onQuestionChange(number)} // Change question when clicked
-            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg mx-1 sm:mx-2 text-white cursor-pointer hover:bg-[#f8770f] transition-all 
+            className={`flex items-center justify-center bg-black w-8 h-8 sm:w-10 sm:h-10 rounded-lg mx-1 sm:mx-2 text-white cursor-pointer hover:bg-[#f8770f] transition-all 
               ${
                 currentQuestionIndex === number
                   ? "border-2 border-[#f8770f]"

@@ -1,9 +1,26 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import Treecloud from "./Treecloud";
 
 export default function QuizComplete() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Replace current history entry with the same page to prevent going back
+    window.history.replaceState(null, "", "/quiz-complete");
+
+    // Handle back button press
+    const handleBackButton = () => {
+      navigate("/dashboard", { replace: true });
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, [navigate]);
 
   return (
     <div className="relative min-h-screen flex items-center justify-center">

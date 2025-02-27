@@ -132,9 +132,6 @@ export default function Domains() {
           navigate("/dashboard");
         }, 500);
         showToastSuccess("Domains selected successfully");
-        setTimeout(() => {
-          showToastWarning("Quiz will be starting soon");
-        }, 2000);
       }
     }
     localStorage.clear();

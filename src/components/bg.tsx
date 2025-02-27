@@ -38,7 +38,7 @@ const Bg = () => {
         },
         modes: {
           push: {
-            quantity: 8, // Number of particles to add on click
+            quantity: 3, // Number of particles to add on click
           },
         },
       },
