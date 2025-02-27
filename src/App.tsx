@@ -19,7 +19,7 @@ import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
-import Tasks from "./components/Tasks";
+//import Tasks from "./components/Tasks";
 import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
