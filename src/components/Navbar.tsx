@@ -30,14 +30,15 @@ export default function Navbar() {
     { name: "HOME", path: "/" },
     // { name: "DOMAINS", path: "/domain" },
     { name: "DASHBOARD", path: "/dashboard" },
+    { name: "DISCORD", path: "https://discord.com/invite/j2Pt6A4YNK" },
     { name: "FAQS", path: "/faqs" },
   ];
 
   const navLinksMobile = [
     { name: "HOME", path: "/" },
     // { name: "DOMAINS", path: "/domain" },
-    
     { name: "DASHBOARD", path: "/dashboard" },
+    { name: "DISCORD", path: "https://discord.com/invite/j2Pt6A4YNK" },
     { name: "PROFILE", path: "/profile" },
     { name: "FAQS", path: "/faqs" },
     
@@ -98,7 +99,11 @@ export default function Navbar() {
         {navLinks.map((link) => (
           <button
             key={link.name}
-            onClick={() => navigate(link.path)}
+            onClick={() =>
+              link.name === "DISCORD"
+                ? window.open(link.path, "_blank")
+                : navigate(link.path)
+            }
             className={`${
               isActive(link.path)
                 ? "text-[#F87D10] underline"
@@ -192,8 +197,12 @@ export default function Navbar() {
                     key={link.name}
                     variants={item}
                     onClick={() => {
-                      navigate(link.path);
-                      toggleMenu();
+                      if (link.name === "DISCORD") {
+                        window.open(link.path, "_blank");
+                      } else {
+                        navigate(link.path);
+                        toggleMenu();
+                      }
                     }}
                     className={`cursor-pointer text-xl sm:text-2xl font-press-start transition-colors duration-300 ${
                       isActive(link.path)

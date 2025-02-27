@@ -188,7 +188,7 @@ export default function Questions() {
         setTabSwitchCount((prevCount) => {
           const newCount = prevCount + 1;
           localStorage.setItem("tabSwitchCount", newCount.toString());
-          if (newCount >= 5) {
+          if (newCount >= 4) {
             handleSubmit(
               subdomain,
               domain,
@@ -463,7 +463,14 @@ export default function Questions() {
               <div className="flex justify-center mt-4">
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                  // onClick={() => window.location.reload()}
+                  onClick={async () => {
+                    try {
+                      await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                      alert("Permissions granted!");
+                    } catch (error) {
+                      alert("Permission denied! Please allow access in settings.");
+                    }
+                  }}
                 >
                   Grant Permissions
                 </button>
@@ -479,7 +486,7 @@ export default function Questions() {
                 You have switched tabs {tabSwitchCount}{" "}
                 {tabSwitchCount === 1 ? "time" : "times"}!
                 <br />
-                Quiz will AutoSubmit after 5 tab switches .
+                Quiz will AutoSubmit after 3 tab switches .
               </p>
               <div className="flex justify-center mt-4">
                 <button 
@@ -542,7 +549,7 @@ export default function Questions() {
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-lg font-semibold font-retro-gaming">
                 Are you sure you want to leave? <br /> Your progress will be
-                lost, and the timer will keep running!
+                restored, and the timer will keep running!
               </p>
               <div className="flex justify-center mt-4">
                 <button
