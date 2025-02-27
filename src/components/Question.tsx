@@ -2,20 +2,19 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import QuestionNumber from "./QuestionNumber.tsx";
-import { SubmitAnswers, LoadQuestions } from "../api/user.ts";
+import { LoadQuestions } from "../api/user.ts";
 import Loader from "./Loader";
 import ConfirmationModal from "./Modal.tsx";
-import { showToastSuccess, showToastWarning } from "../Toast.ts";
 import { disableDevTools, disableRightClick } from "../utils/SecurityUtils.tsx";
 import {
   fetchExpiryTime,
   getQuizData,
   storeQuizData,
+  deleteExpiryFromSecureDB,
 } from "../utils/indexedDb.ts";
 import {
   saveAnswersToLocalStorage,
   loadAnswersFromLocalStorage,
-  clearAnswersFromLocalStorage,
 } from "../utils/localStorage.ts";
 import {
   handleBackButtonWarning,
@@ -25,7 +24,10 @@ import {
   addFullscreenListener,
   handleReEnterFullscreen,
 } from "../utils/fullscreen.ts";
+import handleSubmit from "../utils/quizUtils.ts";
 import ImageModal from "./ImageModal.tsx";
+import { showToastWarning } from "../Toast.ts";
+// import findCorrectAnswerIndex from "../utils/calculateScore.ts";
 
 interface QuizData {
   questions: {
@@ -42,7 +44,7 @@ export default function Questions() {
   const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domain = subdomain?.toUpperCase();
   const [showLeaveModal] = useState(false);
-  const [tabSwitchCount, setTabSwitchCount] = useState(0);
+  const [, setTabSwitchCount] = useState(0);
   const [hasUnsavedChanges] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [showPermissionModal] = useState(false);
@@ -60,7 +62,7 @@ export default function Questions() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
   const [isTimerExpired, setIsTimerExpired] = useState(false);
-  const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
+  const [, setShowTabSwitchModal] = useState(false);
 
   // const [count, setCount] = useState(0);
 
@@ -73,7 +75,7 @@ export default function Questions() {
       setLoading(true);
 
       // Try to fetch from IndexedDB first
-      const cachedQuizData = await getQuizData(subdomain);
+      const cachedQuizData = await getQuizData(subdomain, navigate);
       if (cachedQuizData) {
         setQuizData(cachedQuizData);
 
@@ -88,27 +90,39 @@ export default function Questions() {
       }
 
       try {
-        // Fetch from backend if not found in IndexedDB
         const data = await LoadQuestions({ subdomain });
-        // const count = data.questions.filter(
-        //   (question) => !question.options
-        // ).length;
-        // Cookies.set("count", count.toString(), { expires: 1 / 24 });
-        // setCount(count);
-        setQuizData(data);
-
-        // Store fetched questions securely
-        await storeQuizData(subdomain, data);
-
-        // Load answers from localStorage
-        const savedAnswers = loadAnswersFromLocalStorage(subdomain);
-        if (savedAnswers) {
-          setSelectedAnswers(savedAnswers);
+        if (data.error) {
+          setLoading(false);
+          // setTimeout(
+          //   () => showToastWarning(data.error || "Unable to fetch data"),
+          //   2000
+          // );
+          showToastWarning(data.error || "Unable to fetch data");
+          await deleteExpiryFromSecureDB(subdomain);
+          Cookies.remove("subdomain");
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          }
+          navigate("/dashboard");
+        } else {
+          setQuizData(data);
+          await storeQuizData(subdomain, data);
+          const savedAnswers = loadAnswersFromLocalStorage(subdomain);
+          if (savedAnswers) {
+            setSelectedAnswers(savedAnswers);
+          }
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching quiz data:", error);
-      } finally {
+      } catch (error: string | any) {
+        console.error(error);
         setLoading(false);
+        showToastWarning(error);
+        await deleteExpiryFromSecureDB(subdomain);
+        Cookies.remove("subdomain");
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        navigate("/dashboard");
       }
     };
 
@@ -178,68 +192,6 @@ export default function Questions() {
     };
   }, []);
 
-  const handleSubmit = async (isAutoSubmit = false) => {
-    setLoadingSubmit(true);
-
-    try {
-      const currentQuizData = await await getQuizData(subdomain);
-      const savedAnswers = loadAnswersFromLocalStorage(subdomain);
-
-      const score = calculateScore(currentQuizData, savedAnswers);
-
-      // console.log(score);
-
-      if (!currentQuizData || !currentQuizData.questions) {
-        throw new Error("Quiz data not loaded properly.");
-      }
-
-      if (Object.keys(savedAnswers).length === 0 && !isAutoSubmit) {
-        throw new Error("No answers to submit.");
-      }
-
-      const answers = currentQuizData.questions.map(
-        (_: any, index: number) => savedAnswers[index]?.toString().trim() || ""
-      );
-
-      const result = await SubmitAnswers(
-        round,
-        domain,
-        currentQuizData.questions.map((q: { question: string }) => q.question),
-        answers,
-        score
-      );
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      }
-
-      if (result.status === 200) {
-        setLoadingSubmit(false);
-        clearAnswersFromLocalStorage(subdomain);
-
-        localStorage.setItem("tabSwitchCount", "0");
-        setTabSwitchCount(0);
-        setTimeout(() => {
-          navigate("/quiz-complete");
-        }, 100);
-        setTimeout(() => {
-          showToastSuccess(
-            isAutoSubmit
-              ? "Time's up! Quiz submitted automatically"
-              : "Quiz submitted successfully"
-          );
-        }, 500);
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-      setLoadingSubmit(false);
-      showToastWarning(
-        isAutoSubmit
-          ? "Automatic submission failed. Please try manual submission."
-          : "Submission failed. Please try again."
-      );
-    }
-  };
-
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   useEffect(() => {
     if (!expiryTimestamp || isTimerExpired) return;
@@ -254,7 +206,15 @@ export default function Questions() {
       if (timeDiff <= 0) {
         setIsTimerExpired(true);
         clearInterval(timerInterval);
-        handleSubmit(true); // Auto-submit with flag
+        // Call the imported handleSubmit function
+        handleSubmit(
+          subdomain,
+          domain,
+          round,
+          navigate,
+          true,
+          setLoadingSubmit
+        );
       } else {
         setTimeLeft({
           minutes: Math.floor(timeDiff / 60),
@@ -269,7 +229,9 @@ export default function Questions() {
   const formattedTime = `${String(timeLeft.minutes).padStart(2, "0")}:${String(
     timeLeft.seconds
   ).padStart(2, "0")}`;
-
+  if (!quizData) {
+    navigate("/dashboard");
+  }
   useEffect(() => {
     const cleanupFullscreenListener = addFullscreenListener(
       notSubmitted,
@@ -300,29 +262,30 @@ export default function Questions() {
     );
   }
 
-  const calculateScore = (
-    quizData: QuizData,
-    selectedAnswers: { [key: number]: string | number }
-  ) => {
-    let totalScore = 0;
+  // const calculateScore = (
+  //   quizData: QuizData,
+  //   selectedAnswers: { [key: number]: string | number }
+  // ) => {
+  //   let totalScore = 0;
 
-    quizData.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === undefined) return;
+  //   quizData.questions.forEach((question, index) => {
+  //     if (selectedAnswers[index] === undefined) return;
 
-      if (question.options) {
-        // If options exist, compare selected answer with correct index
-        const correctIndex = question.correctIndex;
-        const ans = question.options[Number(correctIndex) - 37];
-        const selectedAnswer = selectedAnswers[index];
+  //     if (question.options) {
+  //       // If options exist, compare selected answer with correct index
+  //       const ans = question.options[findCorrectAnswerIndex(question)];
+  //       console.log("Correct Ans: " + ans);
+  //       const selectedAnswer = selectedAnswers[index];
+  //       console.log("Your Ans: " + selectedAnswer);
 
-        if (selectedAnswer == ans) {
-          totalScore++;
-        }
-      }
-    });
+  //       if (selectedAnswer == ans) {
+  //         totalScore++;
+  //       }
+  //     }
+  //   });
 
-    return totalScore;
-  };
+  //   return totalScore;
+  // };
 
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
@@ -353,7 +316,7 @@ export default function Questions() {
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
         <div className="flex w-full justify-center items-center">
           <h2 className="text-5xl flex-col my-4 mt-20 md:m-1 font-playmegames absolute">
-            {subdomain.toUpperCase()}
+            {subdomain?.toUpperCase()}
           </h2>
           <div className="border hidden sm:block border-white rounded-xl p-4 ml-auto">
             {formattedTime}
@@ -379,16 +342,18 @@ export default function Questions() {
               id="question"
               className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-between max-h-40 min-h-32 overflow-auto"
             >
-              {quizData.questions[currentQuestionIndex].question}
+              {quizData.questions.length > 0 &&
+                quizData.questions[currentQuestionIndex].question}
 
-              {quizData.questions[currentQuestionIndex].image_url && (
-                <button
-                  className=" bg-[#F8770f] bg-opacity-500 border-[#f8b95a] border-2 text-white px-2 py-2 rounded max-h-14 max-w-14"
-                  onClick={() => setShowImageModal(true)}
-                >
-                  <img src="../../public/imgIcon.png" alt="img" className="" />
-                </button>
-              )}
+              {quizData.questions.length &&
+                quizData.questions[currentQuestionIndex].image_url && (
+                  <button
+                    className=" bg-[#F8770f] bg-opacity-500 border-[#f8b95a] border-2 text-white px-2 py-2 rounded max-h-14 max-w-14"
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    <img src="imgIcon.png" alt="img" className="" />
+                  </button>
+                )}
               {showImageModal && (
                 <ImageModal
                   imageUrl={quizData.questions[currentQuestionIndex].image_url}
@@ -398,7 +363,8 @@ export default function Questions() {
             </div>
 
             {/* If options exist, show multiple-choice buttons */}
-            {quizData.questions[currentQuestionIndex].options ? (
+            {quizData.questions.length > 0 &&
+            quizData.questions[currentQuestionIndex].options ? (
               <div className="text-xs text-center items-center justify-center md:text-lg grid sm:grid-cols-1  md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
                 {quizData.questions[currentQuestionIndex].options.map(
                   (option, index) => (
@@ -452,7 +418,7 @@ export default function Questions() {
               <div className="flex justify-center mt-4">
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={() => window.location.reload()}
+                  // onClick={() => window.location.reload()}
                 >
                   Grant Permissions
                 </button>
@@ -461,7 +427,7 @@ export default function Questions() {
           </div>
         )}
 
-        {showTabSwitchModal && (
+        {/* {showTabSwitchModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
             <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
               <p className="text-md tracking-widest font-normal font-retro-gaming">
@@ -480,7 +446,7 @@ export default function Questions() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {showFullScreenModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
@@ -493,7 +459,7 @@ export default function Questions() {
               <div className="flex justify-center mt-4">
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
-                  onClick={() => window.location.reload()}
+                  // onClick={() => window.location.reload()}
                 >
                   Reload Page
                 </button>
@@ -510,7 +476,15 @@ export default function Questions() {
         }/${quizData.questions.length} questions.`}
             onConfirm={() => {
               setShowModal(false);
-              handleSubmit();
+              // Call the imported handleSubmit function
+              handleSubmit(
+                subdomain,
+                domain,
+                round,
+                navigate,
+                false,
+                setLoadingSubmit
+              );
             }}
             onCancel={() => setShowModal(false)}
           />
@@ -530,8 +504,6 @@ export default function Questions() {
                     e.stopPropagation();
 
                     setShowBackWarning(false);
-
-                    window.location.reload();
                   }}
                 >
                   Cancel
