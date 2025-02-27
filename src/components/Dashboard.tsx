@@ -293,11 +293,18 @@ export default function Dashboard(): JSX.Element {
               </p>
               <p className="mt-2">
                 {selectedQuiz?.subDomain &&
-                SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()]
-                  ? `You will have ${
-                      SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()]
-                    } minutes to finish it.`
-                  : "You will have 30 minutes to finish it."}
+                SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()] ? (
+                  <>
+                    You will have{" "}
+                    <span className="text-[#F8B95A] font-bold">
+                      {SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()]}{" "}
+                      minutes
+                    </span>{" "}
+                    to finish it.
+                  </>
+                ) : (
+                  "You will have 20 minutes to finish it."
+                )}
               </p>
               <div className="flex justify-center mt-4">
                 <button

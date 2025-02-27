@@ -143,21 +143,28 @@ export default function Questions() {
   useEffect(() => {
     const handlePermissionChange = async () => {
       try {
-        const cameraPermission = await navigator.permissions.query({ name: "camera" as PermissionName });
-        const microphonePermission = await navigator.permissions.query({ name: "microphone" as PermissionName });
-  
+        const cameraPermission = await navigator.permissions.query({
+          name: "camera" as PermissionName,
+        });
+        const microphonePermission = await navigator.permissions.query({
+          name: "microphone" as PermissionName,
+        });
+
         const reloadOnChange = () => window.location.reload();
-  
+
         cameraPermission.onchange = reloadOnChange;
         microphonePermission.onchange = reloadOnChange;
-        if (cameraPermission.state === "denied" || microphonePermission.state === "denied") {
+        if (
+          cameraPermission.state === "denied" ||
+          microphonePermission.state === "denied"
+        ) {
           setShowPermissionModal(true);
         }
       } catch (error) {
         console.error("Permission API not supported or error occurred:", error);
       }
     };
-  
+
     handlePermissionChange();
   }, []);
 
@@ -197,7 +204,7 @@ export default function Questions() {
               true,
               setLoadingSubmit
             );
-          } 
+          }
           return newCount;
         });
         setShowTabSwitchModal(true);
@@ -207,7 +214,7 @@ export default function Questions() {
     const handleBlur = () => {
       setTabSwitchCount((prevCount) => {
         const newCount = prevCount + 1;
-        localStorage.setItem("tabSwitchCount", newCount.toString()); 
+        localStorage.setItem("tabSwitchCount", newCount.toString());
         return newCount;
       });
       setShowTabSwitchModal(true);
@@ -259,17 +266,9 @@ export default function Questions() {
   useEffect(() => {
     if (isTimerExpired) {
       console.log("Timer expired, force-submitting quiz.");
-      handleSubmit(
-        subdomain,
-        domain,
-        round,
-        navigate,
-        true,
-        setLoadingSubmit
-      );
+      handleSubmit(subdomain, domain, round, navigate, true, setLoadingSubmit);
     }
   }, [isTimerExpired]);
-  
 
   const formattedTime = `${String(timeLeft.minutes).padStart(2, "0")}:${String(
     timeLeft.seconds
@@ -293,8 +292,8 @@ export default function Questions() {
 
   if (showFullScreenModal && notSubmitted && !isLeaving) {
     return (
-      <div className="fixed inset-0 flex flex-col  z-80  items-center justify-center bg-black bg-opacity-40 text-white text-center p-8">
-        <h2 className="text-3xl font-bold mb-4">
+      <div className="fixed inset-0 flex flex-col items-center justify-center p-8 text-center text-white bg-black z-80 bg-opacity-40">
+        <h2 className="mb-4 text-3xl font-bold">
           Enter Fullscreen to Continue
         </h2>
         <button
@@ -353,20 +352,20 @@ export default function Questions() {
   }
 
   if (!quizData) {
-    return <div className="text-center text-lg">Loading quiz...</div>;
+    return <div className="text-lg text-center">Loading quiz...</div>;
   }
 
   return (
     <>
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
-        <div className="flex w-full justify-center items-center">
-          <h2 className="text-5xl flex-col my-4 mt-20 md:m-1 font-playmegames absolute">
+        <div className="flex items-center justify-center w-full">
+          <h2 className="absolute flex-col my-4 mt-20 text-5xl md:m-1 font-playmegames">
             {subdomain?.toUpperCase()}
           </h2>
-          <div className="border hidden sm:block border-white rounded-xl p-4 ml-auto">
+          <div className="hidden p-4 ml-auto border border-white sm:block rounded-xl">
             {formattedTime}
           </div>
-          <div className="absolute group mt-4 sm:mt-0 left-4">
+          <div className="absolute mt-4 group sm:mt-0 left-4">
             <span className="pb-2 text-2xl cursor-pointer ml-4 border-[0.15rem]  bg-[#FFFFFF] text-black rounded-full w-8 h-8 flex items-center justify-center">
               ℹ
             </span>
@@ -375,17 +374,17 @@ export default function Questions() {
             </div>
           </div>
         </div>
-        <div className="border block sm:hidden mt-16 border-white rounded-xl p-4 ml-0">
+        <div className="block p-4 mt-16 ml-0 border border-white sm:hidden rounded-xl">
           {formattedTime}
         </div>
         <div className="relative flex flex-col justify-start sm:mt-4 items-center h-full w-[80vw] max-w-full font-retro-gaming">
           <div
             id="questionBox"
-            className=" w-100 sm:w-full rounded-xl h-full justify-center flex flex-col"
+            className="flex flex-col justify-center h-full w-100 sm:w-full rounded-xl"
           >
             <div
               id="question"
-              className="p-4 text-xs md:text-lg leading-6 border border-white rounded-xl flex justify-between max-h-40 min-h-32 overflow-auto"
+              className="flex justify-between p-4 overflow-auto text-xs leading-6 border border-white md:text-lg rounded-xl max-h-40 min-h-32 "
             >
               {quizData.questions.length > 0 &&
                 quizData.questions[currentQuestionIndex].question}
@@ -410,7 +409,7 @@ export default function Questions() {
             {/* If options exist, show multiple-choice buttons */}
             {quizData.questions.length > 0 &&
             quizData.questions[currentQuestionIndex].options ? (
-              <div className="text-xs text-center items-center justify-center md:text-lg grid sm:grid-cols-1  md:grid-cols-2 gap-4 mt-8 sm:mt-4 max-h-80 overflow-y-auto">
+              <div className="grid items-center justify-center gap-4 mt-8 overflow-y-auto text-xs text-center md:text-lg sm:grid-cols-1 md:grid-cols-2 sm:mt-4 max-h-80">
                 {quizData.questions[currentQuestionIndex].options.map(
                   (option, index) => (
                     <div
@@ -437,7 +436,7 @@ export default function Questions() {
             ) : (
               <div className="mt-4">
                 <textarea
-                  className="w-full h-60 mt-8 sm:mt-1 sm:h-56 p-2 border bg-transparent rounded-lg text-white font-mono resize-none overflow-auto"
+                  className="w-full p-2 mt-8 overflow-auto font-mono text-white bg-transparent border rounded-lg resize-none h-60 sm:mt-1 sm:h-56"
                   placeholder="Type your answer here"
                   onCopy={handlePreventCopyPaste}
                   onCut={handlePreventCopyPaste}
@@ -453,8 +452,8 @@ export default function Questions() {
         </div>
 
         {showPermissionModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
-            <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+            <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
               <p className="text-lg font-semibold font-retro-gaming">
                 Access to your microphone and camera is required to continue.
                 <br />
@@ -462,13 +461,18 @@ export default function Questions() {
               </p>
               <div className="flex justify-center mt-4">
                 <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                  className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
                   onClick={async () => {
                     try {
-                      await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                      await navigator.mediaDevices.getUserMedia({
+                        audio: true,
+                        video: true,
+                      });
                       alert("Permissions granted!");
                     } catch (error) {
-                      alert("Permission denied! Please allow access in settings.");
+                      alert(
+                        "Permission denied! Please allow access in settings."
+                      );
                     }
                   }}
                 >
@@ -479,18 +483,18 @@ export default function Questions() {
           </div>
         )}
 
-{showTabSwitchModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
-            <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-              <p className="text-md tracking-widest font-normal font-retro-gaming">
+        {showTabSwitchModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+            <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
+              <p className="font-normal tracking-widest text-md font-retro-gaming">
                 You have switched tabs {tabSwitchCount}{" "}
                 {tabSwitchCount === 1 ? "time" : "times"}!
                 <br />
                 Quiz will AutoSubmit after 3 tab switches .
               </p>
               <div className="flex justify-center mt-4">
-                <button 
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                <button
+                  className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
                   onClick={() => setShowTabSwitchModal(false)}
                 >
                   Okay
@@ -500,19 +504,17 @@ export default function Questions() {
           </div>
         )}
 
-
-
         {showFullScreenModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
-            <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
-              <p className="text-md tracking-wide font-semibold font-retro-gaming">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+            <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
+              <p className="font-semibold tracking-wide text-md font-retro-gaming">
                 Screen Sharing is Mandatory
                 <br />
                 Please allow screen sharing to continue the quiz.
               </p>
               <div className="flex justify-center mt-4">
                 <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                  className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
                   // onClick={() => window.location.reload()}
                 >
                   Reload Page
@@ -546,14 +548,14 @@ export default function Questions() {
 
         {showBackWarning && (
           <div className="fixed inset-0 bg-black bg-opacity-100 border-4 rounded-2xl  backdrop-blur-[25px] flex items-center justify-center font-retro-gaming">
-            <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white">
+            <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
               <p className="text-lg font-semibold font-retro-gaming">
                 Are you sure you want to leave? <br /> Your progress will be
                 restored, and the timer will keep running!
               </p>
               <div className="flex justify-center mt-4">
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
+                  className="px-4 py-2 mx-2 text-white bg-red-500 rounded-lg"
                   onClick={(e) => {
                     e.stopPropagation();
 
@@ -563,7 +565,7 @@ export default function Questions() {
                   Cancel
                 </button>
                 <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+                  className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
                   onClick={() => {
                     window.removeEventListener("beforeunload", () => {});
                     navigate("/dashboard");
@@ -588,7 +590,7 @@ export default function Questions() {
       </div>
       {currentQuestionIndex === quizData.questions.length - 1 && (
         <button
-          className="absolute md:bottom-4 bottom-4 text-white font-retro-gaming text-lg md:text-xl"
+          className="absolute text-lg text-white md:bottom-4 bottom-4 font-retro-gaming md:text-xl"
           onClick={() => setShowModal(true)}
         >
           &lt; SUBMIT &gt;
