@@ -22,31 +22,36 @@ const Bg = () => {
     () => ({
       background: {
         color: {
-          value: "#000000", // Background color
+          value: "#000000",
         },
       },
       fpsLimit: 60,
       interactivity: {
         events: {
           onClick: {
-            enable: false,
+            enable: true,
+            mode: "push", // Generates new particles on click
           },
           onHover: {
             enable: false,
           },
         },
-        modes: {},
+        modes: {
+          push: {
+            quantity: 8, // Number of particles to add on click
+          },
+        },
       },
       particles: {
         color: {
-          value: ["#A11414", "#2D4F97", "#D9D9D9"], // Random confetti colors
+          value: ["#A11414", "#2D4F97", "#D9D9D9"],
         },
         move: {
           enable: true,
           speed: 2,
-          direction: MoveDirection.none, // Confetti can move in multiple directions
+          direction: MoveDirection.none,
           outModes: {
-            default: OutMode.out, // Particles disappear after leaving the screen
+            default: OutMode.out,
           },
           random: true,
           straight: false,
@@ -54,18 +59,18 @@ const Bg = () => {
         number: {
           density: {
             enable: true,
-            area: 800, // Spread the particles over a larger area
+            area: 800,
           },
-          value: 200, // Number of particles
+          value: 200,
         },
         opacity: {
-          value: { min: 1, max: 1 }, // Make particles slightly transparent
+          value: { min: 1, max: 1 },
         },
         shape: {
-          type: ["square"], // Random shapes for confetti
+          type: ["square"],
         },
         size: {
-          value: { min: 3, max: 5 }, // Varying confetti sizes
+          value: { min: 3, max: 5 },
           random: true,
         },
       },
@@ -76,10 +81,7 @@ const Bg = () => {
   if (init) {
     return (
       <div className="absolute inset-0 z-1">
-        <Particles
-          id="tsparticles"
-          options={options}
-        />
+        <Particles id="tsparticles" options={options} />
       </div>
     );
   }

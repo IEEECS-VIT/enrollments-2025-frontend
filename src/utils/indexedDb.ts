@@ -74,25 +74,83 @@ export const storeQuizData = async (subdomain: string, data: any) => {
 };
 
 // Retrieve quiz data (only if not expired)
-export const getQuizData = async (subdomain: string) => {
+export const getQuizData = async (
+  subdomain: string,
+  navigate: (path: string) => void
+) => {
   const db = await getDb();
-  const encryptedData = await db.get(STORE_NAME, subdomain);
 
-  if (!encryptedData) return null; // No data found
+  try {
+    const encryptedData = await db.get(STORE_NAME, subdomain);
 
-  const decryptedData = decryptData(encryptedData);
+    if (!encryptedData) {
+      return null;
+    } // No data found
 
-  // Check if expired
-  if (!decryptedData || Date.now() - decryptedData.timestamp > EXPIRY_TIME_MS) {
-    await deleteQuizData(subdomain);
-    return null;
+    const decryptedData = decryptData(encryptedData);
+
+    // Check if expired
+    if (
+      !decryptedData ||
+      Date.now() - decryptedData.timestamp > EXPIRY_TIME_MS
+    ) {
+      await deleteQuizData(subdomain);
+      return null;
+    }
+
+    return decryptedData.quiz;
+  } catch (e) {
+    console.error(e);
+    navigate("/dashboard");
   }
 
-  return decryptedData.quiz; // Return quiz questions
+  // Return quiz questions
 };
 
-// Delete quiz data manually  
+// Delete quiz data manually
 export const deleteQuizData = async (subdomain: string) => {
   const db = await getDb();
   await db.delete(STORE_NAME, subdomain);
+};
+
+export const deleteQuizDataFromIndexedDB = async (subdomain: string) => {
+  try {
+    const db = await getDb();
+    await db.delete(STORE_NAME, subdomain);
+    console.log(`✅ Deleted quiz data for ${subdomain} from QuizDB.`);
+  } catch (error) {
+    console.error(
+      `❌ Failed to delete quiz data for ${subdomain} from QuizDB.`,
+      error
+    );
+  }
+};
+
+export const deleteExpiryFromSecureDB = async (subdomain: string) => {
+  return new Promise((resolve, reject) => {
+    const dbRequest = indexedDB.open("secureDB", 1);
+
+    dbRequest.onsuccess = function (event) {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction("cookies", "readwrite");
+      const store = transaction.objectStore("cookies");
+
+      const deleteRequest = store.delete(`${subdomain}Expiry`);
+
+      deleteRequest.onsuccess = function () {
+        console.log(`✅ Deleted ${subdomain}Expiry from secureDB.`);
+        resolve(true);
+      };
+
+      deleteRequest.onerror = function () {
+        console.error(`❌ Failed to delete ${subdomain}Expiry from secureDB.`);
+        reject(false);
+      };
+    };
+
+    dbRequest.onerror = function () {
+      console.error("❌ Failed to open secureDB.");
+      reject(false);
+    };
+  });
 };

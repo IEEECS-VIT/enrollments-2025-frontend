@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
 import { auth, provider } from "../firebaseConfig";
+// import { showToastWarning } from "../Toast";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -88,7 +89,6 @@ const ProtectedRequest = async <T = unknown>(
     return response;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      
     }
     throw error;
   }
@@ -204,6 +204,7 @@ export interface Question {
 
 export interface QuestionData {
   questions: Question[];
+  error?: string;
 }
 
 export async function LoadQuestions({
@@ -211,9 +212,24 @@ export async function LoadQuestions({
 }: {
   subdomain: string;
 }): Promise<QuestionData> {
-  const response = await ProtectedRequest<QuestionData>(
-    "GET",
-    `/domain/questions?domain=${subdomain}&round=1`
-  );
-  return response.data;
+  try {
+    const response = await ProtectedRequest<QuestionData>(
+      "GET",
+      `/domain/questions?domain=${subdomain}&round=1`
+    );
+    console.log(response.status);
+
+    if (response.status == 204) {
+      return {
+        questions: [],
+        error: "Failed to fetch quiz data, Try again later",
+      };
+    }
+    return response.data;
+  } catch (err: any) {
+    return {
+      questions: [],
+      error: "Failed to fetch quiz data, Try again later",
+    };
+  }
 }

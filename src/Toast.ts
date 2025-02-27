@@ -1,6 +1,6 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-export const showToastWarning = (message: string) => {
+export const showToastWarning = (message: string, options?: any) => {
   toast.warning(message, {
     autoClose: 3000,
     hideProgressBar: true,
@@ -8,7 +8,8 @@ export const showToastWarning = (message: string) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    className: 'custom-toast',
+    className: "custom-toast",
+    ...options,
   });
 };
 
@@ -20,6 +21,6 @@ export const showToastSuccess = (message: string) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    className: 'custom-toast',
+    className: "custom-toast",
   });
 };
