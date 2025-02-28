@@ -86,10 +86,10 @@ export default function Domains() {
       return;
     }
     const techDomains = localStorage.getItem("technical") || "[]";
-    console.log(techDomains.length);
+    // console.log(techDomains.length);
 
     const flag = techDomains == '["CC"]';
-    console.log(flag);
+    // console.log(flag);
 
     if (
       !flag &&
