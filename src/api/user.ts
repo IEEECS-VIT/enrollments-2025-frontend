@@ -217,7 +217,6 @@ export async function LoadQuestions({
       "GET",
       `/domain/questions?domain=${subdomain}&round=1`
     );
-    console.log(response.status);
 
     if (response.status == 204) {
       return {
