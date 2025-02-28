@@ -115,7 +115,6 @@ export default function Questions() {
           setLoading(false);
         }
       } catch (error: string | any) {
-        console.error(error);
         setLoading(false);
         showToastWarning(error);
         await deleteExpiryFromSecureDB(subdomain);
@@ -162,7 +161,6 @@ export default function Questions() {
           setShowPermissionModal(true);
         }
       } catch (error) {
-        console.error("Permission API not supported or error occurred:", error);
       }
     };
 
@@ -273,7 +271,7 @@ export default function Questions() {
 
   useEffect(() => {
     if (isTimerExpired) {
-      console.log("Timer expired, force-submitting quiz.");
+      
       handleSubmit(subdomain, domain, round, navigate, true, setLoadingSubmit);
     }
   }, [isTimerExpired]);
@@ -326,9 +324,9 @@ export default function Questions() {
   //     if (question.options) {
   //       // If options exist, compare selected answer with correct index
   //       const ans = question.options[findCorrectAnswerIndex(question)];
-  //       console.log("Correct Ans: " + ans);
+  
   //       const selectedAnswer = selectedAnswers[index];
-  //       console.log("Your Ans: " + selectedAnswer);
+  
 
   //       if (selectedAnswer == ans) {
   //         totalScore++;
