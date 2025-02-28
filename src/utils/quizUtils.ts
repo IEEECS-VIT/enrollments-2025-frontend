@@ -33,9 +33,9 @@ const calculateScore = (
     if (question.options) {
       // If options exist, compare selected answer with correct index
       const ans = question.options[findCorrectAnswerIndex(question)];
-      console.log("Correct Ans: " + ans);
+      
       const selectedAnswer = selectedAnswers[index];
-      console.log("Your Ans: " + selectedAnswer);
+      
 
       if (selectedAnswer == ans) {
         totalScore++;
@@ -111,7 +111,7 @@ export const handleSubmit = async (
       }, 500);
     }
   } catch (error) {
-    console.error("Submission error:", error);
+    
     if (setLoadingSubmit) {
       setLoadingSubmit(false);
     }

@@ -25,9 +25,7 @@ export const fetchExpiryTime = (subdomain: string): Promise<Date> => {
           if (computedSignature === signature) {
             resolve(new Date(Number(expiryTime))); // ✅ Valid Expiry Time
           } else {
-            console.error(
-              "❌ Signature mismatch. Possible tampering detected."
-            );
+            
             resolve(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
           }
         } else {
@@ -37,7 +35,7 @@ export const fetchExpiryTime = (subdomain: string): Promise<Date> => {
     };
 
     dbRequest.onerror = () => {
-      console.error("❌ Failed to access IndexedDB.");
+      
       resolve(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
     };
   });
@@ -100,7 +98,7 @@ export const getQuizData = async (
 
     return decryptedData.quiz;
   } catch (e) {
-    console.error(e);
+    
     navigate("/dashboard");
   }
 
@@ -117,12 +115,9 @@ export const deleteQuizDataFromIndexedDB = async (subdomain: string) => {
   try {
     const db = await getDb();
     await db.delete(STORE_NAME, subdomain);
-    console.log(`✅ Deleted quiz data for ${subdomain} from QuizDB.`);
+    
   } catch (error) {
-    console.error(
-      `❌ Failed to delete quiz data for ${subdomain} from QuizDB.`,
-      error
-    );
+   
   }
 };
 
@@ -138,18 +133,18 @@ export const deleteExpiryFromSecureDB = async (subdomain: string) => {
       const deleteRequest = store.delete(`${subdomain}Expiry`);
 
       deleteRequest.onsuccess = function () {
-        console.log(`✅ Deleted ${subdomain}Expiry from secureDB.`);
+        
         resolve(true);
       };
 
       deleteRequest.onerror = function () {
-        console.error(`❌ Failed to delete ${subdomain}Expiry from secureDB.`);
+        
         reject(false);
       };
     };
 
     dbRequest.onerror = function () {
-      console.error("❌ Failed to open secureDB.");
+      
       reject(false);
     };
   });

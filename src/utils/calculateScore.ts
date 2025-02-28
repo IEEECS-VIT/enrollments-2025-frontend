@@ -10,7 +10,7 @@ const findCorrectAnswerIndex = (question: any): number => {
     );
 
     if (generatedHash === question.correctIndexHash) {
-      console.log("Correct answer index:", i);
+      
       return i;
     }
   }
