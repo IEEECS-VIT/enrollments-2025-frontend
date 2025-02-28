@@ -41,6 +41,7 @@ export default function Navbar() {
     { name: "DISCORD", path: "https://discord.com/invite/j2Pt6A4YNK" },
     { name: "PROFILE", path: "/profile" },
     { name: "FAQS", path: "/faqs" },
+    
   ];
 
   const container = {

@@ -15,7 +15,7 @@ const UsernameForm: React.FC = () => {
     if (response.status == 200) {
       setTimeout(() => {
         navigate("/domain");
-      }, 3000);
+      }, 1000);
       showToastSuccess("Username selected successfully");
     } else if (response.status == 201) {
       setMessage(`${username} already taken. Try again`);

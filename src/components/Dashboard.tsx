@@ -17,14 +17,31 @@ interface QuizData {
   completed: Quiz[];
 }
 
+// Map of subdomains to their durations in minutes
+const SUBDOMAIN_DURATIONS: Record<string, number> = {
+  CC: 15,
+  WEB: 20,
+  EVENTS: 10,
+  "UI/UX": 10,
+  "GRAPHIC DESIGN": 10,
+  "VIDEO EDITING": 10,
+  "AI/ML": 15,
+  APP: 20,
+  IOT: 10,
+  PNM: 25,
+  RND: 15,
+};
+
+// Default duration if subdomain isn't found in the map
+const DEFAULT_DURATION = 20;
+
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
-  const [selectedQuiz] = useState<Quiz | null>(null);
-  // const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null); - USE THIS LINE AFTER DOMAIN SELECTION DELETE ABOVE LINE
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -44,19 +61,19 @@ export default function Dashboard(): JSX.Element {
     fetchQuizData();
   }, []);
 
-  // const handleStartQuiz = (quiz: Quiz) => {
-  //   const isMobileDevice =
-  //     /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-  //     window.innerWidth < 1024;
+  const handleStartQuiz = (quiz: Quiz) => {
+    const isMobileDevice =
+      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      window.innerWidth < 1024;
 
-  //   if (isMobileDevice) {
-  //     setDeviceWarningModal(true);
-  //     return; // Prevent quiz start on mobile
-  //   } else {
-  //     setSelectedQuiz(quiz);
-  //     setPermissionModal(true);
-  //   } // Show permission request modal first
-  // };
+    if (isMobileDevice) {
+      setDeviceWarningModal(true);
+      return; // Prevent quiz start on mobile
+    } else {
+      setSelectedQuiz(quiz);
+      setPermissionModal(true);
+    } // Show permission request modal first
+  };
 
   const requestPermissions = async () => {
     try {
@@ -100,13 +117,20 @@ export default function Dashboard(): JSX.Element {
         const transaction = db.transaction("cookies", "readwrite");
         const store = transaction.objectStore("cookies");
 
+        // Get duration based on subdomain
+        let duration = DEFAULT_DURATION; // Default 30 minutes
+        if (subdomain && SUBDOMAIN_DURATIONS[subdomain]) {
+          duration = SUBDOMAIN_DURATIONS[subdomain];
+        }
+
         // Check if expiry time already exists for the quiz domain
         const getRequest = store.get(`${selectedQuiz.subDomain}Expiry`);
 
         getRequest.onsuccess = function () {
           let expiryTime = getRequest.result?.value;
           if (!expiryTime) {
-            expiryTime = String(new Date().getTime() + 30 * 60 * 1000);
+            // Set expiry time based on the subdomain-specific duration
+            expiryTime = String(new Date().getTime() + duration * 60 * 1000);
             const signature = CryptoJS.HmacSHA256(
               expiryTime,
               secretKey
@@ -135,6 +159,7 @@ export default function Dashboard(): JSX.Element {
     }
     setShowModal(false);
   };
+
   return (
     <>
       <ToastContainer />
@@ -155,7 +180,7 @@ export default function Dashboard(): JSX.Element {
               <h2 className="text-xl text-center sm:text-4xl">
                 PENDING QUIZZES
               </h2>
-              <span className="font-sans text-lg text-yellow-400">
+              <span className="font-sans text-center text-lg text-yellow-400">
                 *Round-1 is live. Join{" "}
                 <a
                   href="https://discord.gg/j2Pt6A4YNK"
@@ -174,7 +199,7 @@ export default function Dashboard(): JSX.Element {
                   <div
                     key={index}
                     className="flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 cursor-pointer rounded-3xl md:h-24 hover:border-orange-500"
-                    //onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
+                    onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
                   >
                     <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                     {quiz.subDomain && (
@@ -266,7 +291,21 @@ export default function Dashboard(): JSX.Element {
               <p className="text-lg font-semibold">
                 Are you sure you want to start the quiz?
               </p>
-              <p className="mt-2">You will have 30 minutes to finish it.</p>
+              <p className="mt-2">
+                {selectedQuiz?.subDomain &&
+                SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()] ? (
+                  <>
+                    You will have{" "}
+                    <span className="text-[#F8B95A] font-bold">
+                      {SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()]}{" "}
+                      minutes
+                    </span>{" "}
+                    to finish it.
+                  </>
+                ) : (
+                  "You will have 20 minutes to finish it."
+                )}
+              </p>
               <div className="flex justify-center mt-4">
                 <button
                   className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"

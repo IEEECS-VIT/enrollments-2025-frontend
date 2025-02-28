@@ -23,10 +23,9 @@ export default function Profile() {
         const data: ProfileData = await LoadProfile();
         setProfileData(data);
       } catch (error: any) {
-
         // Check if the error is a 404 and redirect
         if (error.response && error.response.status === 401) {
-          navigate("/landing");
+          navigate("/");
         }
       } finally {
         setTimeout(() => setLoading(false), 2000);

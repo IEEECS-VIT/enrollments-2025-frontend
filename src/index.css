@@ -28,18 +28,50 @@ body {
   user-select: none;
 }
 
+/* WebKit Browsers (Chrome, Safari, Edge, Opera) */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px; /* Thin scrollbar */
 }
 
-::-webkit-scrollbar-track {
-  width: 5px;
+/* Remove scrollbar arrows */
+::-webkit-scrollbar-button {
+  display: none;
 }
 
 ::-webkit-scrollbar-thumb {
-  position: absolute;
+  background-color: #f8b95a; /* Custom thumb color */
+  border-radius: 10px; /* Rounded corners */
+  min-height: 20px; /* Prevents small thumbs */
+  border: 2px solid transparent; /* Helps enforce border-radius */
+  background-clip: padding-box; /* Ensures rounded edges appear */
+}
+
+/* Ensure track is transparent */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f8b95a transparent;
+}
+
+/* Internet Explorer & Legacy Edge */
+body {
+  -ms-overflow-style: none; /* Hides default scrollbar */
+}
+
+body::-webkit-scrollbar {
+  width: 6px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #f8b95a;
   border-radius: 10px;
-  width: 10px;
+  min-height: 20px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .custom-toast {
