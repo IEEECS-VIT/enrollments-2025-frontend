@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
 import { auth, provider } from "../firebaseConfig";
-// import { showToastWarning } from "../Toast";
+import { showToastWarning } from "../Toast";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -141,6 +141,10 @@ export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
     "/domain/submit",
     domain
   );
+
+  if (response.status == 204) {
+    showToastWarning("Quiz already started, cannot change domains");
+  }
 
   return {
     status: response.status,
