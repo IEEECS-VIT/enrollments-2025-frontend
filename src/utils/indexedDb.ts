@@ -25,7 +25,6 @@ export const fetchExpiryTime = (subdomain: string): Promise<Date> => {
           if (computedSignature === signature) {
             resolve(new Date(Number(expiryTime))); // ✅ Valid Expiry Time
           } else {
-            
             resolve(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
           }
         } else {
@@ -35,7 +34,6 @@ export const fetchExpiryTime = (subdomain: string): Promise<Date> => {
     };
 
     dbRequest.onerror = () => {
-      
       resolve(new Date(Date.now() + 30 * 60 * 1000)); // Fallback expiry
     };
   });
@@ -98,7 +96,6 @@ export const getQuizData = async (
 
     return decryptedData.quiz;
   } catch (e) {
-    
     navigate("/dashboard");
   }
 
@@ -115,10 +112,7 @@ export const deleteQuizDataFromIndexedDB = async (subdomain: string) => {
   try {
     const db = await getDb();
     await db.delete(STORE_NAME, subdomain);
-    
-  } catch (error) {
-   
-  }
+  } catch (error) {}
 };
 
 export const deleteExpiryFromSecureDB = async (subdomain: string) => {
@@ -133,19 +127,29 @@ export const deleteExpiryFromSecureDB = async (subdomain: string) => {
       const deleteRequest = store.delete(`${subdomain}Expiry`);
 
       deleteRequest.onsuccess = function () {
-        
         resolve(true);
       };
 
       deleteRequest.onerror = function () {
-        
         reject(false);
       };
     };
 
     dbRequest.onerror = function () {
-      
       reject(false);
     };
   });
+};
+export const hasQuizDBKeys = async (): Promise<boolean> => {
+  try {
+    const db = await getDb(); // Use the existing getDb function
+    const transaction = db.transaction(STORE_NAME, "readonly"); // Use the constant STORE_NAME
+    const store = transaction.objectStore(STORE_NAME);
+    const countRequest = store.count(); // Use count() for simple existence check
+    const count = await countRequest;
+    return count > 0; // Return true if at least one key exists
+  } catch (error) {
+    console.error("Error checking keys in QuizDB:", error);
+    return false; // Return false on error instead of rejecting
+  }
 };
