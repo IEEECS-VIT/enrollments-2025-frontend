@@ -9,6 +9,7 @@ export const disableDevTools = () => {
       }
       if (
         (event.ctrlKey && event.shiftKey && event.key === "J") ||
+        (event.ctrlKey && event.shiftKey && event.key === "J") ||
         (event.ctrlKey && event.shiftKey && event.key === "C")
       ) {
         event.preventDefault();
