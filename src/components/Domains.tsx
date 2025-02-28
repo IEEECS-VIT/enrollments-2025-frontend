@@ -134,7 +134,7 @@ export default function Domains() {
         showToastSuccess("Domains selected successfully");
       }
     }
-    localStorage.clear();
+    // localStorage.clear();
   };
 
   return (
