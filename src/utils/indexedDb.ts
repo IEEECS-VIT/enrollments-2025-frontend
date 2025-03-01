@@ -149,7 +149,7 @@ export const hasQuizDBKeys = async (): Promise<boolean> => {
     const count = await countRequest;
     return count > 0; // Return true if at least one key exists
   } catch (error) {
-    console.error("Error checking keys in QuizDB:", error);
+    //console.error("Error checking keys in QuizDB:", error);
     return false; // Return false on error instead of rejecting
   }
 };

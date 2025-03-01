@@ -41,7 +41,7 @@ export default function Dashboard(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [selectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -63,19 +63,19 @@ export default function Dashboard(): JSX.Element {
     fetchQuizData();
   }, []);
 
-  const handleStartQuiz = (quiz: Quiz) => {
-    const isMobileDevice =
-      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-      window.innerWidth < 1024;
+  // const handleStartQuiz = (quiz: Quiz) => {
+  //   const isMobileDevice =
+  //     /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  //     window.innerWidth < 1024;
 
-    if (isMobileDevice) {
-      setDeviceWarningModal(true);
-      return; // Prevent quiz start on mobile
-    } else {
-      setSelectedQuiz(quiz);
-      setPermissionModal(true);
-    } // Show permission request modal first
-  };
+  //   if (isMobileDevice) {
+  //     setDeviceWarningModal(true);
+  //     return; // Prevent quiz start on mobile
+  //   } else {
+  //     setSelectedQuiz(quiz);
+  //     setPermissionModal(true);
+  //   } // Show permission request modal first
+  // };
 
   const requestPermissions = async () => {
     try {
@@ -176,32 +176,25 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
 
-        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center justify-center p-4">
-          <div className="flex flex-col items-center">
-            <div className="mb:4 sm:mb-8">
-              <h2 className="text-xl text-center sm:text-4xl">
+        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
+          <div className="flex flex-col items-center justify-center">
+            
+            {/* <div className="mb:4 text-center"> */}
+            
+              {/* <h2 className="text-xl text-center mb-4 sm:text-4xl">
                 PENDING QUIZZES
-              </h2>
-              <span className="font-sans text-center text-lg text-yellow-400">
-                *Round-1 is live. Join{" "}
-                <a
-                  href="https://discord.gg/j2Pt6A4YNK"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-bold underline"
-                >
-                  Discord
-                </a>{" "}
-                for updates.
-              </span>
+              </h2> */}
+              
+              
             </div>
+            {/* 
             <div className="flex flex-col gap-4 md:flex-row">
               {quizData.pending.length > 0 ? (
                 quizData.pending.map((quiz, index) => (
                   <div
                     key={index}
                     className="flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 cursor-pointer rounded-3xl md:h-24 hover:border-orange-500"
-                    onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
+                    // onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
                   >
                     <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                     {quiz.subDomain && (
@@ -214,19 +207,19 @@ export default function Dashboard(): JSX.Element {
               ) : (
                 <p className="text-gray-400 sm:text-2xl">No pending tasks</p>
               )}
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
 
           <div className="flex flex-col items-center">
-            <h2 className="mt-8 mb-4 text-xl sm:text-4xl md:mt-12">
-              COMPLETED QUIZZES
+            <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl md:mt-12">
+              ATTEMPTED QUIZZES
             </h2>
             <div className="flex flex-col gap-4 md:flex-row">
               {quizData.completed.length > 0 ? (
                 quizData.completed.map((quiz, index) => (
                   <div
                     key={index}
-                    className="flex flex-col items-center justify-center px-8 py-4 text-white transition duration-300 border-2 rounded-3xl hover:border-white"
+                    className="flex flex-col items-center justify-center px-4 md:px-8 py-2 md:py-4 text-white transition duration-300 border-2 rounded-3xl hover:border-white"
                   >
                     <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                     {quiz.subDomain && (
@@ -240,7 +233,22 @@ export default function Dashboard(): JSX.Element {
                 <p className="text-gray-400 sm:text-2xl">No completed tasks</p>
               )}
             </div>
+            <div className="text-center mt-4 md:mt-24">
+          <span className="font-pixeboy tracking-wide text-lg md:text-3xl w-full text-yellow-400">
+                *Round-1 is over! Results will be declared Soon. Join{" "}
+                <a
+                  href="https://discord.gg/j2Pt6A4YNK"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-bold underline"
+                >
+                  Discord
+                </a>{" "}
+                for updates.
+              </span>
+              </div>
           </div>
+          
         </div>
 
         {deviceWarningModal && (
