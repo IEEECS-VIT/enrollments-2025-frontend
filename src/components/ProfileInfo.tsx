@@ -69,7 +69,9 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                       ([key, domainList]) =>
                         domainList.length > 0 && (
                           <div key={key} className="text-sm sm:text-2xl">
-                            <strong>{key} : </strong>
+                            <strong >{key.toLowerCase().replace(/\b\w/g, (char) =>
+                                        char.toUpperCase()
+                                      )} : </strong>
                             {domainList.map((domain, i) => {
                               // Keep "AI/ML" and "UI/UX" fully uppercase
                               const formattedDomain =

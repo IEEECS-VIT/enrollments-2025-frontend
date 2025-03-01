@@ -15,6 +15,7 @@ export default {
       fontFamily: {
         "press-start": ['"Press Start 2P"', "cursive"],
         playmegames: ["PlayMeGames-Demo", "sans-serif"],
+        pixeboy: ["pixeboy", "sans-serif"],
         "retro-gaming": ["retro-gaming", "sans-serif"],
       },
       letterSpacing: {
