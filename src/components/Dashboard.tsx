@@ -50,11 +50,11 @@ export default function Dashboard(): JSX.Element {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await LoadDashboard(1);
+        const response = await LoadDashboard(2);
         setQuizData(response);
-        if (response.pending.length === 0 && response.completed.length === 0)
-          navigate("/domain");
-      } catch (error) {
+        //   if (response.pending.length === 0 && response.completed.length === 0)
+        //     navigate("/");
+        // } catch (error) {
       } finally {
         setLoading(false);
       }
@@ -178,16 +178,13 @@ export default function Dashboard(): JSX.Element {
 
         <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
           <div className="flex flex-col items-center justify-center">
-            
             {/* <div className="mb:4 text-center"> */}
-            
-              {/* <h2 className="text-xl text-center mb-4 sm:text-4xl">
+
+            {/* <h2 className="text-xl text-center mb-4 sm:text-4xl">
                 PENDING QUIZZES
               </h2> */}
-              
-              
-            </div>
-            {/* 
+          </div>
+          {/* 
             <div className="flex flex-col gap-4 md:flex-row">
               {quizData.pending.length > 0 ? (
                 quizData.pending.map((quiz, index) => (
@@ -234,7 +231,7 @@ export default function Dashboard(): JSX.Element {
               )}
             </div>
             <div className="text-center mt-4 md:mt-24">
-          <span className="font-pixeboy tracking-wide text-lg md:text-3xl w-full text-yellow-400">
+              <span className="font-pixeboy tracking-wide text-lg md:text-3xl w-full text-yellow-400">
                 *Round-1 is over! Results will be declared Soon. Join{" "}
                 <a
                   href="https://discord.gg/j2Pt6A4YNK"
@@ -246,9 +243,8 @@ export default function Dashboard(): JSX.Element {
                 </a>{" "}
                 for updates.
               </span>
-              </div>
+            </div>
           </div>
-          
         </div>
 
         {deviceWarningModal && (

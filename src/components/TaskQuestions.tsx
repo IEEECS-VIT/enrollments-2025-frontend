@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
-import WebTask from "./WebTask";
-import AppTask from "./AppTask";
-import AITask from "./AITask";
-import BackendTask from "./BackendTask";
+// import WebTask from "./WebTask";
+// import AppTask from "./AppTask";
+// import AITask from "./AITask";
+// import BackendTask from "./BackendTask";
 
 export default function TaskQuestions() {
   useEffect(() => {
