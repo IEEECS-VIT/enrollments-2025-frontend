@@ -19,7 +19,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
-// import Tasks from "./components/Tasks";
+import Tasks from "./components/Tasks";
 // import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
@@ -86,7 +86,7 @@ const AppContent = () => {
                 <Route path="username" element={<UsernameSection />} />
                 {/* <Route path="quiz" element={<Quiz1 />} /> */}
                 <Route path="dashboard" element={<Dashboard />} />
-                {/* <Route path="task" element={<Tasks />} /> */}
+                <Route path="task" element={<Tasks />} />
                 {/* <Route path="quiz-complete" element={<QuizComplete />} /> */}
                 <Route
                   path="domain"
