@@ -5,7 +5,7 @@ export default function AppTask() {
         {/* App Task Content - With scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[70vh]">
           <div className="markdown-content prose prose-invert max-w-none w-full px-2">
-            <h1 className="text-2xl font-bold text-[#5AB0F8] mb-4">
+            <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
               🧮 App Development Task: Expense-Splitting Application
             </h1>
 
@@ -24,8 +24,8 @@ export default function AppTask() {
               effectively.
             </p>
 
-            <h2 className="text-xl font-bold text-[#5AB0F8] mt-6 mb-3">
-              🔹 Key Points:
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
+              Key Points:
             </h2>
             <ul className="list-disc pl-6 mb-4 text-white">
               <li className="mb-2">
@@ -48,7 +48,7 @@ export default function AppTask() {
               </li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#5AB0F8] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📌 Task Levels
             </h2>
             <p className="mb-4 text-white">
@@ -57,8 +57,8 @@ export default function AppTask() {
               <strong>any tech stack</strong> of your choice for development.
             </p>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#5AB0F8] mb-6">
-              <h3 className="text-lg font-bold text-[#5AB0F8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Basic UI Development (Static)
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -77,7 +77,7 @@ export default function AppTask() {
                   implementing any backend logic
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#5AB0F8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -92,8 +92,8 @@ export default function AppTask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#5AB0F8] mb-6">
-              <h3 className="text-lg font-bold text-[#5AB0F8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 ⚡ Level 2: Functional App with API Integration
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -119,7 +119,7 @@ export default function AppTask() {
                   expenses in different currencies
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#5AB0F8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -134,8 +134,8 @@ export default function AppTask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#5AB0F8] mb-6">
-              <h3 className="text-lg font-bold text-[#5AB0F8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🚀 Level 3: Backend Integration & Data Storage
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -159,7 +159,7 @@ export default function AppTask() {
                   <strong>local storage for offline support</strong>
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#5AB0F8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -174,8 +174,8 @@ export default function AppTask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#5AB0F8] mb-6">
-              <h3 className="text-lg font-bold text-[#5AB0F8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 💯 Level 4: OCR for Automated Expense Entry
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -198,7 +198,7 @@ export default function AppTask() {
                   </strong>
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#5AB0F8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -213,7 +213,7 @@ export default function AppTask() {
               </ul>
             </div>
 
-            <h2 className="text-xl font-bold text-[#5AB0F8] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📍 General Guidelines
             </h2>
             <ul className="list-none pl-2 mb-4 text-white">
@@ -247,7 +247,7 @@ export default function AppTask() {
               </li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#5AB0F8] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📝 Submission Guidelines
             </h2>
             <ol className="list-decimal pl-6 mb-4 text-white">

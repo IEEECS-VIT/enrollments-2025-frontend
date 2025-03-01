@@ -5,7 +5,7 @@ export default function AITask() {
         {/* ML Task Content - With scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[70vh]">
           <div className="markdown-content prose prose-invert max-w-none w-full px-2">
-            <h1 className="text-2xl font-bold text-[#9F5AF8] mb-4">
+            <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
               🤖 AI/ML Task: Image Classification Challenge
             </h1>
 
@@ -27,14 +27,14 @@ export default function AITask() {
               Dataset link:{" "}
               <a
                 href="https://drive.google.com/file/d/1eqMKY4yPdIFN_Fnkvp6VeEtucYT8oT3o/view?usp=sharing"
-                className="text-[#9F5AF8] hover:text-[#B281F9]"
+                className="text-[#F8B95A] hover:text-[#F8B95A]"
                 target="_blank"
               >
                 Fashion MNIST Dataset
               </a>
             </p>
 
-            <h2 className="text-xl font-bold text-[#9F5AF8] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📌 Task Levels
             </h2>
             <p className="mb-4 text-white">
@@ -43,8 +43,8 @@ export default function AITask() {
               each level.
             </p>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#9F5AF8] mb-6">
-              <h3 className="text-lg font-bold text-[#9F5AF8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Exploratory Data Analysis
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -66,7 +66,7 @@ export default function AITask() {
                   values to comprehend data characteristics
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#9F5AF8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -82,8 +82,8 @@ export default function AITask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#9F5AF8] mb-6">
-              <h3 className="text-lg font-bold text-[#9F5AF8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 ⚡ Level 2: Basic Classification Model
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -112,7 +112,7 @@ export default function AITask() {
                   interpret model decisions and feature importance
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#9F5AF8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -127,8 +127,8 @@ export default function AITask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#9F5AF8] mb-6">
-              <h3 className="text-lg font-bold text-[#9F5AF8] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🚀 Level 3: Neural Network Implementation
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
@@ -152,7 +152,7 @@ export default function AITask() {
                   ✅ Evaluate <strong>accuracy and loss metrics</strong>
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#9F5AF8]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -171,7 +171,7 @@ export default function AITask() {
               </ul>
             </div>
 
-            <h2 className="text-xl font-bold text-[#9F5AF8] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📍 General Guidelines
             </h2>
             <ul className="list-none pl-2 mb-4 text-white">
@@ -207,7 +207,7 @@ export default function AITask() {
               </li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#9F5AF8] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📝 Submission Guidelines
             </h2>
             <ol className="list-decimal pl-6 mb-4 text-white">

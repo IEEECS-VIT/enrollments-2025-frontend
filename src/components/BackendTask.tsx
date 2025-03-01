@@ -5,8 +5,8 @@ export default function WebTask() {
         {/* Backend Task Content - With scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[70vh]">
           <div className="markdown-content prose prose-invert max-w-none w-full px-2">
-            <h1 className="text-2xl font-bold text-[#F85A8D] mb-4">
-              🎭 Movie Ticket Booking with Dynamic Pricing (Backend Task)
+            <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
+              🎭 Movie Ticket Booking  (Backend Task)
             </h1>
 
             <p className="mb-4 text-white">
@@ -16,7 +16,7 @@ export default function WebTask() {
               movie ticket booking with dynamic pricing.
             </p>
 
-            <h2 className="text-xl font-bold text-[#F85A8D] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               🎯 Goal
             </h2>
             <p className="mb-4 text-white">
@@ -29,7 +29,7 @@ export default function WebTask() {
               implemented.
             </p>
 
-            <h2 className="text-xl font-bold text-[#F85A8D] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               👤 Roles
             </h2>
             <ul className="list-none pl-2 mb-4 text-white">
@@ -43,7 +43,7 @@ export default function WebTask() {
               </li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#F85A8D] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📌 Task Levels
             </h2>
             <p className="mb-4 text-white">
@@ -51,8 +51,8 @@ export default function WebTask() {
               increasing complexity.
             </p>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F85A8D] mb-6">
-              <h3 className="text-lg font-bold text-[#F85A8D] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Basic Backend - Movies, Shows & Bookings
               </h3>
 
@@ -89,7 +89,7 @@ export default function WebTask() {
                 </li>
               </ul>
 
-              <p className="text-sm font-bold mt-2 text-[#F85A8D]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -104,8 +104,8 @@ export default function WebTask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F85A8D] mb-6">
-              <h3 className="text-lg font-bold text-[#F85A8D] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 ⚡ Level 2: Dynamic Pricing & Role-Based Access
               </h3>
 
@@ -157,7 +157,7 @@ export default function WebTask() {
                 </li>
               </ul>
 
-              <p className="text-sm font-bold mt-2 text-[#F85A8D]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -171,13 +171,13 @@ export default function WebTask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F85A8D] mb-6">
-              <h3 className="text-lg font-bold text-[#F85A8D] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🚀 Level 3: Payments, Booking Expiry & Advanced Features
               </h3>
 
               <h4 className="text-md font-bold text-white mb-2">
-                💳 Payment & Seat Hold System
+                💳 Payment & Release/Hold System
               </h4>
               <ul className="list-none pl-2 mb-3 text-white">
                 <li className="mb-1">
@@ -196,8 +196,8 @@ export default function WebTask() {
                   ✅ Implement an <strong>end-to-end payment flow</strong>,
                   including:
                   <ul className="list-circle pl-6 mt-1 space-y-1 text-white">
-                    <li>Initiating payments</li>
-                    <li>Handling payment success & failure via a webhook</li>
+                    <li>• Initiating payments</li>
+                    <li>• Handling payment success & failure via a webhook</li>
                   </ul>
                 </li>
               </ul>
@@ -223,7 +223,7 @@ export default function WebTask() {
                 </li>
               </ul>
 
-              <p className="text-sm font-bold mt-2 text-[#F85A8D]">
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
               <ul className="list-none pl-2 text-white">
@@ -237,8 +237,8 @@ export default function WebTask() {
               </ul>
             </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F85A8D] mb-6">
-              <h3 className="text-lg font-bold text-[#F85A8D] mb-2">
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🌐 Frontend Integration (Optional for All Levels)
               </h3>
               <p className="mb-2 text-white">
@@ -262,7 +262,7 @@ export default function WebTask() {
               </ul>
             </div>
 
-            <h2 className="text-xl font-bold text-[#F85A8D] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📍 General Guidelines
             </h2>
             <ul className="list-none pl-2 mb-4 text-white">
@@ -285,7 +285,7 @@ export default function WebTask() {
               </li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#F85A8D] mt-6 mb-3">
+            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📝 Submission Guidelines
             </h2>
             <ol className="list-decimal pl-6 mb-4 text-white">
