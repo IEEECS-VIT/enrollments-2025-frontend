@@ -106,7 +106,7 @@ export default function Dashboard(): JSX.Element {
                 {quizData && quizData.completed.length > 0 && (
                   <div className="mb-4 text-center px-14">
                     <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
-                      Congratulations on qualifying Round-1. 🎉
+                      Congratulations on qualifying for Round-2. 🎉
                       <p>
                         Round-2 is live. Interactions (if applicable) will be
                         scheduled soon. Join{" "}
@@ -126,7 +126,7 @@ export default function Dashboard(): JSX.Element {
 
                 {quizData && quizData.completed.length > 0 && (
                   <>
-                    <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">TASKS</h2>
+                    {tasks && (<h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">TASKS</h2>)}
                     <div className="flex flex-col gap-4 md:flex-row">
                       {tasks &&
                         tasks.map((quiz, index) => (
