@@ -61,46 +61,40 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                 <span className="font-bold">Mail ID : </span>{" "}
                 <span className="break-all">{profileData?.email}</span>
               </p>
-              <div>
-                <span className="font-bold">Selected Domains : </span>
-                <div className="mt-2 space-y-2">
-                  {profileData?.domain &&
-                    Object.entries(profileData.domain).map(
-                      ([key, domainList]) =>
-                        domainList.length > 0 && (
-                          <div key={key} className="text-sm sm:text-2xl">
-                            <strong >{key.toLowerCase().replace(/\b\w/g, (char) =>
-                                        char.toUpperCase()
-                                      )} : </strong>
-                            {domainList.map((domain, i) => {
-                              // Keep "AI/ML" and "UI/UX" fully uppercase
-                              const formattedDomain =
-                                domain === "AI/ML" ||
-                                domain === "UI/UX" ||
-                                domain === "RND" ||
-                                domain === "PNM" ||
-                                domain === "IOT" ||
-                                domain === "CC"
-                                  ? domain
-                                  : domain
-                                      .toLowerCase()
-                                      .replace(/\b\w/g, (char) =>
-                                        char.toUpperCase()
-                                      ); // Capitalize first letter of other domains
+              {profileData?.domain && (
+                <div>
+                  <span className="font-bold">Selected Domains : </span>
+                  <div className="mt-2 space-y-2">
+                    {Object.entries(profileData.domain).map(([key, domainList]) =>
+                      domainList.length > 0 ? (
+                        <div key={key} className="text-sm sm:text-2xl">
+                          <strong>
+                            {key.toLowerCase().replace(/\b\w/g, (char) =>
+                              char.toUpperCase()
+                            )}
+                            :
+                          </strong>
+                          {domainList.map((domain, i) => {
+                            const formattedDomain =
+                              ["AI/ML", "UI/UX", "RND", "PNM", "IOT", "CC"].includes(domain)
+                                ? domain
+                                : domain.toLowerCase().replace(/\b\w/g, (char) =>
+                                    char.toUpperCase()
+                                  );
 
-                              return (
-                                <span key={i}>
-                                  {formattedDomain}
-                                  {i < domainList.length - 1 && ", "}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        )
+                            return (
+                              <span key={i}>
+                                {formattedDomain}
+                                {i < domainList.length - 1 && ", "}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      ) : null
                     )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              )} </div>
           </div>
         </div>
 

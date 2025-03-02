@@ -31,7 +31,7 @@ export default function Profile() {
         setTimeout(() => setLoading(false), 2000);
       }
     };
-
+    
     if (!profileData) {
       fetchProfileData();
     }
