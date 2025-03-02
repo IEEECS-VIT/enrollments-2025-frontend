@@ -98,8 +98,8 @@ export default function Dashboard(): JSX.Element {
             {!loading && quizData?.completed.length === 0 ? (
               <div className="mb-4 text-center px-14">
                 <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
-                  Round 1 results are out 🥳. Selected participants have been
-                  sent a mail about further rounds.
+                  The selected individuals have been notified via email. Please
+                  proceed with the tasks. Wishing you all the best!{" "}
                 </span>
               </div>
             ) : (
