@@ -10,13 +10,13 @@ import CCTask from "./CCTask";
 import GraphicTask from "./GraphicTask";
 import VideoTask from "./VideoTask";
 import { useNavigate, useLocation } from "react-router-dom";
-import { GoArrowLeft, GoDownload } from "react-icons/go"; // Import the download icon
+import { GoArrowLeft, GoDownload } from "react-icons/go";
 import LinkSubmissionModal from "./LinkSubmissionModal";
 import { ToastContainer } from "react-toastify";
 
 export default function TaskQuestions() {
   const location = useLocation();
-  const initialDomain = location.state?.subDomain || "WEB"; // Default to "WEB" if no domain is provided
+  const initialDomain = location.state?.subDomain || null;
   const [activeTask, setActiveTask] = useState(initialDomain);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -45,17 +45,24 @@ export default function TaskQuestions() {
       case "CC":
         return <CCTask />;
       case "UI/UX":
-        return <UITask />
+        return <UITask />;
       case "GRAPHIC DESIGN":
-        return <GraphicTask />
+        return <GraphicTask />;
       case "VIDEO EDITING":
-        return <VideoTask />
+        return <VideoTask />;
       default:
         return <WebTask />;
     }
   };
 
-  // Determine the displayed task name
+  const getDocumentLink = () => {
+    if (["UI/UX", "GRAPHIC DESIGN", "VIDEO EDITING"].includes(initialDomain)) {
+      return "https://docs.google.com/document/d/SPECIAL_DOC_ID_FOR_UI_GRAPHIC_VIDEO/edit?tab=t.0";
+    } else {
+      return "https://docs.google.com/document/d/1zKB9ItKiIYWgLbp1UBXtpGNT1rSMXPSv9IfDamgHRQc/edit?tab=t.0";
+    }
+  };
+
   const displayedTaskName =
     initialDomain === "WEB" || initialDomain === "BACKEND" ? "WEB" : activeTask;
 
@@ -75,7 +82,7 @@ export default function TaskQuestions() {
               <GoArrowLeft size={40} />
             </div>
             <p className="text-xl lg:text-5xl lg:mt-2 mt-4 font-bold font-playmegames tracking-widest text-[#F8B95A]">
-            {displayedTaskName.toUpperCase()}
+              {displayedTaskName.toUpperCase()}
             </p>
             {initialDomain === "WEB" && (
               <div className="flex gap-2 lg:gap-8 items-center">
@@ -99,17 +106,12 @@ export default function TaskQuestions() {
             )}
           </div>
 
-          {/* Conditionally render FRONTEND and BACKEND buttons only if initialDomain is "web" */}
-
           <div className="flex gap-8">
             {/* View Doc Button */}
             <button
               className="ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 py-2 border border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
               onClick={() => {
-                window.open(
-                  "https://docs.google.com/document/d/1zKB9ItKiIYWgLbp1UBXtpGNT1rSMXPSv9IfDamgHRQc/edit?tab=t.0",
-                  "_blank"
-                );
+                window.open(getDocumentLink(), "_blank");
               }}
             >
               <GoDownload className="mr-2" /> VIEW DOC
@@ -133,7 +135,7 @@ export default function TaskQuestions() {
       {isModalOpen && (
         <LinkSubmissionModal
           onClose={() => setIsModalOpen(false)}
-          subdomain="IOT"
+          subdomain={initialDomain}
         />
       )}
     </div>
