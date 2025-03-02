@@ -65,13 +65,13 @@ export default function Dashboard(): JSX.Element {
           <div className="bg-black text-white p-6  text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
             <h2 className=" font-bold mb-4">Hey everyone! 👋</h2>
             <p>
-              We’re thrilled to see your interest in joining IEEE-CS ! The
-              technical tasks might look a bit intense, but don’t worry — it’s
-              all about <strong>learning and effort</strong>, not just
-              completion. Even finishing <strong>Level 1</strong> of any track
-              is impressive and shows curiosity and dedication. Take your time,
-              ask questions, and most importantly, enjoy the process. Let’s grow
-              and learn together!
+              We’re thrilled to see your interest in joining IEEE-CS ! The tasks
+              might look a bit intense, but don’t worry — it’s all about{" "}
+              <strong>learning and effort</strong>, not just completion. Even
+              finishing <strong>Level 1</strong> of any track is impressive and
+              shows curiosity and dedication. Take your time, ask questions, and
+              most importantly, enjoy the process. Let’s grow and learn
+              together!
             </p>
             <button
               className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
