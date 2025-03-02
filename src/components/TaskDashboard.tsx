@@ -20,6 +20,7 @@ export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [quizData, setQuizData] = useState<QuizData>();
+  const [showPopup, setShowPopup] = useState(true);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -35,6 +36,10 @@ export default function Dashboard(): JSX.Element {
 
     fetchQuizData();
   }, []);
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
 
   const tasks = quizData?.completed.filter(
     (quiz) =>
@@ -55,6 +60,28 @@ export default function Dashboard(): JSX.Element {
   return (
     <>
       <ToastContainer />
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
+          <div className="bg-black text-white p-6  text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
+            <h2 className=" font-bold mb-4">Hey everyone! 👋</h2>
+            <p>
+              We’re thrilled to see your interest in joining IEEE-CS ! The
+              technical tasks might look a bit intense, but don’t worry — it’s
+              all about <strong>learning and effort</strong>, not just
+              completion. Even finishing <strong>Level 1</strong> of any track
+              is impressive and shows curiosity and dedication. Take your time,
+              ask questions, and most importantly, enjoy the process. Let’s grow
+              and learn together!
+            </p>
+            <button
+              className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
+              onClick={closePopup}
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
       <div className="relative flex items-center justify-center min-h-screen">
         <div className="absolute w-full pointer-events-none">
           <Treecloud />
@@ -98,10 +125,8 @@ export default function Dashboard(): JSX.Element {
                   </div>
                 )}
 
-                {/* Conditionally render TASKS and INTERVIEWS sections only if quizData.completed is not empty */}
                 {quizData && quizData.completed.length > 0 && (
                   <>
-                    {/* TASKS Section */}
                     <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">TASKS</h2>
                     <div className="flex flex-col gap-4 md:flex-row">
                       {tasks &&
@@ -123,7 +148,6 @@ export default function Dashboard(): JSX.Element {
                         ))}
                     </div>
 
-                    {/* INTERVIEWS Section */}
                     <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
                       INTERVIEWS
                     </h2>
