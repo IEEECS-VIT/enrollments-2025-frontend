@@ -1,9 +1,9 @@
 export default function AITask() {
   return (
     <>
-      <div className="relative w-full h-full bg-transparent max-h-[70vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
+      <div className="relative w-full h-full bg-transparent max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
         {/* ML Task Content - With scroll container */}
-        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[70vh]">
+        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh]">
           <div className="markdown-content prose prose-invert max-w-none w-full px-2">
             <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
               🤖 AI/ML Task: Image Classification Challenge

@@ -50,11 +50,11 @@ export default function Dashboard(): JSX.Element {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await LoadDashboard(2);
+        const response = await LoadDashboard(1);
         setQuizData(response);
-        //   if (response.pending.length === 0 && response.completed.length === 0)
-        //     navigate("/");
-        // } catch (error) {
+        if (response.pending.length === 0 && response.completed.length === 0)
+          navigate("/domain");
+      } catch (error) {
       } finally {
         setLoading(false);
       }
