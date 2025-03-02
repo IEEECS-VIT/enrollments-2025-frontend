@@ -97,13 +97,12 @@ export default function Dashboard(): JSX.Element {
           <div className="flex flex-col items-center">
             {!loading && quizData?.completed.length === 0 ? (
               <div className="mb-4 text-center px-14">
-                <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
-                  The selected individuals have been notified via email. Please
-                  proceed with the tasks. Wishing you all the best!{" "}
+                <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl text-center">
+                  Tasks are only visible for people who made it to the next round! <br/> Better luck next time.{" "}
                 </span>
               </div>
             ) : (
-              <>
+              <>h
                 {quizData && quizData.completed.length > 0 && (
                   <div className="mb-4 text-center px-14">
                     <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
