@@ -33,7 +33,7 @@ export default function WebTask() {
             </p>
 
             <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              🔹 Key Points:
+               Key Points:
             </h2>
             <ul className="list-disc pl-6 mb-4 text-white">
               <li className="mb-2">

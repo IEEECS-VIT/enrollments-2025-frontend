@@ -25,8 +25,8 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
   }, [subdomain]);
 
   const handleSubmit = async () => {
-    if (githubLink.trim() === "" && otherLinks.trim() === "") {
-      showToastWarning("Please provide at least one link."); // Replace alert with showToastWarning
+    if (githubLink.trim() === "") {
+      showToastWarning("Please provide GitHub Link"); // Replace alert with showToastWarning
       return;
     }
 
@@ -61,7 +61,7 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
         showToastWarning("Failed to submit task. Please try again."); // Replace alert with showToastWarning
       }
     } catch (error) {
-      console.error("Error submitting task:", error);
+      //console.error("Error submitting task:", error);
       showToastWarning("An error occurred while submitting the task."); // Replace alert with showToastWarning
     }
 
