@@ -4,7 +4,7 @@ export default function WebTask() {
       <div className="relative w-full h-full bg-transparent max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
         {/* Frontend Task Content - Now with scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh]">
-          <div className="markdown-content prose prose-invert max-w-none w-full px-2">
+          <div className="w-full px-2 prose markdown-content prose-invert max-w-none">
             <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
               🚀 Frontend Task
             </h1>
@@ -33,9 +33,9 @@ export default function WebTask() {
             </p>
 
             <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-               Key Points:
+              Key Points:
             </h2>
-            <ul className="list-disc pl-6 mb-4 text-white">
+            <ul className="pl-6 mb-4 text-white list-disc">
               <li className="mb-2">
                 <strong>You can choose any page</strong> from the website—it
                 does not have to be the landing page.
@@ -68,7 +68,7 @@ export default function WebTask() {
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1 - Navbar & Footer with Animations
               </h3>
-              <ul className="list-none pl-2 mb-2 text-white">
+              <ul className="pl-2 mb-2 text-white list-none">
                 <li className="mb-1">
                   ✅ Implement the <strong>navbar & footer</strong> with smooth
                   animations (refer the website)
@@ -86,7 +86,7 @@ export default function WebTask() {
               <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
-              <ul className="list-none pl-2 text-white">
+              <ul className="pl-2 text-white list-none">
                 <li className="mb-1">
                   • Try using <strong>animation libraries</strong> like
                   framer-motion, GSAP, AOS, etc for cleaner animations.
@@ -102,7 +102,7 @@ export default function WebTask() {
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 ⚡ Level 2 - Interactive Page Clone
               </h3>
-              <ul className="list-none pl-2 mb-2 text-white">
+              <ul className="pl-2 mb-2 text-white list-none">
                 <li className="mb-1">
                   ✅ Everything from <strong>Level 1</strong>
                 </li>
@@ -119,7 +119,7 @@ export default function WebTask() {
               <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
-              <ul className="list-none pl-2 text-white">
+              <ul className="pl-2 text-white list-none">
                 <li className="mb-1">
                   • Optimize <strong>performance & accessibility</strong>
                 </li>
@@ -136,7 +136,7 @@ export default function WebTask() {
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🚀 Level 3 - Full Page Clone with Complete Animations
               </h3>
-              <ul className="list-none pl-2 mb-2 text-white">
+              <ul className="pl-2 mb-2 text-white list-none">
                 <li className="mb-1">
                   ✅ Clone <strong>any one page end-to-end</strong>, ensuring
                   all design elements, layouts, and interactions are accurately
@@ -154,7 +154,7 @@ export default function WebTask() {
               <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
-              <ul className="list-none pl-2 text-white">
+              <ul className="pl-2 text-white list-none">
                 <li className="mb-1">
                   • Use <strong>advanced animations</strong> (GSAP, Framer
                   Motion, etc.)
@@ -169,7 +169,7 @@ export default function WebTask() {
             <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📍 General Guidelines
             </h2>
-            <ul className="list-none pl-2 mb-4 text-white">
+            <ul className="pl-2 mb-4 text-white list-none">
               <li className="mb-2">
                 ✅ <strong>Tech Stack:</strong> You are free to use{" "}
                 <strong>any frontend technologies</strong>
@@ -189,7 +189,7 @@ export default function WebTask() {
               <li className="mb-2">
                 ✅ <strong>README File:</strong> A well-documented README.md is
                 mandatory, including:
-                <ul className="list-disc pl-6 mt-2 text-white">
+                <ul className="pl-6 mt-2 text-white list-disc">
                   <li>Features implemented</li>
                   <li>Tech stack used</li>
                   <li>Steps to run the project</li>
@@ -202,7 +202,7 @@ export default function WebTask() {
             <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📝 Submission Guidelines
             </h2>
-            <ol className="list-decimal pl-6 mb-4 text-white">
+            <ol className="pl-6 mb-4 text-white list-decimal">
               <li className="mb-2">
                 <strong>Host the project</strong> (if possible) and share the
                 live link

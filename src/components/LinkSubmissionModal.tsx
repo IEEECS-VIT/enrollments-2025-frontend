@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { SubmitTask } from "../api/user";
-import { showToastSuccess, showToastWarning } from "../Toast"; // Ensure these are imported
+import { showToastSuccess, showToastWarning } from "../Toast";
 
 interface LinkSubmissionModalProps {
   onClose: () => void;
-  subdomain: string; // Add subdomain as a prop
+  subdomain: string;
 }
 
 const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
@@ -14,7 +14,6 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
   const [githubLink, setGithubLink] = useState("");
   const [otherLinks, setOtherLinks] = useState("");
 
-  // Load saved links from localStorage when the modal is opened
   useEffect(() => {
     const savedLinks = localStorage.getItem(`${subdomain}Task`);
     if (savedLinks) {
@@ -26,7 +25,15 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
 
   const handleSubmit = async () => {
     if (githubLink.trim() === "") {
-      showToastWarning("Please provide GitHub Link"); // Replace alert with showToastWarning
+      showToastWarning("Please provide GitHub Link");
+      return;
+    }
+
+    const githubRepoRegex =
+      /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w-]+$/;
+
+    if (!githubRepoRegex.test(githubLink.trim())) {
+      showToastWarning("Please provide a valid GitHub repository link");
       return;
     }
 
@@ -49,20 +56,18 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
     try {
       const response = await SubmitTask(2, subdomain, finalLinks);
       if (response.status === 200) {
-        showToastSuccess("Task submitted successfully!"); // Replace alert with showToastSuccess
+        showToastSuccess("Task submitted successfully!");
 
-        // Save the links to localStorage
         const linksToSave = {
           githubLink: githubLink.trim(),
           otherLinks: otherLinks.trim(),
         };
         localStorage.setItem(`${subdomain}Task`, JSON.stringify(linksToSave));
       } else {
-        showToastWarning("Failed to submit task. Please try again."); // Replace alert with showToastWarning
+        showToastWarning("Failed to submit task. Please try again.");
       }
     } catch (error) {
-      //console.error("Error submitting task:", error);
-      showToastWarning("An error occurred while submitting the task."); // Replace alert with showToastWarning
+      showToastWarning("An error occurred while submitting the task.");
     }
 
     setGithubLink("");
@@ -71,35 +76,51 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center font-retro-gaming">
-      {/* Modal container with 50% width and 50% height */}
-      <div className="bg-black p-6 rounded-xl shadow-lg text-center border-2 border-white w-1/2 h-1/2 flex flex-col justify-between">
-        <h2 className="text-2xl font-bold mb-4">Submit Task Links</h2>
-        <div className="flex flex-col space-y-4 flex-grow">
+    <div className="fixed inset-0 flex items-center justify-center p-4 overflow-x-hidden bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
+      {/* Responsive Modal Container */}
+      <div className="w-11/12 sm:w-3/4 md:w-1/2 max-w-lg p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl max-h-[90vh] overflow-y-auto">
+        <h2 className="mb-4 text-xl font-bold md:text-2xl">
+          Submit Task Links
+        </h2>
+
+        <div className="flex flex-col space-y-3">
           <input
             type="text"
             placeholder="GitHub Link"
             value={githubLink}
             onChange={(e) => setGithubLink(e.target.value)}
-            className="p-2 rounded-lg border border-white bg-transparent text-white"
+            className="p-2 text-white bg-transparent border border-white rounded-lg"
           />
+          <p className="max-w-xs mx-auto text-sm text-gray-400 break-words sm:max-w-sm">
+            Example:{" "}
+            <a
+              href="https://github.com/username/repository"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 underline break-all"
+            >
+              https://github.com/username/repository
+            </a>
+          </p>
           <textarea
             rows={4}
             placeholder="Other Links (comma separated)"
             value={otherLinks}
             onChange={(e) => setOtherLinks(e.target.value)}
-            className="p-2 rounded-lg border border-white bg-transparent text-white"
+            className="p-2 text-white bg-transparent border border-white rounded-lg"
           />
         </div>
-        <div className="flex justify-center mt-4">
+
+        {/* Buttons */}
+        <div className="flex justify-center mt-4 space-x-3">
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded-lg mx-2"
+            className="px-4 py-2 text-white bg-green-500 rounded-lg"
             onClick={handleSubmit}
           >
             Submit
           </button>
           <button
-            className="bg-red-500 text-white px-4 py-2 rounded-lg mx-2"
+            className="px-4 py-2 text-white bg-red-500 rounded-lg"
             onClick={onClose}
           >
             Close

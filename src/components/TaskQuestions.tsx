@@ -67,16 +67,16 @@ export default function TaskQuestions() {
     initialDomain === "WEB" || initialDomain === "BACKEND" ? "WEB" : activeTask;
 
   return (
-    <div className="relative font-sans tracking-wide flex flex-col justify-start items-center h-full w-full px-4">
+    <div className="relative flex flex-col items-center justify-start w-full h-full px-4 font-sans tracking-wide">
       <ToastContainer />
       <div
         id="taskBox"
         className="w-full max-w-[90vw] lg:max-w-[80vw] rounded-xl h-[90%]"
       >
-        <div className="flex flex-col items-center md:flex-row justify-between">
-          <div className="text-center gap-x-4 lg:gap-x-8 flex">
+        <div className="flex flex-col items-center justify-between md:flex-row">
+          <div className="flex text-center gap-x-4 lg:gap-x-8">
             <div
-              className="h-10 w-10  items-center cursor-pointer justify-center flex rounded-md mt-2"
+              className="flex items-center justify-center w-10 h-10 mt-2 rounded-md cursor-pointer"
               onClick={() => navigate("/dashboard")}
             >
               <GoArrowLeft size={40} />
@@ -85,7 +85,7 @@ export default function TaskQuestions() {
               {displayedTaskName.toUpperCase()}
             </p>
             {initialDomain === "WEB" && (
-              <div className="flex gap-2 lg:gap-8 items-center">
+              <div className="flex items-center gap-2 lg:gap-8">
                 <button
                   className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 lg:py-2  border border-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
                     activeTask === "WEB" ? "bg-[#F8B95A]" : "bg-transparent"
@@ -127,7 +127,7 @@ export default function TaskQuestions() {
           </div>
         </div>
 
-        <div className="border border-white rounded-3xl mt-8 lg:mt-8 w-full p-4 mb-2 flex flex-col justify-center items-center ">
+        <div className="flex flex-col items-center justify-center w-full p-4 mt-8 mb-2 border border-white rounded-3xl lg:mt-8 ">
           {renderTaskComponent()}
         </div>
       </div>

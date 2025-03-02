@@ -4,6 +4,7 @@ import Treecloud from "./Treecloud";
 import { LoadDashboard } from "../api/user";
 import Loader from "./Loader";
 import { ToastContainer } from "react-toastify";
+import { showToastWarning } from "../Toast";
 
 interface Quiz {
   domain: string;
@@ -18,16 +19,15 @@ interface QuizData {
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [quizData, setQuizData] = useState<QuizData>({
-    pending: [],
-    completed: [],
-  });
+  const [quizData, setQuizData] = useState<QuizData>();
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await LoadDashboard(2);
         setQuizData(response);
+      } catch {
+        showToastWarning("error ocuured try again");
       } finally {
         setLoading(false);
       }
@@ -36,14 +36,13 @@ export default function Dashboard(): JSX.Element {
     fetchQuizData();
   }, []);
 
-  // Filter quizzes into tasks and interviews based on subDomain
-  const tasks = quizData.completed.filter(
+  const tasks = quizData?.completed.filter(
     (quiz) =>
       !quiz.subDomain ||
       !["EVENTS", "PNM", "IOT", "RND"].includes(quiz.subDomain.toUpperCase())
   );
 
-  const interviews = quizData.completed.filter(
+  const interviews = quizData?.completed.filter(
     (quiz) =>
       quiz.subDomain &&
       ["EVENTS", "PNM", "IOT", "RND"].includes(quiz.subDomain.toUpperCase())
@@ -69,9 +68,9 @@ export default function Dashboard(): JSX.Element {
 
         <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
           <div className="flex flex-col items-center">
-            {!loading && quizData.completed.length === 0 ? (
-              <div className="text-center mb-4 px-14">
-                <span className="font-sans tracking-wide text-lg md:text-xl w-full text-yellow-400">
+            {!loading && quizData?.completed.length === 0 ? (
+              <div className="mb-4 text-center px-14">
+                <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
                   Thank you for participating in IEEE CS Enrollment 2025.
                   Although you didn't qualify, we invite you to stay engaged
                   with our chapter through upcoming events and initiatives. Your
@@ -80,9 +79,9 @@ export default function Dashboard(): JSX.Element {
               </div>
             ) : (
               <>
-                {quizData.completed.length > 0 && (
-                  <div className="text-center mb-4 px-14">
-                    <span className="font-sans tracking-wide text-lg md:text-xl w-full text-yellow-400">
+                {quizData && quizData.completed.length > 0 && (
+                  <div className="mb-4 text-center px-14">
+                    <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
                       Congratulations on qualifying Round-1. 🎉
                       <p>
                         Round-2 is live. Interviews (if applicable) will be
@@ -102,45 +101,51 @@ export default function Dashboard(): JSX.Element {
                 )}
 
                 {/* Conditionally render TASKS and INTERVIEWS sections only if quizData.completed is not empty */}
-                {quizData.completed.length > 0 && (
+                {quizData && quizData.completed.length > 0 && (
                   <>
                     {/* TASKS Section */}
-                    <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl ">TASKS</h2>
+                    <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">TASKS</h2>
                     <div className="flex flex-col gap-4 md:flex-row">
-                      {tasks.map((quiz, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col items-center justify-center px-4 md:px-8 py-2 md:py-4 text-white transition duration-200 cursor-pointer border-2 rounded-3xl hover:border-orange-500"
-                          onClick={() => handleTaskClick(quiz.subDomain)}
-                        >
-                          <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
-                          {quiz.subDomain && (
-                            <p className="text-gray-400 text-md sm:text-xl">
-                              {quiz.subDomain}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                      {tasks &&
+                        tasks.map((quiz, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col items-center justify-center px-4 py-2 text-white transition duration-200 border-2 cursor-pointer md:px-8 md:py-4 rounded-3xl hover:border-orange-500"
+                            onClick={() => handleTaskClick(quiz.subDomain)}
+                          >
+                            <h3 className="text-lg sm:text-xl">
+                              {quiz.domain}
+                            </h3>
+                            {quiz.subDomain && (
+                              <p className="text-gray-400 text-md sm:text-xl">
+                                {quiz.subDomain}
+                              </p>
+                            )}
+                          </div>
+                        ))}
                     </div>
 
                     {/* INTERVIEWS Section */}
-                    <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl md:mt-8 mt-4">
+                    <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
                       INTERVIEWS
                     </h2>
                     <div className="flex flex-col gap-4 md:flex-row">
-                      {interviews.map((quiz, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col items-center justify-center px-4 md:px-8 py-2 md:py-4 text-white border-2 rounded-3xl"
-                        >
-                          <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
-                          {quiz.subDomain && (
-                            <p className="text-gray-400 text-md sm:text-xl">
-                              {quiz.subDomain}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                      {interviews &&
+                        interviews.map((quiz, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col items-center justify-center px-4 py-2 text-white border-2 md:px-8 md:py-4 rounded-3xl"
+                          >
+                            <h3 className="text-lg sm:text-xl">
+                              {quiz.domain}
+                            </h3>
+                            {quiz.subDomain && (
+                              <p className="text-gray-400 text-md sm:text-xl">
+                                {quiz.subDomain}
+                              </p>
+                            )}
+                          </div>
+                        ))}
                     </div>
                   </>
                 )}
