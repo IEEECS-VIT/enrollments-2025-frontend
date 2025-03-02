@@ -124,7 +124,7 @@ export default function Dashboard(): JSX.Element {
                     </div>
 
                     {/* INTERVIEWS Section */}
-                    <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl md:mt-8">
+                    <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl md:mt-8 mt-4">
                       INTERVIEWS
                     </h2>
                     <div className="flex flex-col gap-4 md:flex-row">
