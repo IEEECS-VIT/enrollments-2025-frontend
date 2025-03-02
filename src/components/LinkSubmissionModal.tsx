@@ -32,8 +32,8 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
         return;
       }
 
-      const githubRepoRegex =
-        /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w-]+$/;
+    const githubRepoRegex =
+      /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w-]+\/?$/;
 
       if (!githubRepoRegex.test(githubLink.trim())) {
         showToastWarning("Please provide a valid GitHub repository link");

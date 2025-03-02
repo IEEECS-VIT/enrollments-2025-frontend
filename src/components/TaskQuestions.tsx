@@ -13,6 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { GoArrowLeft, GoDownload } from "react-icons/go";
 import LinkSubmissionModal from "./LinkSubmissionModal";
 import { ToastContainer } from "react-toastify";
+import RNDTask from "./RNDTask";
 
 export default function TaskQuestions() {
   const location = useLocation();
@@ -49,6 +50,8 @@ export default function TaskQuestions() {
         return <GraphicTask />;
       case "VIDEO EDITING":
         return <VideoTask />;
+      case "RND":
+        return <RNDTask />;
       default:
         return <WebTask />;
     }
@@ -62,6 +65,7 @@ export default function TaskQuestions() {
     }
   };
 
+  // Always display "WEB" for both frontend and backend tasks
   const displayedTaskName =
     initialDomain === "WEB" || initialDomain === "BACKEND" ? "WEB" : activeTask;
 
@@ -86,20 +90,16 @@ export default function TaskQuestions() {
             {initialDomain === "WEB" && (
               <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-6">
                 <button
-                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white mt-2 lg:mt-0 h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
-                    activeTask === "WEB"
-                      ? "bg-[#F8B95A]"
-                      : "bg-transparent border border-[#F8B95A]"
+                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 lg:py-2  border border-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
+                    activeTask === "WEB" ? "bg-[#F8B95A]" : "bg-transparent"
                   }`}
                   onClick={() => setActiveTask("WEB")}
                 >
                   FRONTEND
                 </button>
                 <button
-                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white mt-2 lg:mt-0 h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
-                    activeTask === "BACKEND"
-                      ? "bg-[#F8B95A]"
-                      : "bg-transparent border border-[#F8B95A]"
+                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 lg:py-2  border border-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
+                    activeTask === "BACKEND" ? "bg-[#F8B95A]" : "bg-transparent"
                   }`}
                   onClick={() => setActiveTask("BACKEND")}
                 >
@@ -112,7 +112,7 @@ export default function TaskQuestions() {
           <div className="flex flex-wrap justify-center gap-4 mt-4 lg:gap-6 md:mt-0">
             {/* View Doc Button */}
             <button
-              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 bg-[#F8B95A] border border-[#F8B95A]"
+              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 py-2 border border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
               onClick={() => {
                 window.open(getDocumentLink(), "_blank");
               }}
@@ -122,7 +122,7 @@ export default function TaskQuestions() {
 
             {/* Submit Task Button */}
             <button
-              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 bg-[#F8B95A] border border-[#F8B95A]"
+              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 py-2 border border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
               onClick={() => setIsModalOpen(true)}
             >
               SUBMIT TASK
@@ -145,7 +145,14 @@ export default function TaskQuestions() {
             )
           }
           onClose={() => setIsModalOpen(false)}
-          subdomain={initialDomain}
+          // Pass "FRONTEND" or "BACKEND" based on activeTask
+          subdomain={
+            activeTask === "WEB"
+              ? "FRONTEND"
+              : activeTask === "BACKEND"
+              ? "BACKEND"
+              : initialDomain
+          }
         />
       )}
     </div>

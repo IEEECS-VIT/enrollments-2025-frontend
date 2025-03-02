@@ -1,8 +1,8 @@
 export default function CCTask() {
   return (
-    <div className="relative w-full h-full bg-transparent max-h-[65vh] md:max-h-[75vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
+    <div className="relative w-full h-full bg-transparent max-h-[65vh] md:max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
       {/* Competitive Coding Task Content - Now with a scroll container */}
-      <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh] md:max-h-[75vh]">
+      <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh] md:max-h-[65vh]">
         <div className="w-full px-2 prose markdown-content prose-invert max-w-none md:px-4">
           <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-2 md:mb-4">
             🧠 Competitive Coding Task
