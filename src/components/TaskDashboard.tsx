@@ -157,9 +157,10 @@ export default function Dashboard(): JSX.Element {
                         ))}
                     </div>
 
-                    <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
+                    {interviews && ( <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
                       INTERACTIONS
-                    </h2>
+                    </h2> )}
+                   
                     <div className="flex flex-col gap-4 md:flex-row">
                       {interviews &&
                         interviews.map((quiz, index) => (
