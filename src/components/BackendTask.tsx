@@ -222,19 +222,6 @@ export default function WebTask() {
                   <strong>cloned and tested using Docker</strong>
                 </li>
               </ul>
-
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 Extra Points:
-              </p>
-              <ul className="list-none pl-2 text-white">
-                <li className="mb-1">
-                  • Implement <strong>logging and monitoring</strong> solutions
-                </li>
-                <li className="mb-1">
-                  • Add <strong>automated testing</strong> with good code
-                  coverage
-                </li>
-              </ul>
             </div>
 
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
@@ -309,7 +296,7 @@ export default function WebTask() {
 
             <p className="mt-6 mb-4 text-white">
               Good luck with your backend development challenge! This task will
-              help you demonstrate your skills in creating scalable, secure, and
+              help you demonstrate your skills in creating robust, secure, and
               feature-rich backend systems. We're excited to see your
               implementation! 🚀
             </p>
