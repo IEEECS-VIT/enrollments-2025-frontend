@@ -20,7 +20,7 @@ export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [quizData, setQuizData] = useState<QuizData>();
-  const [showPopup, setShowPopup] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -36,6 +36,12 @@ export default function Dashboard(): JSX.Element {
 
     fetchQuizData();
   }, []);
+
+  useEffect(() => {
+    if (quizData && quizData?.completed.length > 0) {
+      setShowPopup(true);
+    }
+  }, [quizData]);
 
   const closePopup = () => {
     setShowPopup(false);
@@ -98,11 +104,12 @@ export default function Dashboard(): JSX.Element {
             {!loading && quizData?.completed.length === 0 ? (
               <div className="mb-4 text-center px-14">
                 <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl text-center">
-                  Tasks are only visible for people who made it to the next round! <br/> Better luck next time.{" "}
+                  Tasks are only visible for people who made it to the next
+                  round! <br /> Better luck next time.{" "}
                 </span>
               </div>
             ) : (
-              <>h
+              <>
                 {quizData && quizData.completed.length > 0 && (
                   <div className="mb-4 text-center px-14">
                     <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
@@ -123,10 +130,13 @@ export default function Dashboard(): JSX.Element {
                     </span>
                   </div>
                 )}
-
                 {quizData && quizData.completed.length > 0 && (
                   <>
-                    {tasks && (<h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">TASKS</h2>)}
+                    {tasks && (
+                      <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">
+                        TASKS
+                      </h2>
+                    )}
                     <div className="flex flex-col gap-4 md:flex-row">
                       {tasks &&
                         tasks.map((quiz, index) => (
