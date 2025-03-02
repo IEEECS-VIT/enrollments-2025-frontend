@@ -242,3 +242,29 @@ export async function LoadQuestions({
     };
   }
 }
+
+export async function SubmitTask(
+  round: number,
+  domain: string,
+  answers: string[] | void[]
+) {
+  if (!answers || answers.length === 0) {
+    throw new Error("Answers cannot be empty");
+  }
+
+  const payload = {
+    round,
+    domain,
+    answers,
+  };
+
+  const response = await ProtectedRequest<DomainResponse>(
+    "POST",
+    "/answer/submit",
+    payload
+  );
+
+  return {
+    status: response.status,
+  };
+}

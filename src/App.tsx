@@ -18,13 +18,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
-import Dashboard from "./components/Dashboard";
+// import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 // import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
 import { Navigate } from "react-router-dom";
+import TaskDashboard from "./components/TaskDashboard";
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.98 },
@@ -60,8 +61,9 @@ const AppContent = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
       <Bg />
-      {location.pathname !== "/quiz" && location.pathname !=="/task" && <Navbar />}
-      
+      {location.pathname !== "/quiz" && location.pathname !== "/task" && (
+        <Navbar />
+      )}
 
       <div className="relative z-20">
         <AnimatePresence mode="wait">
@@ -85,7 +87,7 @@ const AppContent = () => {
                 <Route path="profile" element={<Profile />} />
                 <Route path="username" element={<UsernameSection />} />
                 {/* <Route path="quiz" element={<Quiz1 />} /> */}
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="dashboard" element={<TaskDashboard />} />
                 <Route path="task" element={<Tasks />} />
                 {/* <Route path="quiz-complete" element={<QuizComplete />} /> */}
                 <Route
