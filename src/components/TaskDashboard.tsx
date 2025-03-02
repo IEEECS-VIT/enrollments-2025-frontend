@@ -109,7 +109,7 @@ export default function Dashboard(): JSX.Element {
                     <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
                       Congratulations on qualifying Round-1. 🎉
                       <p>
-                        Round-2 is live. Interviews (if applicable) will be
+                        Round-2 is live. Interactions (if applicable) will be
                         scheduled soon. Join{" "}
                         <a
                           href="https://discord.gg/j2Pt6A4YNK"
@@ -149,7 +149,7 @@ export default function Dashboard(): JSX.Element {
                     </div>
 
                     <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
-                      INTERVIEWS
+                      INTERACTIONS
                     </h2>
                     <div className="flex flex-col gap-4 md:flex-row">
                       {interviews &&
