@@ -39,13 +39,13 @@ export default function Dashboard(): JSX.Element {
   const tasks = quizData?.completed.filter(
     (quiz) =>
       !quiz.subDomain ||
-      !["EVENTS", "PNM", "IOT", "RND"].includes(quiz.subDomain.toUpperCase())
+      !["EVENTS", "PNM", "IOT"].includes(quiz.subDomain.toUpperCase())
   );
 
   const interviews = quizData?.completed.filter(
     (quiz) =>
       quiz.subDomain &&
-      ["EVENTS", "PNM", "IOT", "RND"].includes(quiz.subDomain.toUpperCase())
+      ["EVENTS", "PNM", "IOT"].includes(quiz.subDomain.toUpperCase())
   );
 
   const handleTaskClick = (subDomain: string | undefined) => {
