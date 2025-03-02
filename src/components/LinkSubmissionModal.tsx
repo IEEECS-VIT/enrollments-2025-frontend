@@ -5,11 +5,13 @@ import { showToastSuccess, showToastWarning } from "../Toast";
 interface LinkSubmissionModalProps {
   onClose: () => void;
   subdomain: string;
+  tech: boolean;
 }
 
 const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
   onClose,
   subdomain,
+  tech,
 }) => {
   const [githubLink, setGithubLink] = useState("");
   const [otherLinks, setOtherLinks] = useState("");
@@ -24,25 +26,29 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
   }, [subdomain]);
 
   const handleSubmit = async () => {
-    if (githubLink.trim() === "") {
-      showToastWarning("Please provide GitHub Link");
-      return;
+    if (tech) {
+      if (githubLink.trim() === "") {
+        showToastWarning("Please provide a GitHub Link");
+        return;
+      }
+
+      const githubRepoRegex =
+        /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w-]+$/;
+
+      if (!githubRepoRegex.test(githubLink.trim())) {
+        showToastWarning("Please provide a valid GitHub repository link");
+        return;
+      }
+    } else {
+      if (otherLinks.trim() === "") {
+        showToastWarning("Please provide at least one link");
+        return;
+      }
     }
-
-    const githubRepoRegex =
-      /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w-]+$/;
-
-    if (!githubRepoRegex.test(githubLink.trim())) {
-      showToastWarning("Please provide a valid GitHub repository link");
-      return;
-    }
-
     const linksArray: string[] = [];
-
-    if (githubLink.trim() !== "") {
+    if (tech && githubLink.trim() !== "") {
       linksArray.push(githubLink.trim());
     }
-
     if (otherLinks.trim() !== "") {
       const separatedLinks = otherLinks
         .split(",")
@@ -50,26 +56,26 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
         .filter((link) => link !== "");
       linksArray.push(...separatedLinks);
     }
-
-    const finalLinks = linksArray.map((link) => `${link}`);
-
     try {
-      const response = await SubmitTask(2, subdomain, finalLinks);
+      const response = await SubmitTask(2, subdomain, linksArray);
       if (response.status === 200) {
         showToastSuccess("Task submitted successfully!");
 
         const linksToSave = {
-          githubLink: githubLink.trim(),
+          githubLink: tech ? githubLink.trim() : undefined,
           otherLinks: otherLinks.trim(),
         };
         localStorage.setItem(`${subdomain}Task`, JSON.stringify(linksToSave));
+      } else if (response.status == 201) {
+        showToastWarning("You did not attempt round 1");
+      } else if (response.status == 202) {
+        showToastWarning("You did not qualify round 1");
       } else {
         showToastWarning("Failed to submit task. Please try again.");
       }
     } catch (error) {
       showToastWarning("An error occurred while submitting the task.");
     }
-
     setGithubLink("");
     setOtherLinks("");
     onClose();
@@ -84,27 +90,34 @@ const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
         </h2>
 
         <div className="flex flex-col space-y-3">
-          <input
-            type="text"
-            placeholder="GitHub Link"
-            value={githubLink}
-            onChange={(e) => setGithubLink(e.target.value)}
-            className="p-2 text-white bg-transparent border border-white rounded-lg"
-          />
-          <p className="max-w-xs mx-auto text-sm text-gray-400 break-words sm:max-w-sm">
-            Example:{" "}
-            <a
-              href="https://github.com/username/repository"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 underline break-all"
-            >
-              https://github.com/username/repository
-            </a>
-          </p>
+          {tech && (
+            <>
+              <input
+                type="text"
+                placeholder="GitHub Link"
+                value={githubLink}
+                onChange={(e) => setGithubLink(e.target.value)}
+                className="p-2 text-white bg-transparent border border-white rounded-lg"
+              />
+              <p className="max-w-xs mx-auto text-sm text-gray-400 break-words sm:max-w-sm">
+                Example:{" "}
+                <a
+                  href="https://github.com/username/repository"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 underline break-all"
+                >
+                  https://github.com/username/repository
+                </a>
+              </p>
+            </>
+          )}
+
           <textarea
             rows={4}
-            placeholder="Other Links (comma separated)"
+            placeholder={
+              tech ? "Other Links (comma separated)" : "Links (comma separated)"
+            }
             value={otherLinks}
             onChange={(e) => setOtherLinks(e.target.value)}
             className="p-2 text-white bg-transparent border border-white rounded-lg"

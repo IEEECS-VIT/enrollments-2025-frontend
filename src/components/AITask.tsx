@@ -4,7 +4,7 @@ export default function AITask() {
       <div className="relative w-full h-full bg-transparent max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
         {/* ML Task Content - With scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh]">
-          <div className="markdown-content prose prose-invert max-w-none w-full px-2">
+          <div className="w-full px-2 prose markdown-content prose-invert max-w-none">
             <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
               🤖 AI/ML Task: Image Classification Challenge
             </h1>
@@ -26,7 +26,7 @@ export default function AITask() {
             <p className="mb-4 text-white">
               Dataset link:{" "}
               <a
-                href="https://drive.google.com/file/d/1eqMKY4yPdIFN_Fnkvp6VeEtucYT8oT3o/view?usp=sharing"
+                href="https://drive.google.com/file/d/1byxncPUl2aeKFZ0voFAQ7WbyjBSvLhNA/view?usp=sharing"
                 className="text-[#F8B95A] hover:text-[#F8B95A]"
                 target="_blank"
               >
@@ -47,7 +47,7 @@ export default function AITask() {
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Exploratory Data Analysis
               </h3>
-              <ul className="list-none pl-2 mb-2 text-white">
+              <ul className="pl-2 mb-2 text-white list-none">
                 <li className="mb-1">
                   ✅ Load the dataset and perform{" "}
                   <strong>exploratory data analysis (EDA)</strong>
@@ -69,7 +69,7 @@ export default function AITask() {
               <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
-              <ul className="list-none pl-2 text-white">
+              <ul className="pl-2 text-white list-none">
                 <li className="mb-1">
                   • Create{" "}
                   <strong>visualizations of class distributions</strong> and
@@ -86,7 +86,7 @@ export default function AITask() {
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 ⚡ Level 2: Basic Classification Model
               </h3>
-              <ul className="list-none pl-2 mb-2 text-white">
+              <ul className="pl-2 mb-2 text-white list-none">
                 <li className="mb-1">
                   ✅ Develop a{" "}
                   <strong>classifier using Logistic Regression</strong> to
@@ -115,7 +115,7 @@ export default function AITask() {
               <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
-              <ul className="list-none pl-2 text-white">
+              <ul className="pl-2 text-white list-none">
                 <li className="mb-1">
                   • Explore <strong>different ML algorithms</strong> (Random
                   Forest, SVM, etc.)
@@ -131,7 +131,7 @@ export default function AITask() {
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🚀 Level 3: Neural Network Implementation
               </h3>
-              <ul className="list-none pl-2 mb-2 text-white">
+              <ul className="pl-2 mb-2 text-white list-none">
                 <li className="mb-1">
                   ✅ Construct and train a{" "}
                   <strong>simple neural network</strong> to classify images into
@@ -155,7 +155,7 @@ export default function AITask() {
               <p className="text-sm font-bold mt-2 text-[#F8B95A]">
                 💡 Extra Points:
               </p>
-              <ul className="list-none pl-2 text-white">
+              <ul className="pl-2 text-white list-none">
                 <li className="mb-1">
                   • Implement <strong>more advanced CNN architectures</strong>{" "}
                   (e.g., LeNet, AlexNet)
@@ -174,7 +174,7 @@ export default function AITask() {
             <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📍 General Guidelines
             </h2>
-            <ul className="list-none pl-2 mb-4 text-white">
+            <ul className="pl-2 mb-4 text-white list-none">
               <li className="mb-2">
                 ✅ <strong>Code Organization:</strong> Maintain{" "}
                 <strong>clean, well-documented code</strong> with appropriate
@@ -197,7 +197,7 @@ export default function AITask() {
               <li className="mb-2">
                 ✅ <strong>README File:</strong> A comprehensive README.md is
                 mandatory, including:
-                <ul className="list-disc pl-6 mt-2 text-white">
+                <ul className="pl-6 mt-2 text-white list-disc">
                   <li>Project overview and goals</li>
                   <li>Data description and preprocessing steps</li>
                   <li>Models implemented and their performance</li>
@@ -210,7 +210,7 @@ export default function AITask() {
             <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
               📝 Submission Guidelines
             </h2>
-            <ol className="list-decimal pl-6 mb-4 text-white">
+            <ol className="pl-6 mb-4 text-white list-decimal">
               <li className="mb-2">
                 Create a <strong>GitHub repository</strong> with your code and
                 documentation

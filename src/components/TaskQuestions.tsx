@@ -28,7 +28,6 @@ export default function TaskQuestions() {
   }, [location, navigate]);
 
   useEffect(() => {
-    // Initialize highlight.js
     hljs.highlightAll();
   }, []);
 
@@ -74,7 +73,7 @@ export default function TaskQuestions() {
         className="w-full max-w-[90vw] lg:max-w-[80vw] rounded-xl h-[90%]"
       >
         <div className="flex flex-col items-center justify-between md:flex-row">
-          <div className="flex text-center gap-x-4 lg:gap-x-8">
+          <div className="flex flex-wrap items-center justify-center text-center gap-x-4 lg:gap-x-8">
             <div
               className="flex items-center justify-center w-10 h-10 mt-2 rounded-md cursor-pointer"
               onClick={() => navigate("/dashboard")}
@@ -85,18 +84,22 @@ export default function TaskQuestions() {
               {displayedTaskName.toUpperCase()}
             </p>
             {initialDomain === "WEB" && (
-              <div className="flex items-center gap-2 lg:gap-8">
+              <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-6">
                 <button
-                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 lg:py-2  border border-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
-                    activeTask === "WEB" ? "bg-[#F8B95A]" : "bg-transparent"
+                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white mt-2 lg:mt-0 h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
+                    activeTask === "WEB"
+                      ? "bg-[#F8B95A]"
+                      : "bg-transparent border border-[#F8B95A]"
                   }`}
                   onClick={() => setActiveTask("WEB")}
                 >
                   FRONTEND
                 </button>
                 <button
-                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 py-2 border border-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
-                    activeTask === "BACKEND" ? "bg-[#F8B95A]" : "bg-transparent"
+                  className={`ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white mt-2 lg:mt-0 h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 ${
+                    activeTask === "BACKEND"
+                      ? "bg-[#F8B95A]"
+                      : "bg-transparent border border-[#F8B95A]"
                   }`}
                   onClick={() => setActiveTask("BACKEND")}
                 >
@@ -106,10 +109,10 @@ export default function TaskQuestions() {
             )}
           </div>
 
-          <div className="flex gap-8">
+          <div className="flex flex-wrap justify-center gap-4 mt-4 lg:gap-6 md:mt-0">
             {/* View Doc Button */}
             <button
-              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 py-2 border border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
+              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 bg-[#F8B95A] border border-[#F8B95A]"
               onClick={() => {
                 window.open(getDocumentLink(), "_blank");
               }}
@@ -119,7 +122,7 @@ export default function TaskQuestions() {
 
             {/* Submit Task Button */}
             <button
-              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md shadow-red-glow text-white mt-2 lg:mt-0 h-8 lg:h-12 text-sm lg:text-2xl px-2 lg:px-6 py-2 border border-[#F8B95A] bg-[#F8B95A] bg-opacity-50 flex items-center justify-center hover:scale-105 transition-transform duration-300"
+              className="ring-2 ring-[#F8B95A] font-playmegames rounded-md text-white h-10 lg:h-12 text-sm lg:text-xl px-4 lg:px-6 py-2 flex items-center justify-center hover:scale-105 transition-transform duration-300 bg-[#F8B95A] border border-[#F8B95A]"
               onClick={() => setIsModalOpen(true)}
             >
               SUBMIT TASK
@@ -127,13 +130,20 @@ export default function TaskQuestions() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full p-4 mt-8 mb-2 border border-white rounded-3xl lg:mt-8 ">
+        <div className="flex flex-col items-center justify-center w-full p-4 mt-8 mb-2 border border-white rounded-3xl lg:mt-8">
           {renderTaskComponent()}
         </div>
       </div>
 
       {isModalOpen && (
         <LinkSubmissionModal
+          tech={
+            !(
+              activeTask === "VIDEO EDITING" ||
+              activeTask === "UI/UX" ||
+              activeTask === "GRAPHIC DESIGN"
+            )
+          }
           onClose={() => setIsModalOpen(false)}
           subdomain={initialDomain}
         />
