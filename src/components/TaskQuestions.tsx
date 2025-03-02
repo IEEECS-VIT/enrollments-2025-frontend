@@ -56,7 +56,7 @@ export default function TaskQuestions() {
 
   const getDocumentLink = () => {
     if (["UI/UX", "GRAPHIC DESIGN", "VIDEO EDITING"].includes(initialDomain)) {
-      return "https://docs.google.com/document/d/SPECIAL_DOC_ID_FOR_UI_GRAPHIC_VIDEO/edit?tab=t.0";
+      return "https://docs.google.com/document/d/1WygbRHcw_4T5Zs_Q6J0mRzyoKJ9VoizDZP2iAHfYQiM/edit?usp=sharing";
     } else {
       return "https://docs.google.com/document/d/1zKB9ItKiIYWgLbp1UBXtpGNT1rSMXPSv9IfDamgHRQc/edit?tab=t.0";
     }

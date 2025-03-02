@@ -71,10 +71,8 @@ export default function Dashboard(): JSX.Element {
             {!loading && quizData?.completed.length === 0 ? (
               <div className="mb-4 text-center px-14">
                 <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
-                  Thank you for participating in IEEE CS Enrollment 2025.
-                  Although you didn't qualify, we invite you to stay engaged
-                  with our chapter through upcoming events and initiatives. Your
-                  interest in IEEE CS is valued.
+                  Round 1 results are out 🥳. Selected participants have been
+                  sent a mail about further rounds.
                 </span>
               </div>
             ) : (
