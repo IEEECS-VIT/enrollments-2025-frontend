@@ -221,7 +221,7 @@ export default function Dashboard(): JSX.Element {
                                     {slotInfo.timing}
                                   </p>
                                   <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
-                                    {/* Panel-{slotInfo.panel} */}
+                                    Panel-{slotInfo.panel}
                                   </p>
                                 </>
                               ) : (
