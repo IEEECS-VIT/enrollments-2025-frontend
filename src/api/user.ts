@@ -34,6 +34,7 @@ interface Quiz {
 interface DashboardData {
   pending: Quiz[];
   completed: Quiz[];
+  slots: Object[];
 }
 
 export async function getAuthToken(): Promise<string> {
@@ -191,6 +192,7 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
   const response = await ProtectedRequest<{
     pending: string[];
     completed: string[];
+    slots: Object[];
   }>("GET", "/user/dashboard", null, { round: round });
 
   const transformQuizzes = (quizzes: string[]): Quiz[] =>
@@ -202,6 +204,7 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
   return {
     pending: transformQuizzes(response.data.pending),
     completed: transformQuizzes(response.data.completed),
+    slots: response.data.slots,
   };
 }
 
