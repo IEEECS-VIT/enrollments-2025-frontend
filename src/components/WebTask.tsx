@@ -66,6 +66,35 @@ export default function WebTask() {
 
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
+              👟 Level 0 - Static Component Clone
+              </h3>
+              <ul className="pl-2 mb-2 text-white list-none">
+                <li className="mb-1">
+                  ✅ Simple clone of navbar, footer, and one the ideas page of the website.
+https://www.rocketair.com/ideas
+
+                </li>
+              </ul>
+              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
+                💡 Extra Points:
+              </p>
+              <ul className="pl-2 text-white list-none">
+                <li className="mb-1">
+                • Responsive design
+
+                </li>
+                <li className="mb-1">
+                • Try adding simple transitions using CSS when opening the navbar.
+                </li>
+                <li className="mb-1">
+                • Simple hover effect using CSS for cards of idea page
+
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1 - Navbar & Footer with Animations
               </h3>
               <ul className="pl-2 mb-2 text-white list-none">
