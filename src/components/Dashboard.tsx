@@ -52,8 +52,6 @@ export default function Dashboard(): JSX.Element {
       try {
         const response = await LoadDashboard(1);
         setQuizData(response);
-        if (response.pending.length === 0 && response.completed.length === 0)
-          navigate("/domain");
       } catch (error) {
       } finally {
         setLoading(false);
