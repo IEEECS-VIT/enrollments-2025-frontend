@@ -12,7 +12,7 @@ export default function WebTask() {
             <p className="mb-4 text-white">
               Welcome to the backend development challenge! 🎉 This task will
               test your ability to create a{" "}
-              <strong>scalable and feature-rich backend system</strong> for
+              <strong>robust and feature-rich backend system</strong> for
               movie ticket booking with dynamic pricing.
             </p>
 
