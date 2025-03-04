@@ -11,21 +11,27 @@ interface Quiz {
   subDomain?: string;
 }
 
-interface QuizData {
+interface DashboardData {
   pending: Quiz[];
   completed: Quiz[];
+  slots: Record<string, any>[]; // Use a more specific type if possible
 }
 
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [quizData, setQuizData] = useState<QuizData>();
+  const [quizData, setQuizData] = useState<DashboardData>({
+    pending: [],
+    completed: [],
+    slots: [],
+  });
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await LoadDashboard(2);
+        // console.log(response);
         setQuizData(response);
       } catch {
         showToastWarning("error ocuured try again");
@@ -47,16 +53,43 @@ export default function Dashboard(): JSX.Element {
     setShowPopup(false);
   };
 
+  // Function to safely get slot information for a specific subdomain
+  const getSlotInfo = (subDomain: string) => {
+    if (
+      !quizData ||
+      !Array.isArray(quizData.slots) ||
+      quizData.slots.length === 0 ||
+      !subDomain
+    ) {
+      return null;
+    }
+
+    const slotObj = quizData.slots.find((slot) => {
+      if (typeof slot === "object" && slot !== null) {
+        return subDomain in slot && slot.Panel;
+      }
+      return false;
+    });
+
+    if (!slotObj) return null;
+
+    return {
+      panel: slotObj.Panel,
+      timing: slotObj[subDomain],
+    };
+  };
+
+  // Dynamically separate interviews and tasks based on slot availability
+  const interviews = quizData?.completed.filter(
+    (quiz) =>
+      (quiz.subDomain && getSlotInfo(quiz.subDomain) !== null) ||
+      quiz.subDomain === "IOT"
+  );
+
   const tasks = quizData?.completed.filter(
     (quiz) =>
       !quiz.subDomain ||
-      !["EVENTS", "PNM", "IOT"].includes(quiz.subDomain.toUpperCase())
-  );
-
-  const interviews = quizData?.completed.filter(
-    (quiz) =>
-      quiz.subDomain &&
-      ["EVENTS", "PNM", "IOT"].includes(quiz.subDomain.toUpperCase())
+      (getSlotInfo(quiz.subDomain) === null && quiz.subDomain !== "IOT")
   );
 
   const handleTaskClick = (subDomain: string | undefined) => {
@@ -71,12 +104,12 @@ export default function Dashboard(): JSX.Element {
           <div className="bg-black text-white p-6  text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
             <h2 className=" font-bold mb-4">Hey everyone! 👋</h2>
             <p>
-              We’re thrilled to see your interest in joining IEEE-CS ! The tasks
-              might look a bit intense, but don’t worry — it’s all about{" "}
+              We're thrilled to see your interest in joining IEEE-CS ! The tasks
+              might look a bit intense, but don't worry — it's all about{" "}
               <strong>learning and effort</strong>, not just completion. Even
               finishing <strong>Level 1</strong> of any track is impressive and
               shows curiosity and dedication. Take your time, ask questions, and
-              most importantly, enjoy the process. Let’s grow and learn
+              most importantly, enjoy the process. Let's grow and learn
               together!
             </p>
             <button
@@ -99,7 +132,7 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
 
-        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
+        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[75%] sm:h-[75vh] h-[75vh] flex flex-col items-center p-4">
           <div className="flex flex-col items-center">
             {!loading && quizData?.completed.length === 0 ? (
               <div className="mb-4 text-center px-14">
@@ -113,10 +146,9 @@ export default function Dashboard(): JSX.Element {
                 {quizData && quizData.completed.length > 0 && (
                   <div className="mb-4 text-center px-14">
                     <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
-                      Congratulations on qualifying for Round-2. 🎉
                       <p>
-                        Round-2 is live. Interactions (if applicable) will be
-                        scheduled soon. Join{" "}
+                        Round-2 is live. Interactions will be scheduled soon.
+                        Join{" "}
                         <a
                           href="https://discord.gg/j2Pt6A4YNK"
                           target="_blank"
@@ -132,7 +164,7 @@ export default function Dashboard(): JSX.Element {
                 )}
                 {quizData && quizData.completed.length > 0 && (
                   <>
-                    {tasks && (
+                    {tasks && tasks.length > 0 && (
                       <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">
                         TASKS
                       </h2>
@@ -149,7 +181,7 @@ export default function Dashboard(): JSX.Element {
                               {quiz.domain}
                             </h3>
                             {quiz.subDomain && (
-                              <p className="text-gray-400 text-md sm:text-xl">
+                              <p className="text-gray-400 text-md sm:text-xl text-center">
                                 {quiz.subDomain}
                               </p>
                             )}
@@ -157,27 +189,54 @@ export default function Dashboard(): JSX.Element {
                         ))}
                     </div>
 
-                    {interviews && ( <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
-                      INTERACTIONS
-                    </h2> )}
-                   
+                    {interviews && interviews.length > 0 && (
+                      <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
+                        INTERACTIONS
+                      </h2>
+                    )}
+
                     <div className="flex flex-col gap-4 md:flex-row">
                       {interviews &&
-                        interviews.map((quiz, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col items-center justify-center px-4 py-2 text-white border-2 md:px-8 md:py-4 rounded-3xl"
-                          >
-                            <h3 className="text-lg sm:text-xl">
-                              {quiz.domain}
-                            </h3>
-                            {quiz.subDomain && (
-                              <p className="text-gray-400 text-md sm:text-xl">
-                                {quiz.subDomain}
-                              </p>
-                            )}
-                          </div>
-                        ))}
+                        interviews.map((quiz, index) => {
+                          const slotInfo = quiz.subDomain
+                            ? getSlotInfo(quiz.subDomain)
+                            : null;
+
+                          return (
+                            <div
+                              key={index}
+                              className="flex flex-col items-center justify-center px-4 py-2 text-white border-2 md:px-8 md:py-4 rounded-3xl"
+                            >
+                              <h3 className="text-lg sm:text-xl">
+                                {quiz.domain}
+                              </h3>
+                              {quiz.subDomain && (
+                                <p className="text-gray-400 text-md sm:text-xl text-center">
+                                  {quiz.subDomain}
+                                </p>
+                              )}
+                              {slotInfo ? (
+                                <>
+                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
+                                    {slotInfo.timing}
+                                  </p>
+                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
+                                    {/* Panel-{slotInfo.panel} */}
+                                  </p>
+                                </>
+                              ) : (
+                                <>
+                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
+                                    Scheduling soon
+                                  </p>
+                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
+                                    Check Discord
+                                  </p>
+                                </>
+                              )}
+                            </div>
+                          );
+                        })}
                     </div>
                   </>
                 )}
