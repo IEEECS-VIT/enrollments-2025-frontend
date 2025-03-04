@@ -59,6 +59,27 @@ export default function AppTask() {
 
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
+              👞 Level 0: Static Roll Dice UI 
+              </h3>
+              <ul className="list-none pl-2 mb-2 text-white">
+                <li className="mb-1">
+                  ✅ A single screen with a dice image in the center
+                </li>
+                <li className="mb-1">
+                  ✅ A button below the dice that says "Roll Dice".
+                </li>
+                <li className="mb-1">
+                  ✅ When the button is tapped, a new dice image should appear (static image swap).
+                </li>
+                <li className="mb-1">
+                  ✅ Clean UI with centered alignment.
+                </li>
+              </ul>
+              
+            </div>
+
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Basic UI Development (Static)
               </h3>
               <ul className="list-none pl-2 mb-2 text-white">
