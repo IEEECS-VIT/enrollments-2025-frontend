@@ -23,6 +23,26 @@ export default function CCTask() {
             The challenge is divided into three levels of increasing complexity.
           </p>
 
+          <div className="bg-[#232334] bg-opacity-50 p-3 md:p-4 rounded-lg border-l-4 border-[#F8B95A] mb-4 md:mb-6">
+            <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2">
+            👞 Level 0: Basic Data Structure implementation
+            </h3>
+            <p className="mb-2 text-sm text-white md:text-base">
+            Implement a doubly linked list with basic operations
+            </p>
+            <ul className="pl-2 mb-2 text-sm text-white list-none md:text-base">
+              <li className="mb-1">
+                • Node creation
+              </li>
+              <li className="mb-1">
+                • Insertion (head and tail)
+              </li>
+              <li className="mb-1">
+                • Traversal (forward and backward) and printing. 
+              </li>
+            </ul>
+          </div>
+
           {/* Level 1 */}
           <div className="bg-[#232334] bg-opacity-50 p-3 md:p-4 rounded-lg border-l-4 border-[#F8B95A] mb-4 md:mb-6">
             <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2">

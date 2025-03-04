@@ -53,6 +53,25 @@ export default function WebTask() {
 
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
+              🔑 Level 0: Basic Authentication - Login
+              </h3>
+
+              <ul className="list-none pl-2 mb-3 text-white">
+                <li className="mb-1">
+                  ✅  Implement a simple user login system.
+                </li>
+                <li className="mb-1">
+                  ✅ Allow users to register with a username and password.
+                </li>
+                <li className="mb-1">
+                  ✅ Provide a login endpoint to authenticate users.
+                </li>
+              </ul>
+            </div>
+
+
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Basic Backend - Movies, Shows & Bookings
               </h3>
 

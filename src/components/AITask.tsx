@@ -40,6 +40,26 @@ export default function AITask() {
 
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
               <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
+              👞 Level 0: Data Loading and Initial Inspection
+              </h3>
+              <ul className="pl-2 mb-2 text-white list-none">
+                <li className="mb-1">
+                  ✅  Load the dataset using pandas/numpy.
+                </li>
+                <li className="mb-1">
+                Check the dataset shape and print it.
+                </li>
+                <li className="mb-1">
+                Display a few of the images using matplotlib with their labels.
+                </li>
+                <li className="mb-1">
+                Verify grayscale format by checking a single image. 
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
                 🔰 Level 1: Exploratory Data Analysis
               </h3>
               <ul className="pl-2 mb-2 text-white list-none">

@@ -1,4 +1,4 @@
-//import Treecloud from "./Treecloud";
+// import Cloud from "./Clouds";
 import TaskQuestions from "./TaskQuestions";
 
 export default function Task() {
@@ -6,7 +6,7 @@ export default function Task() {
     <>
       <div className="relative flex items-center justify-center min-h-screen">
         {/* <div className="absolute w-full pointer-events-none">
-          <Treecloud />
+          <Cloud />
         </div> */}
 
         <div className="absolute z-10 w-full pointer-events-auto ">
