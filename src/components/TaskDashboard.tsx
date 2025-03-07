@@ -27,6 +27,8 @@ export default function Dashboard(): JSX.Element {
   });
   const [showPopup, setShowPopup] = useState(false);
   const [showDeadlineModal, setShowDeadlineModal] = useState(false);
+  const [blockedTaskModal, setBlockedTaskModal] = useState(false);
+  const [blockedTaskName, setBlockedTaskName] = useState("");
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -91,8 +93,16 @@ export default function Dashboard(): JSX.Element {
   );
 
   const handleTaskClick = (subDomain: string | undefined) => {
-    if (subDomain === "GRAPHIC DESIGN") {
-      setShowDeadlineModal(true);
+    const blockedTasks = [
+      "GRAPHIC DESIGN",
+      "UI/UX",
+      "VIDEO EDITING",
+      "CC",
+      "AI/ML",
+    ];
+    if (subDomain && blockedTasks.includes(subDomain)) {
+      setBlockedTaskName(subDomain);
+      setBlockedTaskModal(true);
     } else {
       navigate("/task", { state: { subDomain } });
     }
@@ -131,6 +141,23 @@ export default function Dashboard(): JSX.Element {
             <button
               className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
               onClick={() => setShowDeadlineModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {blockedTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
+          <div className="bg-black text-white p-6 text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
+            <h2 className="font-bold mb-4">Submission Closed</h2>
+            <p>
+              The deadline for submitting the task of {blockedTaskName} is over.
+            </p>
+
+            <button
+              className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
+              onClick={() => setBlockedTaskModal(false)}
             >
               Close
             </button>
