@@ -99,11 +99,17 @@ export default function Dashboard(): JSX.Element {
       "VIDEO EDITING",
       "CC",
       "AI/ML",
+      "WEB",
+      "APP",
+      "EVENTS",
+      "RND",
+      "PNM"
     ];
     if (subDomain && blockedTasks.includes(subDomain)) {
       setBlockedTaskName(subDomain);
       setBlockedTaskModal(true);
     } else {
+      console.log(subDomain);
       navigate("/task", { state: { subDomain } });
     }
   };
