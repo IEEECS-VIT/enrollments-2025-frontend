@@ -99,11 +99,17 @@ export default function Dashboard(): JSX.Element {
       "VIDEO EDITING",
       "CC",
       "AI/ML",
+      "WEB",
+      "APP",
+      "EVENTS",
+      "RND",
+      "PNM"
     ];
     if (subDomain && blockedTasks.includes(subDomain)) {
       setBlockedTaskName(subDomain);
       setBlockedTaskModal(true);
     } else {
+      console.log(subDomain);
       navigate("/task", { state: { subDomain } });
     }
   };
@@ -263,8 +269,8 @@ export default function Dashboard(): JSX.Element {
                                   <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold text-center">
                                     {slotInfo.timing}
                                   </p>
-                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold text-center">
-                                    Panel-{slotInfo.panel}
+                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
+                                    {/* Panel-{slotInfo.panel} */}
                                   </p>
                                 </>
                               ) : (
