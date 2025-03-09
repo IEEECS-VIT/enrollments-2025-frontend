@@ -26,15 +26,17 @@ export default function Dashboard(): JSX.Element {
     slots: [],
   });
   const [showPopup, setShowPopup] = useState(false);
+  const [showDeadlineModal, setShowDeadlineModal] = useState(false);
+  const [blockedTaskModal, setBlockedTaskModal] = useState(false);
+  const [blockedTaskName, setBlockedTaskName] = useState("");
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await LoadDashboard(2);
-        // console.log(response);
         setQuizData(response);
       } catch {
-        showToastWarning("error ocuured try again");
+        showToastWarning("error occurred try again");
       } finally {
         setLoading(false);
       }
@@ -53,7 +55,6 @@ export default function Dashboard(): JSX.Element {
     setShowPopup(false);
   };
 
-  // Function to safely get slot information for a specific subdomain
   const getSlotInfo = (subDomain: string) => {
     if (
       !quizData ||
@@ -79,7 +80,6 @@ export default function Dashboard(): JSX.Element {
     };
   };
 
-  // Dynamically separate interviews and tasks based on slot availability
   const interviews = quizData?.completed.filter(
     (quiz) =>
       (quiz.subDomain && getSlotInfo(quiz.subDomain) !== null) ||
@@ -93,7 +93,25 @@ export default function Dashboard(): JSX.Element {
   );
 
   const handleTaskClick = (subDomain: string | undefined) => {
-    navigate("/task", { state: { subDomain } });
+    const blockedTasks = [
+      "GRAPHIC DESIGN",
+      "UI/UX",
+      "VIDEO EDITING",
+      "CC",
+      "AI/ML",
+      "WEB",
+      "APP",
+      "EVENTS",
+      "RND",
+      "PNM"
+    ];
+    if (subDomain && blockedTasks.includes(subDomain)) {
+      setBlockedTaskName(subDomain);
+      setBlockedTaskModal(true);
+    } else {
+      console.log(subDomain);
+      navigate("/task", { state: { subDomain } });
+    }
   };
 
   return (
@@ -101,10 +119,10 @@ export default function Dashboard(): JSX.Element {
       <ToastContainer />
       {showPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
-          <div className="bg-black text-white p-6  text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
-            <h2 className=" font-bold mb-4">Hey everyone! 👋</h2>
+          <div className="bg-black text-white p-6 text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
+            <h2 className="font-bold mb-4">Hey everyone! 👋</h2>
             <p>
-              We're thrilled to see your interest in joining IEEE-CS ! The tasks
+              We're thrilled to see your interest in joining IEEE-CS! The tasks
               might look a bit intense, but don't worry — it's all about{" "}
               <strong>learning and effort</strong>, not just completion. Even
               finishing <strong>Level 1</strong> of any track is impressive and
@@ -117,6 +135,37 @@ export default function Dashboard(): JSX.Element {
               onClick={closePopup}
             >
               Got it!
+            </button>
+          </div>
+        </div>
+      )}
+      {showDeadlineModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
+          <div className="bg-black text-white p-6 text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
+            <h2 className="font-bold mb-4">Deadline Over</h2>
+            <p>The deadline for task submission for Graphic Design is over.</p>
+            <button
+              className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
+              onClick={() => setShowDeadlineModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {blockedTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
+          <div className="bg-black text-white p-6 text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
+            <h2 className="font-bold mb-4">Submission Closed</h2>
+            <p>
+              The deadline for submitting the task of {blockedTaskName} is over.
+            </p>
+
+            <button
+              className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
+              onClick={() => setBlockedTaskModal(false)}
+            >
+              Close
             </button>
           </div>
         </div>
@@ -217,11 +266,11 @@ export default function Dashboard(): JSX.Element {
                               )}
                               {slotInfo ? (
                                 <>
-                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
+                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold text-center">
                                     {slotInfo.timing}
                                   </p>
                                   <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
-                                    Panel-{slotInfo.panel}
+                                    {/* Panel-{slotInfo.panel} */}
                                   </p>
                                 </>
                               ) : (
