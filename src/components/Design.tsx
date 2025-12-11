@@ -12,6 +12,13 @@ export default function Design() {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  // Defined domains here to handle dynamic lengths and icons easily
+  const DOMAINS = [
+    { label: "UI/UX", icon: "/cherry.svg" },
+    // { label: "GRAPHIC DESIGN", icon: "/grapes.svg" },
+    { label: "VIDEO EDITING", icon: "/yellowoval.svg" },
+  ];
+
   useEffect(() => {
     setHoveredIndex(0);
     if (containerRef.current) {
@@ -20,7 +27,7 @@ export default function Design() {
   }, []);
 
   const handleKeyNavigation = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const totalButtons = 3;
+    const totalButtons = DOMAINS.length;
     const submitButtonIndex = totalButtons;
 
     if (event.key === "ArrowLeft") {
@@ -55,8 +62,7 @@ export default function Design() {
     setHoveredIndex((current) => (current !== null ? current : 0));
 
   const handleClick = (index: number) => {
-    const labels = ["UI/UX", "GRAPHIC DESIGN", "VIDEO EDITING"];
-    const selectedLabel = labels[index];
+    const selectedLabel = DOMAINS[index].label;
 
     if (
       currentSelections.length < 2 &&
@@ -92,11 +98,13 @@ export default function Design() {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center items-center w-full sm:mt-[8vh] mt-[4vh]">
-          {["UI/UX", "GRAPHIC DESIGN", "VIDEO EDITING"].map((label, index) => (
+          {DOMAINS.map((domain, index) => (
             <div
               key={index}
               className={`flex flex-col mb-[2.5vh] items-center sm:basis-1/3 cursor-pointer nav-button p-4 rounded-lg transition-transform duration-300 ${
-                currentSelections.includes(label) ? "scale-110" : "scale-100"
+                currentSelections.includes(domain.label)
+                  ? "scale-110"
+                  : "scale-100"
               }`}
               onClick={() => handleClick(index)}
               onMouseEnter={() => handleHover(index)}
@@ -104,23 +112,17 @@ export default function Design() {
             >
               <img
                 className="h-[7.5vh] sm:h-[15vh]"
-                src={
-                  index === 0
-                    ? "/cherry.svg"
-                    : index === 1
-                    ? "/grapes.svg"
-                    : "/yellowoval.svg"
-                }
-                alt={label}
+                src={domain.icon}
+                alt={domain.label}
               />
               <p
                 className={`text-[2.75vh] sm:text-[1.85vh] md:text-[2.15vh] lg:text-[2.75vh] tracking-wider transition-all duration-300 ${
-                  currentSelections.includes(label)
+                  currentSelections.includes(domain.label)
                     ? "text-[#0395F1] font-bold underline underline-offset-4"
                     : "text-white"
                 } ${hoveredIndex === index ? "animate-blink" : ""}`}
               >
-                {hoveredIndex === index ? `> ${label} <` : label}
+                {hoveredIndex === index ? `> ${domain.label} <` : domain.label}
               </p>
             </div>
           ))}
@@ -130,9 +132,11 @@ export default function Design() {
         onClick={handleOkClick}
         tabIndex={0}
         className={`ring-2 ring-[#F8B95A] tracking-wider rounded-md text-[2.5vh] shadow-red-glow text-white h-[5vh] w-[10vw] bg-[#F8B95A] bg-opacity-50 mt-8 transform transition-transform duration-300 ${
-          hoveredIndex === 3 ? "scale-110 bg-opacity-70" : "scale-100"
+          hoveredIndex === DOMAINS.length
+            ? "scale-110 bg-opacity-70"
+            : "scale-100"
         }`}
-        onMouseEnter={() => setHoveredIndex(3)}
+        onMouseEnter={() => setHoveredIndex(DOMAINS.length)}
         onMouseLeave={() => setHoveredIndex(null)}
       >
         OK

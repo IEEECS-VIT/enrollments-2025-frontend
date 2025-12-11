@@ -53,10 +53,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                 <span className="font-bold">Username : </span>{" "}
                 {profileData?.username}
               </p>
-              <p>
+              {/* <p>
                 <span className="font-bold">Mobile No. : </span>{" "}
                 {profileData?.mobile}
-              </p>
+              </p> */}
               <p>
                 <span className="font-bold">Mail ID : </span>{" "}
                 <span className="break-all">{profileData?.email}</span>

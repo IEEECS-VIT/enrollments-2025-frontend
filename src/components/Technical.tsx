@@ -14,10 +14,10 @@ export default function Technical() {
 
   const DOMAINS = [
     { label: "WEB", icon: "/computer.svg" },
-    { label: "IOT", icon: "/drone.svg" },
+    // { label: "IOT", icon: "/drone.svg" },
     { label: "APP", icon: "/App.svg" },
     { label: "AI/ML", icon: "/AI.svg" },
-    { label: "RND", icon: "/book.svg" },
+    // { label: "RND", icon: "/book.svg" },
     { label: "CC", icon: "/cc.svg" },
   ];
 

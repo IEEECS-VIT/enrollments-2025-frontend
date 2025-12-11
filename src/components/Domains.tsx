@@ -128,9 +128,9 @@ export default function Domains() {
 
       const response = await SubmitDomains(allSelectedData);
       if (response.status === 200) {
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 500);
+        // setTimeout(() => {
+        //   navigate("/dashboard");
+        // }, 500);
         showToastSuccess("Domains selected successfully");
       }
     }
