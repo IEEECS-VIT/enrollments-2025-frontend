@@ -85,16 +85,16 @@ export default function Domains() {
       localStorage.setItem("lastVisited", paths[index]);
       return;
     }
-    const techDomains = localStorage.getItem("technical") || "[]";
-    // console.log(techDomains.length);
+    // const techDomains = localStorage.getItem("technical") || "[]";
+    // // console.log(techDomains.length);
 
-    const flag = techDomains == '["CC"]';
-    // console.log(flag);
+    // const flag = techDomains == '["CC"]';
+    // // console.log(flag);
 
     if (
-      !flag &&
-      selectedDomains.length >= 2 &&
-      !(selectedDomain == "technical")
+      // !flag &&
+      selectedDomains.length >= 2 
+      // && !(selectedDomain == "technical")
     ) {
       showToastWarning("You can select upto 2 domains.");
       return;

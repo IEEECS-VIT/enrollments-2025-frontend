@@ -76,47 +76,49 @@ export default function Technical() {
   const handleClick = (index: number) => {
     const selectedLabel = DOMAINS[index].label;
 
-    const isDesignPresent = (() => {
-      const item = localStorage.getItem("design");
-      return item !== null && item !== "[]";
-    })();
+    // const isDesignPresent = (() => {
+    //   const item = localStorage.getItem("design");
+    //   return item !== null && item !== "[]";
+    // })();
 
-    const isManagementPresent = (() => {
-      const item = localStorage.getItem("management");
-      return item !== null && item !== "[]";
-    })();
+    // const isManagementPresent = (() => {
+    //   const item = localStorage.getItem("management");
+    //   return item !== null && item !== "[]";
+    // })();
 
-    if (isDesignPresent && isManagementPresent) {
-      if (selectedLabel === "CC") {
-        setCurrentSelections((prev) => (prev.includes("CC") ? [] : ["CC"]));
-      } else {
-        showToastWarning(
-          "Only CC is allowed in Technical when selecting three domains.To proceed with this sub-domain, deselect one of the other domains."
-        );
-      }
-    } else {
+    // if (isDesignPresent && isManagementPresent) {
+    //   if (selectedLabel === "CC") {
+    //     setCurrentSelections((prev) => (prev.includes("CC") ? [] : ["CC"]));
+    //   } else {
+    //     showToastWarning(
+    //       "Only CC is allowed in Technical when selecting three domains.To proceed with this sub-domain, deselect one of the other domains."
+    //     );
+    //   }
+    // } else {
       setCurrentSelections((prev) => {
-        const isCCSelected = prev.includes("CC");
+        // const isCCSelected = prev.includes("CC");
 
         if (prev.includes(selectedLabel)) {
           return prev.filter((label) => label !== selectedLabel);
-        } else if (isCCSelected) {
-          if (prev.length < 3) {
+        } 
+        // else if (isCCSelected) {
+        //   if (prev.length < 3) {
+        //     return [...prev, selectedLabel];
+        //   } else {
+        //     showToastWarning("Only 2 Sub-Domains Allowed (plus CC)");
+        //     return prev;
+        //   }
+        // } 
+        else {
+          if (prev.length < 2 /* || selectedLabel === "CC" */) {
             return [...prev, selectedLabel];
           } else {
-            showToastWarning("Only 2 Sub-Domains Allowed (plus CC)");
-            return prev;
-          }
-        } else {
-          if (prev.length < 2 || selectedLabel === "CC") {
-            return [...prev, selectedLabel];
-          } else {
-            showToastWarning("Only 2 Sub-Domains Allowed (unless one is CC)");
+            showToastWarning("Only 2 Sub-Domains Allowed" /* (unless one is CC) */);
             return prev;
           }
         }
       });
-    }
+    // }
   };
 
   const handleOkClick = () => {
@@ -137,10 +139,10 @@ export default function Technical() {
             TECHNICAL
           </p>
         </div>
-        <div className="mt-8 ml-2 text-sm text-center text-yellow-400 sm:text-lg sm:mt-0 sm:ml-0">
+        {/* <div className="mt-8 ml-2 text-sm text-center text-yellow-400 sm:text-lg sm:mt-0 sm:ml-0">
           *CC ( Competitive Coding ) can be chosen as an additional subdomain
           under Tech.
-        </div>
+        </div> */}
         <div className="w-full mt-[4vh] grid grid-cols-2 sm:grid-cols-3 gap-4 px-4">
           {DOMAINS.map((domain, index) => (
             <div
