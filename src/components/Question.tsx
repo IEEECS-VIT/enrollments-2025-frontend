@@ -28,7 +28,7 @@ import handleSubmit from "../utils/quizUtils.ts";
 import ImageModal from "./ImageModal.tsx";
 import { showToastWarning } from "../Toast.ts";
 import { ToastContainer } from "react-toastify";
-// import findCorrectAnswerIndex from "../utils/calculateScore.ts";
+// import findCorrectAnswerIndex from "../utils/calculateScore.ts"; // Commented out
 
 interface QuizData {
   questions: {
@@ -94,10 +94,6 @@ export default function Questions() {
         const data = await LoadQuestions({ subdomain });
         if (data.error) {
           setLoading(false);
-          // setTimeout(
-          //   () => showToastWarning(data.error || "Unable to fetch data"),
-          //   2000
-          // );
           showToastWarning(data.error || "Unable to fetch data");
           await deleteExpiryFromSecureDB(subdomain);
           Cookies.remove("subdomain");
@@ -249,7 +245,6 @@ export default function Questions() {
       if (timeDiff <= 0) {
         setIsTimerExpired(true);
         clearInterval(timerInterval);
-        // Call the imported handleSubmit function
         handleSubmit(
           subdomain,
           domain,
@@ -271,7 +266,6 @@ export default function Questions() {
 
   useEffect(() => {
     if (isTimerExpired) {
-      
       handleSubmit(subdomain, domain, round, navigate, true, setLoadingSubmit);
     }
   }, [isTimerExpired]);
@@ -312,30 +306,32 @@ export default function Questions() {
     );
   }
 
-  // const calculateScore = (
-  //   quizData: QuizData,
-  //   selectedAnswers: { [key: number]: string | number }
-  // ) => {
-  //   let totalScore = 0;
+  // --- COMMENTED OUT LOCAL SCORE CALCULATION AS REQUESTED ---
+  /*
+  const calculateScore = (
+    quizData: QuizData,
+    selectedAnswers: { [key: number]: string | number }
+  ) => {
+    let totalScore = 0;
 
-  //   quizData.questions.forEach((question, index) => {
-  //     if (selectedAnswers[index] === undefined) return;
+    quizData.questions.forEach((question, index) => {
+      if (selectedAnswers[index] === undefined) return;
 
-  //     if (question.options) {
-  //       // If options exist, compare selected answer with correct index
-  //       const ans = question.options[findCorrectAnswerIndex(question)];
-  
-  //       const selectedAnswer = selectedAnswers[index];
-  
+      if (question.options) {
+        // If options exist, compare selected answer with correct index
+        const ans = question.options[findCorrectAnswerIndex(question)];
+        const selectedAnswer = selectedAnswers[index];
 
-  //       if (selectedAnswer == ans) {
-  //         totalScore++;
-  //       }
-  //     }
-  //   });
+        if (selectedAnswer == ans) {
+          totalScore++;
+        }
+      }
+    });
 
-  //   return totalScore;
-  // };
+    return totalScore;
+  };
+  */
+  // -----------------------------------------------------------
 
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
@@ -522,7 +518,7 @@ export default function Questions() {
               <div className="flex justify-center mt-4">
                 <button
                   className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
-                  // onClick={() => window.location.reload()}
+                  onClick={() => window.location.reload()}
                 >
                   Reload Page
                 </button>
@@ -538,14 +534,17 @@ export default function Questions() {
           Object.values(selectedAnswers).filter((v) => v !== "").length
         }/${quizData.questions.length} questions.`}
             onConfirm={() => {
-              if (Object.values(selectedAnswers).filter((v) => v !== "").length === 0) {
-                // Show toast notification when no answers selected
-                showToastWarning("Please select at least one answer before submitting");
+              if (
+                Object.values(selectedAnswers).filter((v) => v !== "").length ===
+                0
+              ) {
+                showToastWarning(
+                  "Please select at least one answer before submitting"
+                );
                 setShowModal(false);
-                return; // Don't proceed with submission
+                return;
               }
               setShowModal(false);
-              // Call the imported handleSubmit function
               handleSubmit(
                 subdomain,
                 domain,
@@ -601,14 +600,30 @@ export default function Questions() {
           onQuestionChange={setCurrentQuestionIndex}
         />
       </div>
-      {currentQuestionIndex === quizData.questions.length - 1 && (
-        <button
-          className="absolute text-lg text-white md:bottom-4 bottom-4 font-retro-gaming md:text-xl"
-          onClick={() => setShowModal(true)}
+      
+      {/* --- ADDED NAVIGATION BUTTONS HERE --- */}
+      <div className="absolute w-full bottom-4 flex justify-between px-8 md:px-16 pointer-events-auto z-50 font-retro-gaming text-white text-lg md:text-xl">
+          
+        {/* PREV BUTTON */}
+        <button 
+            onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+            className={`transition-opacity duration-200 ${currentQuestionIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         >
-          &lt; SUBMIT &gt;
+            &lt; PREV
         </button>
-      )}
+
+        {/* NEXT / SUBMIT BUTTON */}
+        {currentQuestionIndex === quizData.questions.length - 1 ? (
+            <button onClick={() => setShowModal(true)}>
+                SUBMIT &gt;
+            </button>
+        ) : (
+            <button onClick={() => setCurrentQuestionIndex(prev => Math.min(quizData.questions.length - 1, prev + 1))}>
+                NEXT &gt;
+            </button>
+        )}
+      </div>
+
     </>
   );
 }

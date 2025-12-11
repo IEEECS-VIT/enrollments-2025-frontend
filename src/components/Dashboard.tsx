@@ -17,6 +17,10 @@ interface QuizData {
   completed: Quiz[];
 }
 
+//CONTROLLER: Change this to enable Quiz functionality
+const QUIZ_ENABLED = true;
+
+
 // Map of subdomains to their durations in minutes
 const SUBDOMAIN_DURATIONS: Record<string, number> = {
   CC: 15,
@@ -41,7 +45,7 @@ export default function Dashboard(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
-  const [selectedQuiz,setSelectedQuiz] = useState<Quiz | null>(null);
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -62,6 +66,9 @@ export default function Dashboard(): JSX.Element {
   }, []);
 
   const handleStartQuiz = (quiz: Quiz) => {
+    // If quiz is disabled, stop here
+    if (!QUIZ_ENABLED) return;
+
     const isMobileDevice =
       /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
       window.innerWidth < 1024;
@@ -177,24 +184,39 @@ export default function Dashboard(): JSX.Element {
         <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
           <div className="flex flex-col items-center justify-center">
             <div className="mb:4 text-center">
-
-            <h2 className="text-xl text-center mb-4 sm:text-4xl">
+              <h2 className="text-xl text-center mb-4 sm:text-4xl">
                 PENDING QUIZZES
               </h2>
-          </div>
-          
+            </div>
+
             <div className="flex flex-col gap-4 md:flex-row">
               {quizData.pending.length > 0 ? (
                 quizData.pending.map((quiz, index) => (
                   <div
                     key={index}
-                    className="flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 cursor-pointer rounded-3xl md:h-24 hover:border-orange-500"
+                    // Updated styling logic based on QUIZ_ENABLED
+                    className={`flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 rounded-3xl md:h-24 ${
+                      QUIZ_ENABLED
+                        ? "cursor-pointer hover:border-orange-500 border-white"
+                        : "cursor-not-allowed border-gray-600 bg-gray-800 opacity-60"
+                    }`}
                     onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
                   >
                     <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                     {quiz.subDomain && (
-                      <p className="text-gray-400 text-md sm:text-xl">
+                      <p
+                        className={`text-md sm:text-xl ${
+                          QUIZ_ENABLED ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         {quiz.subDomain}
+                      </p>
+                    )}
+                    
+                    {/* Added Coming Soon Text */}
+                    {!QUIZ_ENABLED && (
+                      <p className="mt-1 text-xs font-bold tracking-wider text-yellow-400 sm:text-sm">
+                        COMING SOON
                       </p>
                     )}
                   </div>
