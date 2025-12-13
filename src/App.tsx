@@ -18,7 +18,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
-import Dashboard from "./components/Dashboard";
+//import Dashboard from "./components/Dashboard";
 // import Tasks from "./components/Tasks";
 // import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
@@ -54,8 +54,8 @@ const PageTracker: React.FC = () => {
 const AppContent = () => {
   const location = useLocation();
   useEffect(() => {
-    //disableDevTools();
-    //disableRightClick();
+    disableDevTools();
+    disableRightClick();
   }, []);
 
   return (
@@ -87,7 +87,7 @@ const AppContent = () => {
                 <Route path="profile" element={<Profile />} />
                 <Route path="username" element={<UsernameSection />} />
                 {/* <Route path="quiz" element={<Quiz1 />} /> */}
-                <Route path="dashboard" element={<Dashboard />} />
+                {/* <Route path="dashboard" element={<Dashboard />} /> */}
                 {/* <Route path="task" element={<Tasks />} /> */}
                 {/* <Route path="quiz-complete" element={<QuizComplete />} /> */}
                 <Route
