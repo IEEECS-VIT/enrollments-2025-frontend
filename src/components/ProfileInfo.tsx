@@ -80,7 +80,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
               </div>
             </div>
 
-            {/* Selected Domains Section - Always rendered now */}
+            {/* Selected Domains Section*/}
             <div className="bg-white/[0.05] backdrop-blur-md border border-white/20 p-5 rounded-xl flex flex-col gap-4">
               <span className="text-sm md:text-base font-bold uppercase tracking-wider border-b border-white/10 pb-2">
                 Selected Domains
