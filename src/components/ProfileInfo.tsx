@@ -25,12 +25,12 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
       navigate("/username");
     }
   }, [profileData.username, navigate]);
+
   const handleSignOut = async () => {
     try {
       showToastSuccess("Signed out successfully.");
 
       setTimeout(async () => {
-        // Make the callback function async
         await firebaseSignOut(auth);
         Cookies.remove("authToken");
         navigate("/");
@@ -38,6 +38,11 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
       }, 1000);
     } catch (error) {}
   };
+
+  // Helper to check if any domains are actually selected
+  const hasDomains =
+    profileData?.domain &&
+    Object.values(profileData.domain).some((list) => list.length > 0);
 
   return (
     <>
@@ -48,67 +53,17 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
             PROFILE
           </p>
 
-          {/* --------------------------------------------------
-            OLD UI CODE (Commented out as requested)
-            --------------------------------------------------
-          */}
+          {/* Legacy UI Code (Commented Out) */}
           {/* <div className="flex py-8 sm:py-0 flex-col items-center w-full sm:flex-row sm:items-start sm:gap-10">
-            <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[5vh] sm:space-y-12">
-              <p>
-                <span className="font-bold">Username : </span>{" "}
-                {profileData?.username}
-              </p>
-              
-              <p>
-                <span className="font-bold">Mail ID : </span>{" "}
-                <span className="break-all">{profileData?.email}</span>
-              </p>
-              {profileData?.domain && (
-                <div>
-                  <span className="font-bold">Selected Domains : </span>
-                  <div className="mt-2 space-y-2">
-                    {Object.entries(profileData.domain).map(([key, domainList]) =>
-                      domainList.length > 0 ? (
-                        <div key={key} className="text-sm sm:text-2xl">
-                          <strong>
-                            {key.toLowerCase().replace(/\b\w/g, (char) =>
-                              char.toUpperCase()
-                            )}
-                            :
-                          </strong>
-                          {domainList.map((domain, i) => {
-                            const formattedDomain =
-                              ["AI/ML", "UI/UX", "RND", "PNM", "IOT", "CC"].includes(domain)
-                                ? domain
-                                : domain.toLowerCase().replace(/\b\w/g, (char) =>
-                                    char.toUpperCase()
-                                  );
-
-                            return (
-                              <span key={i}>
-                                {formattedDomain}
-                                {i < domainList.length - 1 && ", "}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      ) : null
-                    )}
-                  </div>
-                </div>
-              )} </div>
+            ...
           </div> */}
 
-          {/* --------------------------------------------------
-            NEW REDESIGNED UI
-            --------------------------------------------------
-          */}
           <div className="flex flex-col w-full h-full gap-6 mt-4 overflow-y-auto custom-scrollbar">
             
-            {/* Top section: User details grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* User Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-[30%_1fr] gap-4">
               
-              {/* Username Box - changed bg to lower opacity and added backdrop-blur for glassy look */}
+              {/* Username Box */}
               <div className="bg-white/[0.07] backdrop-blur-md border border-white/30 p-4 rounded-xl flex flex-col gap-2">
                 <span className="text-xs text-white/70 uppercase tracking-widest">Username</span>
                 <span className="text-lg md:text-xl font-bold truncate">
@@ -116,7 +71,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                 </span>
               </div>
 
-              {/* Email Box - same glassy treatment */}
+              {/* Email Box */}
               <div className="bg-white/[0.07] backdrop-blur-md border border-white/30 p-4 rounded-xl flex flex-col gap-2">
                 <span className="text-xs text-white/70 uppercase tracking-widest">Email Address</span>
                 <span className="text-sm md:text-lg font-bold truncate" title={profileData?.email}>
@@ -125,26 +80,27 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
               </div>
             </div>
 
-            {/* Domain Section container - also made glassy */}
-            {profileData?.domain && (
-              <div className="bg-white/[0.05] backdrop-blur-md border border-white/20 p-5 rounded-xl flex flex-col gap-4">
-                <span className="text-sm md:text-base font-bold uppercase tracking-wider border-b border-white/10 pb-2">
-                  Selected Domains
-                </span>
-                
-                <div className="space-y-4">
-                  {Object.entries(profileData.domain).map(([key, domainList]) =>
+            {/* Selected Domains Section*/}
+            <div className="bg-white/[0.05] backdrop-blur-md border border-white/20 p-5 rounded-xl flex flex-col gap-4">
+              <span className="text-sm md:text-base font-bold uppercase tracking-wider border-b border-white/10 pb-2">
+                Selected Domains
+              </span>
+              
+              <div className="space-y-4">
+                {hasDomains ? (
+                  // Render domains if they exist
+                  Object.entries(profileData.domain).map(([key, domainList]) =>
                     domainList.length > 0 ? (
                       <div key={key} className="flex flex-col gap-2">
-                        {/* Domain Category Label */}
+                        {/* Domain Category */}
                         <strong className="text-xs text-green-400 uppercase">
                           {key.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
                         </strong>
                         
-                        {/* Domain Badges - updated chips to be glassy as well */}
+                        {/* Domain Badges */}
                         <div className="flex flex-wrap gap-2">
                           {domainList.map((domain, i) => {
-                             // keeping your existing formatting logic
+                            // Domain name formatting logic
                             const formattedDomain =
                               ["AI/ML", "UI/UX", "RND", "PNM", "IOT", "CC"].includes(domain)
                                 ? domain
@@ -164,17 +120,23 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                         </div>
                       </div>
                     ) : null
-                  )}
-                </div>
+                  )
+                ) : (
+                  // Render "None" if no domains are selected
+                  <div className="text-white/40 text-sm md:text-base italic pl-1">
+                    None
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
         </div>
 
+        {/* Sign Out Button */}
         <button
           onClick={handleSignOut}
-          className="px-4 py-2 text-xs tracking-wide text-white transition bg-transparent rounded-lg sm:text-lg md:text-xl hover:text-red-400 hover:scale-105"
+          className="px-4 py-2 text-xs tracking-wide text-white transition bg-transparent rounded-lg sm:text-lg md:text-xl hover:scale-105"
         >
           &lt; SIGN OUT &gt;
         </button>

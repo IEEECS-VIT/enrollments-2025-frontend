@@ -133,7 +133,7 @@ export default function Technical() {
       tabIndex={0}
     >
       <ToastContainer />
-      <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
+      <div className="border-2 border-[#65C54E] mt-[18vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] sm:w-[80%] md:w-[90%] lg:w-[80%] sm:h-[62.5vh] h-[70vh] flex flex-col items-center">
         <div className="text-center mt-[6vh] sm:mt-[4vh]">
           <p className="sm:text-[6.06vw] text-[3.5vh] font-bold tracking-wider leading-[0.5rem] sm:leading-[5rem]">
             TECHNICAL
@@ -143,7 +143,7 @@ export default function Technical() {
           *CC ( Competitive Coding ) can be chosen as an additional subdomain
           under Tech.
         </div> */}
-        <div className="w-full mt-[4vh] grid grid-cols-2 sm:grid-cols-3 gap-4 px-4">
+        <div className="w-full mt-[4vh] grid grid-cols-2 sm:grid-cols-4 gap-4 px-4 py-16">
           {DOMAINS.map((domain, index) => (
             <div
               key={index}
@@ -160,7 +160,7 @@ export default function Technical() {
               tabIndex={0}
             >
               <img
-                className="h-[7.5vh] sm:h-[12.5vh]"
+                className="h-[7.5vh] sm:h-[10vh]"
                 src={domain.icon}
                 alt={domain.label}
               />
