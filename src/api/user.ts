@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
+import { auth, provider } from "../firebaseConfig";
 import { showToastWarning } from "../Toast";
 import { hasQuizDBKeys } from "../utils/indexedDb";
 
@@ -138,13 +138,51 @@ const ProtectedRequest = async <T = unknown>(
 };
 
 export async function Login(): Promise<ResponseData> {
-  const response = await ProtectedRequest<{ detail: string }>(
-    "POST",
-    "/user/login"
-  );
-  return {
-    status: response.status,
-  };
+  let token: string;
+
+  // 1. Check if we have a user looks logged in, but might be expired
+  if (auth.currentUser) {
+    try {
+      // Try to revive the session
+      token = await auth.currentUser.getIdToken(true);
+    } catch (error) {
+      await auth.signOut(); // Clear the ghost state
+      try {
+        const result = await signInWithPopup(auth, provider);
+        token = await result.user.getIdToken();
+      } catch (popupError) {
+        throw new Error("Login cancelled");
+      }
+    }
+  } else {
+    // 2. Standard Case: No user found, just open the popup
+    try {
+      const result = await signInWithPopup(auth, provider);
+      token = await result.user.getIdToken();
+    } catch (error) {
+      throw new Error("Login cancelled");
+    }
+  }
+  // 3. Setting Cookie & Call Backend
+  Cookies.set("authToken", token, { secure: true, sameSite: "Strict" });
+
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/user/login`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
