@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
-import { auth, provider } from "../firebaseConfig";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 import { showToastWarning } from "../Toast";
 import { hasQuizDBKeys } from "../utils/indexedDb";
 
