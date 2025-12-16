@@ -9,38 +9,38 @@ import {
   loadAnswersFromLocalStorage,
   clearAnswersFromLocalStorage,
 } from "./localStorage.ts";
-import findCorrectAnswerIndex from "./calculateScore.ts";
+//import findCorrectAnswerIndex from "./calculateScore.ts";
 import Cookies from "js-cookie";
 
-interface QuizData {
-  questions: {
-    id?: string;
-    questionId?: string;
-    _id?: string;
-    image_url: any;
-    question: string;
-    options?: string[];
-    correctIndex: number | string;
-  }[];
-}
+// interface QuizData {
+//   questions: {
+//     id?: string;
+//     questionId?: string;
+//     _id?: string;
+//     image_url: any;
+//     question: string;
+//     options?: string[];
+//     correctIndex: number | string;
+//   }[];
+// }
 
-const calculateScore = (
-  quizData: QuizData,
-  selectedAnswers: { [key: number]: string | number }
-) => {
-  let totalScore = 0;
-  quizData.questions.forEach((question, index) => {
-    if (selectedAnswers[index] === undefined) return;
-    if (question.options) {
-      const ans = question.options[findCorrectAnswerIndex(question)];
-      const selectedAnswer = selectedAnswers[index];
-      if (selectedAnswer == ans) {
-        totalScore++;
-      }
-    }
-  });
-  return totalScore;
-};
+// const calculateScore = (
+//   quizData: QuizData,
+//   selectedAnswers: { [key: number]: string | number }
+// ) => {
+//   let totalScore = 0;
+//   quizData.questions.forEach((question, index) => {
+//     if (selectedAnswers[index] === undefined) return;
+//     if (question.options) {
+//       const ans = question.options[findCorrectAnswerIndex(question)];
+//       const selectedAnswer = selectedAnswers[index];
+//       if (selectedAnswer == ans) {
+//         totalScore++;
+//       }
+//     }
+//   });
+//   return totalScore;
+// };
 
 export const handleSubmit = async (
   subdomain: string,
@@ -128,7 +128,7 @@ export const handleSubmit = async (
   } catch (error: any) {
     if (setLoadingSubmit) setLoadingSubmit(false);
     
-    //actual error response from the server
+    //  actual error response from the server
     if (error.response) {
         console.error("SERVER ERROR RESPONSE:", error.response.data);
     }
