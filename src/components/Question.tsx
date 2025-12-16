@@ -5,9 +5,7 @@ import QuestionNumber from "./QuestionNumber.tsx";
 import { LoadQuestions } from "../api/user.ts";
 import Loader from "./Loader";
 import ConfirmationModal from "./Modal.tsx";
-import { disableDevTools, disableRightClick } from "../utils/SecurityUtils.tsx";
 import {
-  fetchExpiryTime,
   getQuizData,
   storeQuizData,
   deleteExpiryFromSecureDB,
@@ -28,10 +26,10 @@ import handleSubmit from "../utils/quizUtils.ts";
 import ImageModal from "./ImageModal.tsx";
 import { showToastWarning } from "../Toast.ts";
 import { ToastContainer } from "react-toastify";
-// import findCorrectAnswerIndex from "../utils/calculateScore.ts"; // Commented out
 
 interface QuizData {
   questions: {
+    id: string; // --- FIXED: Using 'id' ---
     image_url: any;
     question: string;
     options?: string[];
@@ -42,8 +40,9 @@ interface QuizData {
 export default function Questions() {
   const location = useLocation();
   const navigate = useNavigate();
-  const subdomain = location.state?.quiz?.subDomain || Cookies.get("subdomain");
-  var domain = subdomain?.toUpperCase();
+  const subdomainRaw = location.state?.quiz?.subDomain || Cookies.get("subdomain");
+  var domainName = subdomainRaw?.toUpperCase() || ""; 
+  
   const [showLeaveModal] = useState(false);
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [hasUnsavedChanges] = useState(false);
@@ -61,12 +60,10 @@ export default function Questions() {
   const [showBackWarning, setShowBackWarning] = useState(false);
   const [isLeaving] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
-  const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
-  const [isTimerExpired, setIsTimerExpired] = useState(false);
   const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
 
-  // const [count, setCount] = useState(0);
-
+  // --- FIXED: Initialize as NULL to prevent premature "Time Up" ---
+  const [questionTimeLeft, setQuestionTimeLeft] = useState<number | null>(null);
   const [confirmed] = useState(false);
 
   const round = 1;
@@ -75,27 +72,23 @@ export default function Questions() {
     const fetchQuizData = async () => {
       setLoading(true);
 
-      // Try to fetch from IndexedDB first
-      const cachedQuizData = await getQuizData(subdomain, navigate);
+      const cachedQuizData = await getQuizData(subdomainRaw, navigate);
       if (cachedQuizData) {
         setQuizData(cachedQuizData);
-
-        // Load answers from localStorage
-        const savedAnswers = loadAnswersFromLocalStorage(subdomain);
+        const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
         if (savedAnswers) {
           setSelectedAnswers(savedAnswers);
         }
-
         setLoading(false);
         return;
       }
 
       try {
-        const data = await LoadQuestions({ subdomain });
+        const data = await LoadQuestions({ subdomain: subdomainRaw });
         if (data.error) {
           setLoading(false);
           showToastWarning(data.error || "Unable to fetch data");
-          await deleteExpiryFromSecureDB(subdomain);
+          await deleteExpiryFromSecureDB(subdomainRaw);
           Cookies.remove("subdomain");
           if (document.fullscreenElement) {
             document.exitFullscreen();
@@ -103,8 +96,8 @@ export default function Questions() {
           navigate("/dashboard");
         } else {
           setQuizData(data);
-          await storeQuizData(subdomain, data);
-          const savedAnswers = loadAnswersFromLocalStorage(subdomain);
+          await storeQuizData(subdomainRaw, data);
+          const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
           if (savedAnswers) {
             setSelectedAnswers(savedAnswers);
           }
@@ -113,7 +106,7 @@ export default function Questions() {
       } catch (error: string | any) {
         setLoading(false);
         showToastWarning(error);
-        await deleteExpiryFromSecureDB(subdomain);
+        await deleteExpiryFromSecureDB(subdomainRaw);
         Cookies.remove("subdomain");
         if (document.fullscreenElement) {
           document.exitFullscreen();
@@ -124,7 +117,7 @@ export default function Questions() {
 
     fetchQuizData();
 
-    const savedAnswers = Cookies.get(subdomain);
+    const savedAnswers = Cookies.get(subdomainRaw);
     if (savedAnswers) {
       setSelectedAnswers(JSON.parse(savedAnswers));
     }
@@ -134,7 +127,7 @@ export default function Questions() {
       setShowFullScreenModal
     );
     return cleanupBackButtonWarning;
-  }, [subdomain]);
+  }, [subdomainRaw]);
 
   useEffect(() => {
     const handlePermissionChange = async () => {
@@ -163,11 +156,84 @@ export default function Questions() {
     handlePermissionChange();
   }, []);
 
+  const getQuestionDuration = (currentQ: any) => {
+    if (!currentQ) return 0;
+
+    const isMCQ = currentQ.options && currentQ.options.length > 0;
+    
+    const techKeywords = ["WEB", "APP", "CC", "AIML", "TECH"];
+    if (techKeywords.some(keyword => domainName.includes(keyword))) {
+      return 60; 
+    }
+
+    const designKeywords = ["VIDEO", "EDITING", "UI/UX", "DESIGN"];
+    if (designKeywords.some(keyword => domainName.includes(keyword))) {
+      return isMCQ ? 60 : 150; 
+    }
+
+    const mgmtKeywords = ["MANAGEMENT", "PNM"];
+    if (mgmtKeywords.some(keyword => domainName.includes(keyword))) {
+      return isMCQ ? 60 : 240;
+    }
+
+    if (domainName.includes("EVENTS")) {
+      return isMCQ ? 60 : 120;
+    }
+
+    return 60;
+  };
+
+  // Reset timer when question changes or data loads
   useEffect(() => {
-    fetchExpiryTime(subdomain).then(setExpiryTimestamp);
-    disableDevTools();
-    disableRightClick();
-  }, []);
+    if (quizData.questions.length > 0) {
+      const duration = getQuestionDuration(quizData.questions[currentQuestionIndex]);
+      setQuestionTimeLeft(duration);
+    }
+  }, [currentQuestionIndex, quizData, domainName]);
+  useEffect(() => {
+    // If timer hasn't initialized yet (is null), do nothing.
+    // This prevents the "0" default value from triggering "Time Up" on load.
+    if (questionTimeLeft === null) return;
+
+    if (questionTimeLeft <= 0) {
+      if (quizData.questions.length > 0) {
+        handleTimeUp();
+      }
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setQuestionTimeLeft((prev) => (prev !== null ? prev - 1 : null));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [questionTimeLeft, quizData]); 
+
+  const handleTimeUp = () => {
+    if (currentQuestionIndex === quizData.questions.length - 1) {
+       handleSubmit(
+          subdomainRaw,
+          domainName,
+          round,
+          navigate,
+          true,
+          setLoadingSubmit
+        );
+    } else {
+      moveToNextQuestion();
+    }
+  };
+
+  const moveToNextQuestion = () => {
+    if (currentQuestionIndex < quizData.questions.length - 1) {
+        setCurrentQuestionIndex((prev) => prev + 1);
+    }
+  };
+  
+  // Format the time safely
+  const formattedTime = questionTimeLeft !== null 
+    ? `${String(Math.floor(questionTimeLeft / 60)).padStart(2, "0")}:${String(questionTimeLeft % 60).padStart(2, "0")}`
+    : "00:00";
 
   useEffect(() => {
     const cleanupBeforeUnload = addBeforeUnloadListener(
@@ -175,7 +241,6 @@ export default function Questions() {
       hasUnsavedChanges,
       notSubmitted
     );
-
     return cleanupBeforeUnload;
   }, [confirmed, hasUnsavedChanges, notSubmitted]);
 
@@ -185,7 +250,7 @@ export default function Questions() {
       setTabSwitchCount(parseInt(savedTabSwitchCount, 10));
     }
   
-    let hasSwitched = false; // Prevents double counting
+    let hasSwitched = false; 
   
     const incrementTabSwitchCount = () => {
       setTabSwitchCount((prevCount) => {
@@ -194,8 +259,8 @@ export default function Questions() {
   
         if (newCount >= 4) {
           handleSubmit(
-            subdomain,
-            domain,
+            subdomainRaw,
+            domainName,
             round,
             navigate,
             true,
@@ -218,7 +283,7 @@ export default function Questions() {
     };
   
     const handleFocus = () => {
-      hasSwitched = false; // Reset when user comes back
+      hasSwitched = false; 
     };
   
     window.addEventListener("visibilitychange", handleVisibilityChange);
@@ -231,48 +296,6 @@ export default function Questions() {
   }, []);
   
 
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  useEffect(() => {
-    if (!expiryTimestamp || isTimerExpired) return;
-
-    const timerInterval = setInterval(() => {
-      const now = new Date();
-      const timeDiff = Math.max(
-        0,
-        Math.floor((expiryTimestamp.getTime() - now.getTime()) / 1000)
-      );
-
-      if (timeDiff <= 0) {
-        setIsTimerExpired(true);
-        clearInterval(timerInterval);
-        handleSubmit(
-          subdomain,
-          domain,
-          round,
-          navigate,
-          true,
-          setLoadingSubmit
-        );
-      } else {
-        setTimeLeft({
-          minutes: Math.floor(timeDiff / 60),
-          seconds: timeDiff % 60,
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, [expiryTimestamp, isTimerExpired]);
-
-  useEffect(() => {
-    if (isTimerExpired) {
-      handleSubmit(subdomain, domain, round, navigate, true, setLoadingSubmit);
-    }
-  }, [isTimerExpired]);
-
-  const formattedTime = `${String(timeLeft.minutes).padStart(2, "0")}:${String(
-    timeLeft.seconds
-  ).padStart(2, "0")}`;
   if (!quizData) {
     navigate("/dashboard");
   }
@@ -306,37 +329,10 @@ export default function Questions() {
     );
   }
 
-  // --- COMMENTED OUT LOCAL SCORE CALCULATION AS REQUESTED ---
-  /*
-  const calculateScore = (
-    quizData: QuizData,
-    selectedAnswers: { [key: number]: string | number }
-  ) => {
-    let totalScore = 0;
-
-    quizData.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === undefined) return;
-
-      if (question.options) {
-        // If options exist, compare selected answer with correct index
-        const ans = question.options[findCorrectAnswerIndex(question)];
-        const selectedAnswer = selectedAnswers[index];
-
-        if (selectedAnswer == ans) {
-          totalScore++;
-        }
-      }
-    });
-
-    return totalScore;
-  };
-  */
-  // -----------------------------------------------------------
-
   const handleAnswerChange = (questionIndex: number, answer: string) => {
     const updatedAnswers = { ...selectedAnswers, [questionIndex]: answer };
     setSelectedAnswers(updatedAnswers);
-    saveAnswersToLocalStorage(subdomain, updatedAnswers);
+    saveAnswersToLocalStorage(subdomainRaw, updatedAnswers);
   };
 
   const handlePreventCopyPaste = (
@@ -363,7 +359,7 @@ export default function Questions() {
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
         <div className="flex items-center justify-center w-full">
           <h2 className="absolute flex-col my-4 mt-20 text-5xl md:m-1 font-playmegames">
-            {subdomain?.toUpperCase()}
+            {subdomainRaw?.toUpperCase()}
           </h2>
           <div className="hidden p-4 ml-auto border border-white sm:block rounded-xl">
             {formattedTime}
@@ -373,7 +369,7 @@ export default function Questions() {
               ℹ
             </span>
             <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-retro-gaming">
-              Timer will continue if you leave the site .
+              Strict forward navigation. You cannot go back to previous questions.
             </div>
           </div>
         </div>
@@ -409,7 +405,6 @@ export default function Questions() {
               )}
             </div>
 
-            {/* If options exist, show multiple-choice buttons */}
             {quizData.questions.length > 0 &&
             quizData.questions[currentQuestionIndex].options ? (
               <div className="grid items-center justify-center gap-4 mt-8 overflow-y-auto text-xs text-center md:text-lg sm:grid-cols-1 md:grid-cols-2 sm:mt-4 max-h-80">
@@ -546,8 +541,8 @@ export default function Questions() {
               }
               setShowModal(false);
               handleSubmit(
-                subdomain,
-                domain,
+                subdomainRaw,
+                domainName,
                 round,
                 navigate,
                 false,
@@ -594,31 +589,21 @@ export default function Questions() {
         )}
       </div>
       <div className="font-retro-gaming">
+        {/* Pass the correct props to the cleaned up QuestionNumber component */}
         <QuestionNumber
           totalQuestions={quizData.questions.length}
           currentQuestionIndex={currentQuestionIndex}
-          onQuestionChange={setCurrentQuestionIndex}
         />
       </div>
       
-      {/* --- ADDED NAVIGATION BUTTONS HERE --- */}
       <div className="absolute w-full bottom-4 flex justify-between px-8 md:px-16 pointer-events-auto z-50 font-retro-gaming text-white text-lg md:text-xl">
-          
-        {/* PREV BUTTON */}
-        <button 
-            onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-            className={`transition-opacity duration-200 ${currentQuestionIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        >
-            &lt; PREV
-        </button>
-
-        {/* NEXT / SUBMIT BUTTON */}
+        <div></div> 
         {currentQuestionIndex === quizData.questions.length - 1 ? (
             <button onClick={() => setShowModal(true)}>
                 SUBMIT &gt;
             </button>
         ) : (
-            <button onClick={() => setCurrentQuestionIndex(prev => Math.min(quizData.questions.length - 1, prev + 1))}>
+            <button onClick={() => moveToNextQuestion()}>
                 NEXT &gt;
             </button>
         )}

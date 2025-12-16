@@ -21,7 +21,7 @@ import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
 // import Tasks from "./components/Tasks";
 import QuizComplete from "./components/QuizCompleted";
-import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
+//import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
 import { Navigate } from "react-router-dom";
@@ -54,8 +54,8 @@ const PageTracker: React.FC = () => {
 const AppContent = () => {
   const location = useLocation();
   useEffect(() => {
-    disableDevTools();
-    disableRightClick();
+    //disableDevTools();
+    //disableRightClick();
   }, []);
 
   return (

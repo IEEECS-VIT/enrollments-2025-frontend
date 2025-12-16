@@ -38,33 +38,38 @@ interface DashboardData {
 }
 
 export async function getAuthToken(): Promise<string> {
+  const currentUser = auth.currentUser;
+  
+  if (currentUser) {
+    return await currentUser.getIdToken(false); 
+  }
+
   return new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, async (user: User | null) => {
-      if (user) {
-        try {
-          const freshToken = await user.getIdToken(true);
-          Cookies.set("authToken", freshToken, {
-            secure: true,
-            sameSite: "Strict",
-          });
-          resolve(freshToken);
-        } catch (error) {
-          reject("Failed to refresh token");
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (user: User | null) => {
+        unsubscribe(); 
+
+        if (user) {
+          try {
+            const token = await user.getIdToken(false);
+            Cookies.set("authToken", token, {
+              secure: true,
+              sameSite: "Strict",
+            });
+            resolve(token);
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          reject("User is not signed in");
         }
-      } else {
-        try {
-          const result = await signInWithPopup(auth, provider);
-          const idToken = await result.user.getIdToken();
-          Cookies.set("authToken", idToken, {
-            secure: true,
-            sameSite: "Strict",
-          });
-          resolve(idToken);
-        } catch (error) {
-          reject("Sign-in failed");
-        }
+      },
+      (error) => {
+        unsubscribe(); 
+        reject(error);
       }
-    });
+    );
   });
 }
 
@@ -97,13 +102,47 @@ const ProtectedRequest = async <T = unknown>(
 };
 
 export async function Login(): Promise<ResponseData> {
-  const response = await ProtectedRequest<{ detail: string }>(
-    "POST",
-    "/user/login"
-  );
-  return {
-    status: response.status,
-  };
+  let token: string;
+
+  if (auth.currentUser) {
+    try {
+      token = await auth.currentUser.getIdToken(true);
+    } catch (error) {
+      await auth.signOut(); 
+      try {
+        const result = await signInWithPopup(auth, provider);
+        token = await result.user.getIdToken();
+      } catch (popupError) {
+        throw new Error("Login cancelled");
+      }
+    }
+  } else {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      token = await result.user.getIdToken();
+    } catch (error) {
+      throw new Error("Login cancelled");
+    }
+  }
+  Cookies.set("authToken", token, { secure: true, sameSite: "Strict" });
+
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/user/login`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
@@ -114,7 +153,6 @@ export async function LoadProfile(): Promise<ProfileData> {
     mobile: data.mobile,
     email: data.email,
     domain: data.domain,
-    //username:data.username
   };
 }
 
@@ -158,29 +196,21 @@ export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
   };
 }
 
-export async function SubmitAnswers(
-  round: number,
-  domain: string,
-  questions: string[],
-  answers: (string | number)[] | void[],
-  score: number
-) {
-  if (questions.length !== answers?.length) {
-    throw new Error("question and answer count not same");
-  }
+// --- Interface for the backend payload ---
+interface SubmitAnswersPayload {
+  domain: string;
+  round: number;
+  answers: {
+    questionId: string;
+    answer: string;
+  }[];
+}
 
-  const payload = {
-    round,
-    domain,
-    questions,
-    answers,
-    score,
-  };
-
+export async function SubmitAnswers(payload: SubmitAnswersPayload) {
   const response = await ProtectedRequest<DomainResponse>(
     "POST",
     "/answer/submit",
-    payload
+    payload as unknown as Record<string, unknown>
   );
 
   return {
@@ -208,7 +238,9 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
   };
 }
 
+// --- UPDATED: Matches what backend sends (id) ---
 export interface Question {
+  id: string; 
   question: string;
   options: string[];
   correctIndex: number;

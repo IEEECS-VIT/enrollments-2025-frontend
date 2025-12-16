@@ -9,7 +9,7 @@ const faqs: FAQ[] = [
   {
     question: "How many domains can we select?",
     answer:
-      "You can select a total of 4 subdomains across any two domains, with a maximum of 2 subdomains per domain. Regardless of your choices, you are allowed to select Competitive Coding under the Technical domain.",
+      "You can select a total of 4 subdomains across any two domains, with a maximum of 2 subdomains per domain.",
   },
   {
     question: "What will be asked in the quiz?",
@@ -17,7 +17,7 @@ const faqs: FAQ[] = [
   },
   {
     question: "What will happen after the quiz?",
-    answer: "We will let you all know about it.",
+    answer: "Further info will be shared later.",
   },
   {
     question:
@@ -36,8 +36,8 @@ const faqs: FAQ[] = [
   },
   {
     question:
-      "Can I still join a domain as a second-year or third-year student?",
-    answer: "Yes, we accept students from second and third year too.",
+      "Can I still join a domain as a second-year?",
+    answer: "Yes, we accept students from second year.",
   },
 ];
 

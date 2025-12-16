@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "HOME", path: "/" },
-    // { name: "DOMAINS", path: "/domain" },
+    //{ name: "DOMAINS", path: "/domain" },
     { name: "DASHBOARD", path: "/dashboard" },
     { name: "DISCORD", path: "https://discord.com/invite/j2Pt6A4YNK" },
     { name: "FAQS", path: "/faqs" },
@@ -36,7 +36,7 @@ export default function Navbar() {
 
   const navLinksMobile = [
     { name: "HOME", path: "/" },
-    // { name: "DOMAINS", path: "/domain" },
+    //{ name: "DOMAINS", path: "/domain" },
     { name: "DASHBOARD", path: "/dashboard" },
     { name: "DISCORD", path: "https://discord.com/invite/j2Pt6A4YNK" },
     { name: "PROFILE", path: "/profile" },

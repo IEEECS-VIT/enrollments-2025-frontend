@@ -25,12 +25,12 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
       navigate("/username");
     }
   }, [profileData.username, navigate]);
+
   const handleSignOut = async () => {
     try {
       showToastSuccess("Signed out successfully.");
 
       setTimeout(async () => {
-        // Make the callback function async
         await firebaseSignOut(auth);
         Cookies.remove("authToken");
         navigate("/");
@@ -39,42 +39,64 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
     } catch (error) {}
   };
 
+  // Helper to check if any domains are actually selected
+  const hasDomains =
+    profileData?.domain &&
+    Object.values(profileData.domain).some((list) => list.length > 0);
+
   return (
     <>
       <ToastContainer />
       <div className="text-white min-h-screen flex flex-col items-center justify-center font-press-start p-4 space-y-6 relative">
-        <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[60vh] max-h-screen w-[90%] sm:w-[80%] md:w-[70%] flex flex-col py-12 sm:py-8 px-6 space-y-6 font-retro-gaming">
-          <p className="text-2xl sm:text-3xl md:text-4xl tracking-widest text-center">
+        {/* Adjusted width to 95% on mobile to give more breathing room, and limited height to 85vh so it doesn't get cut off */}
+        <div className="border-2 border-white mt-16 sm:mt-24 rounded-3xl backdrop-blur-[4.5px] min-h-[50vh] max-h-[85vh] w-[95%] sm:w-[80%] md:w-[70%] flex flex-col py-8 px-5 sm:px-6 space-y-6 font-retro-gaming">
+          <p className="text-2xl sm:text-3xl md:text-4xl tracking-widest text-center border-b-2 border-white/20 pb-4">
             PROFILE
           </p>
-          <div className="flex py-8 sm:py-0 flex-col items-center w-full sm:flex-row sm:items-start sm:gap-10">
-            <div className="flex flex-col text-base sm:text-lg md:text-2xl w-full space-y-[5vh] sm:space-y-12">
-              <p>
-                <span className="font-bold">Username : </span>{" "}
-                {profileData?.username}
-              </p>
-              {/* <p>
-                <span className="font-bold">Mobile No. : </span>{" "}
-                {profileData?.mobile}
-              </p> */}
-              <p>
-                <span className="font-bold">Mail ID : </span>{" "}
-                <span className="break-all">{profileData?.email}</span>
-              </p>
-              {profileData?.domain && (
-                <div>
-                  <span className="font-bold">Selected Domains : </span>
-                  <div className="mt-2 space-y-2">
-                    {Object.entries(profileData.domain).map(([key, domainList]) =>
-                      domainList.length > 0 ? (
-                        <div key={key} className="text-sm sm:text-2xl">
-                          <strong>
-                            {key.toLowerCase().replace(/\b\w/g, (char) =>
-                              char.toUpperCase()
-                            )}
-                            :
-                          </strong>
+
+          <div className="flex flex-col w-full h-full gap-6 mt-4 overflow-y-auto custom-scrollbar">
+            
+            {/* User Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-[30%_1fr] gap-4">
+              
+              {/* Username Box - added min-w-0 to stop flex items from overflowing */}
+              <div className="bg-white/[0.07] backdrop-blur-md border border-white/30 p-4 rounded-xl flex flex-col gap-2 min-w-0">
+                <span className="text-xs text-white/70 uppercase tracking-widest">Username</span>
+                <span className="text-lg md:text-xl font-bold truncate">
+                  {profileData?.username || "N/A"}
+                </span>
+              </div>
+
+              {/* Email Box - added min-w-0 here too so long emails truncate properly on mobile */}
+              <div className="bg-white/[0.07] backdrop-blur-md border border-white/30 p-4 rounded-xl flex flex-col gap-2 min-w-0">
+                <span className="text-xs text-white/70 uppercase tracking-widest">Email Address</span>
+                <span className="text-sm md:text-lg font-bold truncate" title={profileData?.email}>
+                  {profileData?.email || "N/A"}
+                </span>
+              </div>
+            </div>
+
+            {/* Selected Domains Section*/}
+            <div className="bg-white/[0.05] backdrop-blur-md border border-white/20 p-5 rounded-xl flex flex-col gap-4">
+              <span className="text-sm md:text-base font-bold uppercase tracking-wider border-b border-white/10 pb-2">
+                Selected Domains
+              </span>
+              
+              <div className="space-y-4">
+                {hasDomains ? (
+                  // Render domains if they exist
+                  Object.entries(profileData.domain).map(([key, domainList]) =>
+                    domainList.length > 0 ? (
+                      <div key={key} className="flex flex-col gap-2">
+                        {/* Domain Category */}
+                        <strong className="text-xs text-green-400 uppercase">
+                          {key.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+                        </strong>
+                        
+                        {/* Domain Badges */}
+                        <div className="flex flex-wrap gap-2">
                           {domainList.map((domain, i) => {
+                            // Domain name formatting logic
                             const formattedDomain =
                               ["AI/ML", "UI/UX", "RND", "PNM", "IOT", "CC"].includes(domain)
                                 ? domain
@@ -83,24 +105,34 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileData }) => {
                                   );
 
                             return (
-                              <span key={i}>
+                              <span 
+                                key={i} 
+                                className="px-3 py-1 text-xs md:text-sm bg-white/[0.07] backdrop-blur-sm border border-white/30 rounded-md hover:bg-white/20 transition-colors"
+                              >
                                 {formattedDomain}
-                                {i < domainList.length - 1 && ", "}
                               </span>
                             );
                           })}
                         </div>
-                      ) : null
-                    )}
+                      </div>
+                    ) : null
+                  )
+                ) : (
+                  // Render "None" if no domains are selected
+                  <div className="text-white/40 text-sm md:text-base italic pl-1">
+                    None
                   </div>
-                </div>
-              )} </div>
+                )}
+              </div>
+            </div>
           </div>
+
         </div>
 
+        {/* Sign Out Button */}
         <button
           onClick={handleSignOut}
-          className="px-4 py-2 text-xs tracking-wide text-white transition bg-transparent rounded-lg sm:text-lg md:text-xl"
+          className="px-4 py-2 text-xs tracking-wide text-white transition bg-transparent rounded-lg sm:text-lg md:text-xl hover:scale-105"
         >
           &lt; SIGN OUT &gt;
         </button>

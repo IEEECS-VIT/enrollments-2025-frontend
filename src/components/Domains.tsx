@@ -132,6 +132,10 @@ export default function Domains() {
         //   navigate("/dashboard");
         // }, 500);
         showToastSuccess("Domains selected successfully");
+        
+        setTimeout(() => {
+          navigate("/profile");
+        }, 1000);
       }
     }
     // localStorage.clear();
