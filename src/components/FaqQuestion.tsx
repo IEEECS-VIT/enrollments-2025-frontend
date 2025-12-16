@@ -17,7 +17,7 @@ const faqs: FAQ[] = [
   },
   {
     question: "What will happen after the quiz?",
-    answer: "We will let you all know about it.",
+    answer: "Further info will be shared later.",
   },
   {
     question:
