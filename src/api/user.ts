@@ -238,7 +238,6 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
   };
 }
 
-// --- UPDATED: Matches what backend sends (id) ---
 export interface Question {
   id: string; 
   question: string;
