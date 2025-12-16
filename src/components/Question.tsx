@@ -29,7 +29,7 @@ import { ToastContainer } from "react-toastify";
 
 interface QuizData {
   questions: {
-    id: string; // --- FIXED: Using 'id' ---
+    id: string; 
     image_url: any;
     question: string;
     options?: string[];
@@ -62,7 +62,7 @@ export default function Questions() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
 
-  // --- FIXED: Initialize as NULL to prevent premature "Time Up" ---
+  //Initialize as NULL to prevent premature Time Up
   const [questionTimeLeft, setQuestionTimeLeft] = useState<number | null>(null);
   const [confirmed] = useState(false);
 
@@ -191,8 +191,6 @@ export default function Questions() {
     }
   }, [currentQuestionIndex, quizData, domainName]);
   useEffect(() => {
-    // If timer hasn't initialized yet (is null), do nothing.
-    // This prevents the "0" default value from triggering "Time Up" on load.
     if (questionTimeLeft === null) return;
 
     if (questionTimeLeft <= 0) {

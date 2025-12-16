@@ -75,10 +75,10 @@ export const handleSubmit = async (
       throw new Error("No answers to submit.");
     }
 
-    // --- 2. ROBUST MAPPING: Handles id, questionId, OR _id ---
+
     const formattedAnswers = currentQuizData.questions.map(
       (question: any, index: number) => {
-        // Try to find the ID in any of the common fields, prioritizing 'id'
+      
         const finalId = question.id || question.questionId || question._id;
 
         if (!finalId) {
@@ -86,7 +86,7 @@ export const handleSubmit = async (
         }
 
         return {
-            // Backend likely expects 'questionId' key in payload, but value comes from question.id
+            
             questionId: finalId, 
             answer: savedAnswers[index]?.toString().trim() || "" 
         };
@@ -128,7 +128,7 @@ export const handleSubmit = async (
   } catch (error: any) {
     if (setLoadingSubmit) setLoadingSubmit(false);
     
-    // Log the actual error response from the server
+    //actual error response from the server
     if (error.response) {
         console.error("SERVER ERROR RESPONSE:", error.response.data);
     }
