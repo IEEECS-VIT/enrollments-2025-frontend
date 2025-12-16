@@ -37,34 +37,75 @@ interface DashboardData {
   slots: Object[];
 }
 
+//Earlier Refresh token logic 
+// export async function getAuthToken(): Promise<string> {
+//   return new Promise((resolve, reject) => {
+//     onAuthStateChanged(auth, async (user: User | null) => {
+//       if (user) {
+//         try {
+//           const freshToken = await user.getIdToken(true);
+//           Cookies.set("authToken", freshToken, {
+//             secure: true,
+//             sameSite: "Strict",
+//           });
+//           resolve(freshToken);
+//         } catch (error) {
+//           reject("Failed to refresh token");
+//         }
+//       } else {
+//         try {
+//           const result = await signInWithPopup(auth, provider);
+//           const idToken = await result.user.getIdToken();
+//           Cookies.set("authToken", idToken, {
+//             secure: true,
+//             sameSite: "Strict",
+//           });
+//           resolve(idToken);
+//         } catch (error) {
+//           reject("Sign-in failed");
+//         }
+//       }
+//     });
+//   });
+// }
+
+
+//NEW Logic for the refresh token 
 export async function getAuthToken(): Promise<string> {
+  //Check if user is already loaded in memory
+  const currentUser = auth.currentUser;
+  
+  if (currentUser) {
+    return await currentUser.getIdToken(false); 
+  }
+
+  //If not in local then using firebase to initialise 
   return new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, async (user: User | null) => {
-      if (user) {
-        try {
-          const freshToken = await user.getIdToken(true);
-          Cookies.set("authToken", freshToken, {
-            secure: true,
-            sameSite: "Strict",
-          });
-          resolve(freshToken);
-        } catch (error) {
-          reject("Failed to refresh token");
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (user: User | null) => {
+        unsubscribe(); // STOP LISTENING immediately
+
+        if (user) {
+          try {
+            const token = await user.getIdToken(false);
+            Cookies.set("authToken", token, {
+              secure: true,
+              sameSite: "Strict",
+            });
+            resolve(token);
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          reject("User is not signed in");
         }
-      } else {
-        try {
-          const result = await signInWithPopup(auth, provider);
-          const idToken = await result.user.getIdToken();
-          Cookies.set("authToken", idToken, {
-            secure: true,
-            sameSite: "Strict",
-          });
-          resolve(idToken);
-        } catch (error) {
-          reject("Sign-in failed");
-        }
+      },
+      (error) => {
+        unsubscribe(); 
+        reject(error);
       }
-    });
+    );
   });
 }
 
@@ -97,13 +138,51 @@ const ProtectedRequest = async <T = unknown>(
 };
 
 export async function Login(): Promise<ResponseData> {
-  const response = await ProtectedRequest<{ detail: string }>(
-    "POST",
-    "/user/login"
-  );
-  return {
-    status: response.status,
-  };
+  let token: string;
+
+  // 1. Check if we have a user looks logged in, but might be expired
+  if (auth.currentUser) {
+    try {
+      // Try to revive the session
+      token = await auth.currentUser.getIdToken(true);
+    } catch (error) {
+      await auth.signOut(); // Clear the ghost state
+      try {
+        const result = await signInWithPopup(auth, provider);
+        token = await result.user.getIdToken();
+      } catch (popupError) {
+        throw new Error("Login cancelled");
+      }
+    }
+  } else {
+    // 2. Standard Case: No user found, just open the popup
+    try {
+      const result = await signInWithPopup(auth, provider);
+      token = await result.user.getIdToken();
+    } catch (error) {
+      throw new Error("Login cancelled");
+    }
+  }
+  // 3. Setting Cookie & Call Backend
+  Cookies.set("authToken", token, { secure: true, sameSite: "Strict" });
+
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/user/login`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function LoadProfile(): Promise<ProfileData> {
