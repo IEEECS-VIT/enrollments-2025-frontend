@@ -317,7 +317,7 @@ export default function Dashboard(): JSX.Element {
               <p className="text-lg font-semibold">
                 Are you sure you want to start the quiz?
               </p>
-              <p className="mt-2">
+              {/* <p className="mt-2">
                 {selectedQuiz?.subDomain &&
                 SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()] ? (
                   <>
@@ -331,7 +331,7 @@ export default function Dashboard(): JSX.Element {
                 ) : (
                   "You will have 20 minutes to finish it."
                 )}
-              </p>
+              </p> */}
               <div className="flex justify-center mt-4">
                 <button
                   className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"

@@ -29,7 +29,7 @@ import { ToastContainer } from "react-toastify";
 
 interface QuizData {
   questions: {
-    id: string; 
+    id: string;
     image_url: any;
     question: string;
     options?: string[];
@@ -40,16 +40,32 @@ interface QuizData {
 export default function Questions() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Get Subdomain & Define Storage Key
   const subdomainRaw = location.state?.quiz?.subDomain || Cookies.get("subdomain");
-  var domainName = subdomainRaw?.toUpperCase() || ""; 
+  var domainName = subdomainRaw?.toUpperCase() || "";
   
+  const STORAGE_KEY = subdomainRaw ? `currentIndex_${subdomainRaw.toLowerCase()}` : null;
+
   const [showLeaveModal] = useState(false);
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [hasUnsavedChanges] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [quizData, setQuizData] = useState<QuizData>({ questions: [] });
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    if (!STORAGE_KEY) return 0;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      // Return the saved number, or 0 if nothing is saved
+      return saved ? parseInt(saved, 10) : 0;
+    } catch (e) {
+      return 0;
+    }
+  });
+
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | number;
   }>({});
@@ -61,24 +77,30 @@ export default function Questions() {
   const [isLeaving] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [showTabSwitchModal, setShowTabSwitchModal] = useState(false);
-
-  //Initialize as NULL to prevent premature Time Up
   const [questionTimeLeft, setQuestionTimeLeft] = useState<number | null>(null);
   const [confirmed] = useState(false);
 
   const round = 1;
 
   useEffect(() => {
+    if (STORAGE_KEY) {
+      localStorage.setItem(STORAGE_KEY, currentQuestionIndex.toString());
+    }
+  }, [currentQuestionIndex, STORAGE_KEY]);
+
+  useEffect(() => {
     const fetchQuizData = async () => {
       setLoading(true);
 
       const cachedQuizData = await getQuizData(subdomainRaw, navigate);
+      
       if (cachedQuizData) {
         setQuizData(cachedQuizData);
         const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
         if (savedAnswers) {
           setSelectedAnswers(savedAnswers);
         }
+     
         setLoading(false);
         return;
       }
@@ -149,8 +171,7 @@ export default function Questions() {
         ) {
           setShowPermissionModal(true);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     handlePermissionChange();
@@ -160,19 +181,19 @@ export default function Questions() {
     if (!currentQ) return 0;
 
     const isMCQ = currentQ.options && currentQ.options.length > 0;
-    
+
     const techKeywords = ["WEB", "APP", "CC", "AIML", "TECH"];
-    if (techKeywords.some(keyword => domainName.includes(keyword))) {
-      return 60; 
+    if (techKeywords.some((keyword) => domainName.includes(keyword))) {
+      return 60;
     }
 
     const designKeywords = ["VIDEO", "EDITING", "UI/UX", "DESIGN"];
-    if (designKeywords.some(keyword => domainName.includes(keyword))) {
-      return isMCQ ? 60 : 150; 
+    if (designKeywords.some((keyword) => domainName.includes(keyword))) {
+      return isMCQ ? 60 : 150;
     }
 
     const mgmtKeywords = ["MANAGEMENT", "PNM"];
-    if (mgmtKeywords.some(keyword => domainName.includes(keyword))) {
+    if (mgmtKeywords.some((keyword) => domainName.includes(keyword))) {
       return isMCQ ? 60 : 240;
     }
 
@@ -183,13 +204,23 @@ export default function Questions() {
     return 60;
   };
 
-  // Reset timer when question changes or data loads
+  // Timer Logic
   useEffect(() => {
     if (quizData.questions.length > 0) {
-      const duration = getQuestionDuration(quizData.questions[currentQuestionIndex]);
+        
+      // Safety Check: If stored index is out of bounds 
+      if (currentQuestionIndex >= quizData.questions.length) {
+         setCurrentQuestionIndex(Math.max(0, quizData.questions.length - 1));
+         return;
+      }
+
+      const duration = getQuestionDuration(
+        quizData.questions[currentQuestionIndex]
+      );
       setQuestionTimeLeft(duration);
     }
   }, [currentQuestionIndex, quizData, domainName]);
+
   useEffect(() => {
     if (questionTimeLeft === null) return;
 
@@ -205,18 +236,20 @@ export default function Questions() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [questionTimeLeft, quizData]); 
+  }, [questionTimeLeft, quizData]);
 
   const handleTimeUp = () => {
     if (currentQuestionIndex === quizData.questions.length - 1) {
-       handleSubmit(
-          subdomainRaw,
-          domainName,
-          round,
-          navigate,
-          true,
-          setLoadingSubmit
-        );
+      // Clear storage on submit
+      if(STORAGE_KEY) localStorage.removeItem(STORAGE_KEY);
+      handleSubmit(
+        subdomainRaw,
+        domainName,
+        round,
+        navigate,
+        true,
+        setLoadingSubmit
+      );
     } else {
       moveToNextQuestion();
     }
@@ -224,14 +257,16 @@ export default function Questions() {
 
   const moveToNextQuestion = () => {
     if (currentQuestionIndex < quizData.questions.length - 1) {
-        setCurrentQuestionIndex((prev) => prev + 1);
+      setCurrentQuestionIndex((prev) => prev + 1);
     }
   };
-  
-  // Format the time safely
-  const formattedTime = questionTimeLeft !== null 
-    ? `${String(Math.floor(questionTimeLeft / 60)).padStart(2, "0")}:${String(questionTimeLeft % 60).padStart(2, "0")}`
-    : "00:00";
+
+  const formattedTime =
+    questionTimeLeft !== null
+      ? `${String(Math.floor(questionTimeLeft / 60)).padStart(2, "0")}:${String(
+          questionTimeLeft % 60
+        ).padStart(2, "0")}`
+      : "00:00";
 
   useEffect(() => {
     const cleanupBeforeUnload = addBeforeUnloadListener(
@@ -247,15 +282,17 @@ export default function Questions() {
     if (savedTabSwitchCount) {
       setTabSwitchCount(parseInt(savedTabSwitchCount, 10));
     }
-  
-    let hasSwitched = false; 
-  
+
+    let hasSwitched = false;
+
     const incrementTabSwitchCount = () => {
       setTabSwitchCount((prevCount) => {
         const newCount = prevCount + 1;
         localStorage.setItem("tabSwitchCount", newCount.toString());
-  
+
         if (newCount >= 4) {
+          // Clear storage on auto-submit
+          if(STORAGE_KEY) localStorage.removeItem(STORAGE_KEY);
           handleSubmit(
             subdomainRaw,
             domainName,
@@ -267,10 +304,10 @@ export default function Questions() {
         }
         return newCount;
       });
-  
+
       setShowTabSwitchModal(true);
     };
-  
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         if (!hasSwitched) {
@@ -279,20 +316,19 @@ export default function Questions() {
         }
       }
     };
-  
+
     const handleFocus = () => {
-      hasSwitched = false; 
+      hasSwitched = false;
     };
-  
+
     window.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("focus", handleFocus);
-  
+
     return () => {
       window.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("focus", handleFocus);
     };
   }, []);
-  
 
   if (!quizData) {
     navigate("/dashboard");
@@ -353,7 +389,7 @@ export default function Questions() {
 
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div className="border-2 border-white mt-[10vh] rounded-3xl w-[80%] backdrop-blur-[4.5px] lg:w-[70%] sm:h-[65vh] h-[75vh] flex flex-col items-center p-4 md:p-8 z-50">
         <div className="flex items-center justify-center w-full">
           <h2 className="absolute flex-col my-4 mt-20 text-5xl md:m-1 font-playmegames">
@@ -367,7 +403,8 @@ export default function Questions() {
               ℹ
             </span>
             <div className="absolute left-12 tracking-wider bg-opacity-50 transform -translate-x-80 -translate-y-32 lg:-translate-x-1/2 border-[0.15rem] border-[#F8B95A] mt-2 w-max bg-[#F8B95A] text-white text-xs px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-retro-gaming">
-              Strict forward navigation. You cannot go back to previous questions.
+              Strict forward navigation. You cannot go back to previous
+              questions.
             </div>
           </div>
         </div>
@@ -383,10 +420,13 @@ export default function Questions() {
               id="question"
               className="flex justify-between p-4 overflow-auto text-xs leading-6 border border-white md:text-lg rounded-xl max-h-40 min-h-32 "
             >
+              {/* Added checks to prevent crash if data loads slowly while index is set */}
               {quizData.questions.length > 0 &&
+                quizData.questions[currentQuestionIndex] &&
                 quizData.questions[currentQuestionIndex].question}
 
               {quizData.questions.length &&
+                quizData.questions[currentQuestionIndex] &&
                 quizData.questions[currentQuestionIndex].image_url && (
                   <button
                     className=" bg-[#F8770f] bg-opacity-500 border-[#f8b95a] border-2 text-white px-2 py-2 rounded max-h-14 max-w-14"
@@ -395,7 +435,7 @@ export default function Questions() {
                     <img src="imgIcon.png" alt="img" className="" />
                   </button>
                 )}
-              {showImageModal && (
+              {showImageModal && quizData.questions[currentQuestionIndex] && (
                 <ImageModal
                   imageUrl={quizData.questions[currentQuestionIndex].image_url}
                   onClose={() => setShowImageModal(false)}
@@ -404,6 +444,7 @@ export default function Questions() {
             </div>
 
             {quizData.questions.length > 0 &&
+            quizData.questions[currentQuestionIndex] && 
             quizData.questions[currentQuestionIndex].options ? (
               <div className="grid items-center justify-center gap-4 mt-8 overflow-y-auto text-xs text-center md:text-lg sm:grid-cols-1 md:grid-cols-2 sm:mt-4 max-h-80">
                 {quizData.questions[currentQuestionIndex].options.map(
@@ -538,6 +579,8 @@ export default function Questions() {
                 return;
               }
               setShowModal(false);
+              // Clear storage on manual submit
+              if(STORAGE_KEY) localStorage.removeItem(STORAGE_KEY);
               handleSubmit(
                 subdomainRaw,
                 domainName,
@@ -593,20 +636,15 @@ export default function Questions() {
           currentQuestionIndex={currentQuestionIndex}
         />
       </div>
-      
+
       <div className="absolute w-full bottom-4 flex justify-between px-8 md:px-16 pointer-events-auto z-50 font-retro-gaming text-white text-lg md:text-xl">
-        <div></div> 
+        <div></div>
         {currentQuestionIndex === quizData.questions.length - 1 ? (
-            <button onClick={() => setShowModal(true)}>
-                SUBMIT &gt;
-            </button>
+          <button onClick={() => setShowModal(true)}>SUBMIT &gt;</button>
         ) : (
-            <button onClick={() => moveToNextQuestion()}>
-                NEXT &gt;
-            </button>
+          <button onClick={() => moveToNextQuestion()}>NEXT &gt;</button>
         )}
       </div>
-
     </>
   );
 }
