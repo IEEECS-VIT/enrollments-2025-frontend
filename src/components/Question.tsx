@@ -26,6 +26,7 @@ import handleSubmit from "../utils/quizUtils.ts";
 import ImageModal from "./ImageModal.tsx";
 import { showToastWarning } from "../Toast.ts";
 import { ToastContainer } from "react-toastify";
+import { disableDevTools, disableRightClick } from "../utils/SecurityUtils";
 
 interface QuizData {
   questions: {
@@ -41,6 +42,11 @@ export default function Questions() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    disableDevTools();
+    disableRightClick();
+  }, []);
+  
   // Get Subdomain & Define Storage Key
   const subdomainRaw = location.state?.quiz?.subDomain || Cookies.get("subdomain");
   var domainName = subdomainRaw?.toUpperCase() || "";

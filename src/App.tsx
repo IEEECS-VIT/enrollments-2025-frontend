@@ -6,10 +6,10 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Domainselection from "./components/Domainselection";
-import Designdomain from "./components/Designdomain";
-import Technicaldomain from "./components/Technicaldomain";
-import Managementdomain from "./components/Managementdomain";
+//import Domainselection from "./components/Domainselection";
+//import Designdomain from "./components/Designdomain";
+//import Technicaldomain from "./components/Technicaldomain";
+//import Managementdomain from "./components/Managementdomain";
 import Bg from "./components/bg";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
@@ -21,7 +21,7 @@ import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
 // import Tasks from "./components/Tasks";
 import QuizComplete from "./components/QuizCompleted";
-//import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
+import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
 import { Navigate } from "react-router-dom";
@@ -54,8 +54,8 @@ const PageTracker: React.FC = () => {
 const AppContent = () => {
   const location = useLocation();
   useEffect(() => {
-    //disableDevTools();
-    //disableRightClick();
+    disableDevTools();
+    disableRightClick();
   }, []);
 
   return (
@@ -80,10 +80,10 @@ const AppContent = () => {
               <Route path="faqs" element={<Faq />} />
 
               <Route element={<ProtectedRoute />}>
-                <Route path="domain" element={<Domainselection />} />
+                {/* <Route path="domain" element={<Domainselection />} />
                 <Route path="design" element={<Designdomain />} />
                 <Route path="technical" element={<Technicaldomain />} />
-                <Route path="management" element={<Managementdomain />} />
+                <Route path="management" element={<Managementdomain />} /> */}
                 <Route path="profile" element={<Profile />} />
                 <Route path="username" element={<UsernameSection />} />
                 <Route path="quiz" element={<Quiz1 />} />
