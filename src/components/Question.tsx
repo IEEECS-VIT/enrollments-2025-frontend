@@ -46,9 +46,13 @@ export default function Questions() {
     disableDevTools();
     disableRightClick();
   }, []);
-  
-  // Get Subdomain & Define Storage Key
-  const subdomainRaw = location.state?.quiz?.subDomain || Cookies.get("subdomain");
+
+  const rawState = location.state?.quiz?.subDomain;
+  const rawCookie = Cookies.get("subdomain");
+  const rawLocal = localStorage.getItem("active_quiz_subdomain");
+
+  const subdomainRaw = (rawState || rawCookie || rawLocal || "").trim();
+
   var domainName = subdomainRaw?.toUpperCase() || "";
   
   const STORAGE_KEY = subdomainRaw ? `currentIndex_${subdomainRaw.toLowerCase()}` : null;
@@ -65,8 +69,18 @@ export default function Questions() {
     if (!STORAGE_KEY) return 0;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      // Return the saved number, or 0 if nothing is saved
-      return saved ? parseInt(saved, 10) : 0;
+      if (saved !== null && saved !== undefined) {
+        return parseInt(saved, 10);
+      }
+
+      const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
+      if (savedAnswers && Object.keys(savedAnswers).length > 0) {
+        const indexes = Object.keys(savedAnswers).map((k) => parseInt(k, 10));
+        const maxIndex = Math.max(...indexes);
+        return isNaN(maxIndex) ? 0 : maxIndex + 1;
+      }
+      
+      return 0;
     } catch (e) {
       return 0;
     }
@@ -89,64 +103,72 @@ export default function Questions() {
   const round = 1;
 
   useEffect(() => {
-    if (STORAGE_KEY) {
+    if (STORAGE_KEY && !loading) {
       localStorage.setItem(STORAGE_KEY, currentQuestionIndex.toString());
     }
-  }, [currentQuestionIndex, STORAGE_KEY]);
+  }, [currentQuestionIndex, STORAGE_KEY, loading]);
 
   useEffect(() => {
     const fetchQuizData = async () => {
-  setLoading(true);
+      setLoading(true);
 
-  const cachedQuizData = await getQuizData(subdomainRaw, navigate);
-
-  if (cachedQuizData) {
-    setQuizData(cachedQuizData);
-    const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
-    if (savedAnswers) {
-      setSelectedAnswers(savedAnswers);
-    }
-
-    setLoading(false);
-    return;
-  }
-
-  try {
-    const apiSubdomain = subdomainRaw?.toUpperCase().includes("VIDEO")
-      ? "VIDEO"
-      : subdomainRaw;
-
-    const data = await LoadQuestions({ subdomain: apiSubdomain });
-
-    if (data.error) {
-      setLoading(false);
-      showToastWarning(data.error || "Unable to fetch data");
-      await deleteExpiryFromSecureDB(subdomainRaw);
-      Cookies.remove("subdomain");
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
+      if (subdomainRaw) {
+        localStorage.setItem("active_quiz_subdomain", subdomainRaw);
       }
-      navigate("/dashboard");
-    } else {
-      setQuizData(data);
-      await storeQuizData(subdomainRaw, data);
-      const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
-      if (savedAnswers) {
-        setSelectedAnswers(savedAnswers);
+
+      const cachedQuizData = await getQuizData(subdomainRaw, navigate);
+
+      if (cachedQuizData) {
+        setQuizData(cachedQuizData);
+        const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
+        if (savedAnswers) {
+          setSelectedAnswers(savedAnswers);
+        }
+
+        setLoading(false);
+        return;
       }
-      setLoading(false);
-    }
-  } catch (error: string | any) {
-    setLoading(false);
-    showToastWarning(error);
-    await deleteExpiryFromSecureDB(subdomainRaw);
-    Cookies.remove("subdomain");
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    }
-    navigate("/dashboard");
-  }
-};
+
+      try {
+        const apiSubdomain = subdomainRaw?.toUpperCase().includes("VIDEO")
+          ? "VIDEO"
+          : subdomainRaw;
+        
+        if (!apiSubdomain) {
+             throw new Error("Subdomain not found");
+        }
+
+        const data = await LoadQuestions({ subdomain: apiSubdomain });
+
+        if (data.error) {
+          setLoading(false);
+          showToastWarning(data.error || "Unable to fetch data");
+          await deleteExpiryFromSecureDB(subdomainRaw);
+          Cookies.remove("subdomain");
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          }
+          navigate("/dashboard");
+        } else {
+          setQuizData(data);
+          await storeQuizData(subdomainRaw, data);
+          const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
+          if (savedAnswers) {
+            setSelectedAnswers(savedAnswers);
+          }
+          setLoading(false);
+        }
+      } catch (error: string | any) {
+        setLoading(false);
+        showToastWarning(error);
+        await deleteExpiryFromSecureDB(subdomainRaw);
+        Cookies.remove("subdomain");
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        navigate("/dashboard");
+      }
+    };
 
     fetchQuizData();
 
