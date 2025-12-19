@@ -125,7 +125,7 @@ export const handleSubmit = async (
     };
 
     // --- 3. DEBUG LOG: Look at this in your browser console! ---
-    console.log("SENDING PAYLOAD TO BACKEND:", JSON.stringify(payload, null, 2));
+    // console.log("SENDING PAYLOAD TO BACKEND:", JSON.stringify(payload, null, 2));
 
     const result = await SubmitAnswers(payload);
 
