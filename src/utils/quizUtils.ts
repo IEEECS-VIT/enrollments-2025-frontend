@@ -9,7 +9,7 @@ import {
   loadAnswersFromLocalStorage,
   clearAnswersFromLocalStorage,
 } from "./localStorage.ts";
-//import findCorrectAnswerIndex from "./calculateScore.ts";
+import findCorrectAnswerIndex from "./calculateScore.ts";
 import Cookies from "js-cookie";
 
 // interface QuizData {
@@ -76,27 +76,52 @@ export const handleSubmit = async (
     }
 
 
+    // Backend expects array of objects with questionId and answer, plus a score field
     const formattedAnswers = currentQuizData.questions.map(
       (question: any, index: number) => {
-      
         const finalId = question.id || question.questionId || question._id;
 
         if (!finalId) {
-            console.error(` CRITICAL: Question at index ${index} has NO ID!`, question);
+            console.error(`CRITICAL: Question at index ${index} has NO ID!`, question);
         }
 
         return {
-            
-            questionId: finalId, 
+            questionId: finalId || `question_${index}`, 
             answer: savedAnswers[index]?.toString().trim() || "" 
         };
       }
     );
 
+    // Calculate actual score by comparing user answers with correct answers
+    let score = 0;
+    currentQuizData.questions.forEach((question: any, index: number) => {
+      const userAnswer = savedAnswers[index];
+      
+      // Skip if user didn't answer
+      if (!userAnswer) return;
+      
+      // Check if it's an MCQ (has options)
+      if (question.options && Array.isArray(question.options)) {
+        // Find the correct answer index using the decryption function
+        const correctIndex = findCorrectAnswerIndex(question);
+        
+        if (correctIndex !== -1) {
+          const correctAnswer = question.options[correctIndex];
+          // Compare user's answer with the correct answer
+          if (userAnswer.toString().trim() === correctAnswer.trim()) {
+            score++;
+          }
+        }
+      }
+      // For non-MCQ questions (text answers), we can't auto-score on frontend
+      // Backend will need to manually score these or we just count them as attempted
+    });
+
     const payload = {
         domain: domain,
         round: round,
-        answers: formattedAnswers
+        answers: formattedAnswers,
+        score: score
     };
 
     // --- 3. DEBUG LOG: Look at this in your browser console! ---
