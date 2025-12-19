@@ -37,54 +37,18 @@ interface DashboardData {
   slots: Object[];
 }
 
-//Earlier Refresh token logic 
-// export async function getAuthToken(): Promise<string> {
-//   return new Promise((resolve, reject) => {
-//     onAuthStateChanged(auth, async (user: User | null) => {
-//       if (user) {
-//         try {
-//           const freshToken = await user.getIdToken(true);
-//           Cookies.set("authToken", freshToken, {
-//             secure: true,
-//             sameSite: "Strict",
-//           });
-//           resolve(freshToken);
-//         } catch (error) {
-//           reject("Failed to refresh token");
-//         }
-//       } else {
-//         try {
-//           const result = await signInWithPopup(auth, provider);
-//           const idToken = await result.user.getIdToken();
-//           Cookies.set("authToken", idToken, {
-//             secure: true,
-//             sameSite: "Strict",
-//           });
-//           resolve(idToken);
-//         } catch (error) {
-//           reject("Sign-in failed");
-//         }
-//       }
-//     });
-//   });
-// }
-
-
-//NEW Logic for the refresh token 
 export async function getAuthToken(): Promise<string> {
-  //Check if user is already loaded in memory
   const currentUser = auth.currentUser;
   
   if (currentUser) {
     return await currentUser.getIdToken(false); 
   }
 
-  //If not in local then using firebase to initialise 
   return new Promise((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(
       auth,
       async (user: User | null) => {
-        unsubscribe(); // STOP LISTENING immediately
+        unsubscribe(); 
 
         if (user) {
           try {
@@ -140,13 +104,11 @@ const ProtectedRequest = async <T = unknown>(
 export async function Login(): Promise<ResponseData> {
   let token: string;
 
-  // 1. Check if we have a user looks logged in, but might be expired
   if (auth.currentUser) {
     try {
-      // Try to revive the session
       token = await auth.currentUser.getIdToken(true);
     } catch (error) {
-      await auth.signOut(); // Clear the ghost state
+      await auth.signOut(); 
       try {
         const result = await signInWithPopup(auth, provider);
         token = await result.user.getIdToken();
@@ -155,7 +117,6 @@ export async function Login(): Promise<ResponseData> {
       }
     }
   } else {
-    // 2. Standard Case: No user found, just open the popup
     try {
       const result = await signInWithPopup(auth, provider);
       token = await result.user.getIdToken();
@@ -163,7 +124,6 @@ export async function Login(): Promise<ResponseData> {
       throw new Error("Login cancelled");
     }
   }
-  // 3. Setting Cookie & Call Backend
   Cookies.set("authToken", token, { secure: true, sameSite: "Strict" });
 
   try {
@@ -193,7 +153,6 @@ export async function LoadProfile(): Promise<ProfileData> {
     mobile: data.mobile,
     email: data.email,
     domain: data.domain,
-    //username:data.username
   };
 }
 
@@ -237,29 +196,21 @@ export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
   };
 }
 
-export async function SubmitAnswers(
-  round: number,
-  domain: string,
-  questions: string[],
-  answers: (string | number)[] | void[],
-  score: number
-) {
-  if (questions.length !== answers?.length) {
-    throw new Error("question and answer count not same");
-  }
+// --- Interface for the backend payload ---
+interface SubmitAnswersPayload {
+  domain: string;
+  round: number;
+  answers: {
+    questionId: string;
+    answer: string;
+  }[];
+}
 
-  const payload = {
-    round,
-    domain,
-    questions,
-    answers,
-    score,
-  };
-
+export async function SubmitAnswers(payload: SubmitAnswersPayload) {
   const response = await ProtectedRequest<DomainResponse>(
     "POST",
     "/answer/submit",
-    payload
+    payload as unknown as Record<string, unknown>
   );
 
   return {
@@ -288,6 +239,7 @@ export async function LoadDashboard(round: number): Promise<DashboardData> {
 }
 
 export interface Question {
+  id: string; 
   question: string;
   options: string[];
   correctIndex: number;
