@@ -96,52 +96,57 @@ export default function Questions() {
 
   useEffect(() => {
     const fetchQuizData = async () => {
-      setLoading(true);
+  setLoading(true);
 
-      const cachedQuizData = await getQuizData(subdomainRaw, navigate);
-      
-      if (cachedQuizData) {
-        setQuizData(cachedQuizData);
-        const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
-        if (savedAnswers) {
-          setSelectedAnswers(savedAnswers);
-        }
-     
-        setLoading(false);
-        return;
-      }
+  const cachedQuizData = await getQuizData(subdomainRaw, navigate);
 
-      try {
-        const data = await LoadQuestions({ subdomain: subdomainRaw });
-        if (data.error) {
-          setLoading(false);
-          showToastWarning(data.error || "Unable to fetch data");
-          await deleteExpiryFromSecureDB(subdomainRaw);
-          Cookies.remove("subdomain");
-          if (document.fullscreenElement) {
-            document.exitFullscreen();
-          }
-          navigate("/dashboard");
-        } else {
-          setQuizData(data);
-          await storeQuizData(subdomainRaw, data);
-          const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
-          if (savedAnswers) {
-            setSelectedAnswers(savedAnswers);
-          }
-          setLoading(false);
-        }
-      } catch (error: string | any) {
-        setLoading(false);
-        showToastWarning(error);
-        await deleteExpiryFromSecureDB(subdomainRaw);
-        Cookies.remove("subdomain");
-        if (document.fullscreenElement) {
-          document.exitFullscreen();
-        }
-        navigate("/dashboard");
+  if (cachedQuizData) {
+    setQuizData(cachedQuizData);
+    const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
+    if (savedAnswers) {
+      setSelectedAnswers(savedAnswers);
+    }
+
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const apiSubdomain = subdomainRaw?.toUpperCase().includes("VIDEO")
+      ? "VIDEO"
+      : subdomainRaw;
+
+    const data = await LoadQuestions({ subdomain: apiSubdomain });
+
+    if (data.error) {
+      setLoading(false);
+      showToastWarning(data.error || "Unable to fetch data");
+      await deleteExpiryFromSecureDB(subdomainRaw);
+      Cookies.remove("subdomain");
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
       }
-    };
+      navigate("/dashboard");
+    } else {
+      setQuizData(data);
+      await storeQuizData(subdomainRaw, data);
+      const savedAnswers = loadAnswersFromLocalStorage(subdomainRaw);
+      if (savedAnswers) {
+        setSelectedAnswers(savedAnswers);
+      }
+      setLoading(false);
+    }
+  } catch (error: string | any) {
+    setLoading(false);
+    showToastWarning(error);
+    await deleteExpiryFromSecureDB(subdomainRaw);
+    Cookies.remove("subdomain");
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+    navigate("/dashboard");
+  }
+};
 
     fetchQuizData();
 

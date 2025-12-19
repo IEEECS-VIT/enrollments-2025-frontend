@@ -18,7 +18,7 @@ interface QuizData {
 }
 
 //CONTROLLER: Change this to enable Quiz functionality
-const QUIZ_ENABLED = false;
+const QUIZ_ENABLED = true;
 
 
 // Map of subdomains to their durations in minutes
