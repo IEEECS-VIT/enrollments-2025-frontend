@@ -204,6 +204,7 @@ interface SubmitAnswersPayload {
     questionId: string;
     answer: string;
   }[];
+  score: number;
 }
 
 export async function SubmitAnswers(payload: SubmitAnswersPayload) {
