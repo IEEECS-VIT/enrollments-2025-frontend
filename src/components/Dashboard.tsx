@@ -262,7 +262,7 @@ export default function Dashboard(): JSX.Element {
               <span className="font-pixeboy tracking-wide text-lg md:text-2xl w-full text-yellow-400 font-bold">
                 Round-1 results will be announced. Keep checking{" "}
                 <a
-                  href="https://discord.gg/j2Pt6A4YNK"
+                  href="https://discord.gg/nZyPnb7jtG"
                   target="_blank"
                   rel="noreferrer"
                   className="font-bold underline hover:text-white transition-colors"
