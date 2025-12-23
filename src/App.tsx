@@ -15,7 +15,7 @@ import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Quiz1 from "./components/Quiz1";
+//import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
@@ -86,7 +86,7 @@ const AppContent = () => {
                 <Route path="management" element={<Managementdomain />} /> */}
                 <Route path="profile" element={<Profile />} />
                 <Route path="username" element={<UsernameSection />} />
-                <Route path="quiz" element={<Quiz1 />} />
+                {/* <Route path="quiz" element={<Quiz1 />} /> */}
                 <Route path="dashboard" element={<Dashboard />} />
                 {/* <Route path="task" element={<Tasks />} /> */}
                 <Route path="quiz-complete" element={<QuizComplete />} />

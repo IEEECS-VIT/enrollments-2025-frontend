@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Treecloud from "./Treecloud";
 import { LoadDashboard } from "../api/user";
 import Loader from "./Loader";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
+//import Cookies from "js-cookie";
+//import CryptoJS from "crypto-js";
 import { ToastContainer } from "react-toastify";
 
 interface Quiz {
@@ -18,34 +18,36 @@ interface QuizData {
 }
 
 //CONTROLLER: Change this to enable Quiz functionality
-const QUIZ_ENABLED = true;
-
+// const QUIZ_ENABLED = true;
 
 // Map of subdomains to their durations in minutes
-const SUBDOMAIN_DURATIONS: Record<string, number> = {
-  CC: 15,
-  WEB: 20,
-  EVENTS: 10,
-  "UI/UX": 10,
-  "GRAPHIC DESIGN": 10,
-  "VIDEO EDITING": 10,
-  "AI/ML": 15,
-  APP: 20,
-  IOT: 10,
-  PNM: 25,
-  RND: 15,
-};
+// const SUBDOMAIN_DURATIONS: Record<string, number> = {
+//   CC: 15,
+//   WEB: 20,
+//   EVENTS: 10,
+//   "UI/UX": 10,
+//   "GRAPHIC DESIGN": 10,
+//   "VIDEO EDITING": 10,
+//   "AI/ML": 15,
+//   APP: 20,
+//   IOT: 10,
+//   PNM: 25,
+//   RND: 15,
+// };
 
 // Default duration if subdomain isn't found in the map
-const DEFAULT_DURATION = 20;
+// const DEFAULT_DURATION = 20;
 
 export default function Dashboard(): JSX.Element {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [permissionModal, setPermissionModal] = useState(false);
-  const [deviceWarningModal, setDeviceWarningModal] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  
+  // COMMENTED OUT INTERACTIVE STATE
+  // const [showModal, setShowModal] = useState(false);
+  // const [permissionModal, setPermissionModal] = useState(false);
+  // const [deviceWarningModal, setDeviceWarningModal] = useState(false);
+  // const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -65,6 +67,8 @@ export default function Dashboard(): JSX.Element {
     fetchQuizData();
   }, []);
 
+  // COMMENTED OUT ALL QUIZ STARTING LOGIC
+  /*
   const handleStartQuiz = (quiz: Quiz) => {
     // If quiz is disabled, stop here
     if (!QUIZ_ENABLED) return;
@@ -166,6 +170,7 @@ export default function Dashboard(): JSX.Element {
     }
     setShowModal(false);
   };
+  */
 
   return (
     <>
@@ -182,7 +187,9 @@ export default function Dashboard(): JSX.Element {
         )}
 
         <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
-          <div className="flex flex-col items-center justify-center">
+          
+          {/* PENDING QUIZZES SECTION - COMMENTED OUT */}
+          {/* <div className="flex flex-col items-center justify-center">
             <div className="mb:4 text-center">
               <h2 className="text-xl text-center mb-4 sm:text-4xl">
                 PENDING QUIZZES
@@ -194,7 +201,6 @@ export default function Dashboard(): JSX.Element {
                 quizData.pending.map((quiz, index) => (
                   <div
                     key={index}
-                    // Updated styling logic based on QUIZ_ENABLED
                     className={`flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 rounded-3xl md:h-24 ${
                       QUIZ_ENABLED
                         ? "cursor-pointer hover:border-orange-500 border-white"
@@ -213,7 +219,6 @@ export default function Dashboard(): JSX.Element {
                       </p>
                     )}
                     
-                    {/* Added Coming Soon Text */}
                     {!QUIZ_ENABLED && (
                       <p className="mt-1 text-xs font-bold tracking-wider text-yellow-400 sm:text-sm">
                         COMING SOON
@@ -225,7 +230,8 @@ export default function Dashboard(): JSX.Element {
                 <p className="text-gray-400 sm:text-2xl">No pending tasks</p>
               )}
             </div>
-          </div>
+          </div> 
+          */}
 
           <div className="flex flex-col items-center">
             <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl md:mt-12">
@@ -250,6 +256,24 @@ export default function Dashboard(): JSX.Element {
                 <p className="text-gray-400 sm:text-2xl">No completed tasks</p>
               )}
             </div>
+            
+            {/* Round-1 Notification */}
+            <div className="text-center mt-8 md:mt-12">
+              <span className="font-pixeboy tracking-wide text-lg md:text-2xl w-full text-yellow-400 font-bold">
+                Round-1 results will be announced. Keep checking{" "}
+                <a
+                  href="https://discord.gg/j2Pt6A4YNK"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-bold underline hover:text-white transition-colors"
+                >
+                  Discord
+                </a>
+                !
+              </span>
+            </div>
+
+            {/* OLD COMMENTED OUT CODE - OF ENROLLMENTS 2025 */}
             {/* <div className="text-center mt-4 md:mt-24">
               <span className="font-pixeboy tracking-wide text-lg md:text-3xl w-full text-yellow-400">
                 *Round-1 is over! Results will be declared Soon. Join{" "}
@@ -267,7 +291,8 @@ export default function Dashboard(): JSX.Element {
           </div>
         </div>
 
-        {deviceWarningModal && (
+        {/* MODALS COMMENTED OUT */}
+        {/* {deviceWarningModal && (
           <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
             <div className="p-6 text-center bg-black border-2 border-red-500 shadow-lg rounded-xl w-80">
               <p className="text-lg font-semibold tracking-wider text-red-500">
@@ -282,10 +307,10 @@ export default function Dashboard(): JSX.Element {
               </button>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Camera & Microphone Permission Modal */}
-        {permissionModal && (
+        {/* {permissionModal && (
           <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
             <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
               <p className="text-lg font-semibold tracking-wider">
@@ -308,16 +333,16 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Confirmation Modal */}
-        {showModal && (
+        {/* {showModal && (
           <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
             <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
               <p className="text-lg font-semibold">
                 Are you sure you want to start the quiz?
               </p>
-              {/* <p className="mt-2">
+              <p className="mt-2">
                 {selectedQuiz?.subDomain &&
                 SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()] ? (
                   <>
@@ -331,7 +356,7 @@ export default function Dashboard(): JSX.Element {
                 ) : (
                   "You will have 20 minutes to finish it."
                 )}
-              </p> */}
+              </p>
               <div className="flex justify-center mt-4">
                 <button
                   className="px-4 py-2 mx-2 text-white bg-green-500 rounded-lg"
@@ -348,7 +373,7 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
