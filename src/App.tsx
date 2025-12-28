@@ -54,8 +54,8 @@ const PageTracker: React.FC = () => {
 const AppContent = () => {
   const location = useLocation();
   useEffect(() => {
-    //disableDevTools();
-    //disableRightClick();
+    disableDevTools();
+    disableRightClick();
   }, []);
 
   return (
