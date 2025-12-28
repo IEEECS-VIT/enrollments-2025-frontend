@@ -281,17 +281,24 @@ export async function LoadQuestions({
 export async function SubmitTask(
   round: number,
   domain: string,
+  subcategory: string | null | undefined, // Added parameter
   answers: string[] | void[]
 ) {
   if (!answers || answers.length === 0) {
     throw new Error("Answers cannot be empty");
   }
 
-  const payload = {
+  // Construct payload. Use explicit type to allow optional property assignment
+  const payload: Record<string, any> = {
     round,
     domain,
     answers,
   };
+
+  // Only add subcategory if it is present (e.g. for WEB)
+  if (subcategory) {
+    payload.subcategory = subcategory;
+  }
 
   const response = await ProtectedRequest<DomainResponse>(
     "POST",

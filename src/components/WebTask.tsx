@@ -1,252 +1,132 @@
+import { FaRocket, FaLink, FaBullseye, FaMagic, FaWind, FaTheaterMasks, FaPaintBrush, FaMapMarkerAlt, FaClipboardList, FaCheckCircle } from "react-icons/fa";
+
 export default function WebTask() {
   return (
     <>
-      <div className="relative w-full h-full bg-transparent max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
-        {/* Frontend Task Content - Now with scroll container */}
-        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh]">
-          <div className="w-full px-2 prose markdown-content prose-invert max-w-none">
-            <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
-              🚀 Frontend Task
+      <div className="relative w-full h-full bg-transparent max-h-[50vh] md:max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
+
+        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
+
+          <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
+
+            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4 flex items-center gap-3">
+              <FaRocket className="text-2xl" /> Frontend Task
             </h1>
 
-            <p className="mb-4 text-white">
-              Welcome to the frontend enrollment challenge! 🎉 This task is
-              designed to <strong>evaluate your current frontend skills</strong>{" "}
-              while allowing you to showcase your ability to build responsive
-              and visually accurate web pages.
+            <p className="mb-4 text-white text-sm md:text-base">
+              Welcome to the frontend enrollment challenge! Your mission is to
+              demonstrate your design precision and coding skills by replicating a
+              modern, animated landing page.
             </p>
 
-            <p className="mb-4 text-white">
-              Your challenge is to <strong>replicate any one page</strong>{" "}
-              (including the navbar & footer) from the following website:
+            <p className="mb-4 text-white text-sm md:text-base">
+              <strong>The Goal:</strong> Clone the following website to the best
+              of your ability. There are no strict levels—we want to see how far
+              you can push your skills in terms of layout, responsiveness, and
+              interactivity.
             </p>
 
-            <p className="mb-4 text-white">
-              🔗{" "}
+            <p className="mb-4 text-white text-sm md:text-base flex items-center gap-2">
+              <FaLink className="text-[#F8B95A]" />{" "}
               <a
-                href="https://www.rocketair.com"
-                className="text-[#F8B95A] hover:text-[#F9CA81]"
+                href="https://companion.uprock.pro/"
+                className="text-[#F8B95A] hover:text-[#F9CA81] break-all"
                 target="_blank"
+                rel="noreferrer"
               >
-                RocketAir
+                UpRock Companion
               </a>
             </p>
 
-            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              Key Points:
+            <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3 flex items-center gap-2">
+              <FaBullseye /> Scope of Work
             </h2>
-            <ul className="pl-6 mb-4 text-white list-disc">
-              <li className="mb-2">
-                <strong>You can choose any page</strong> from the website—it
-                does not have to be the landing page.
-              </li>
-              <li className="mb-2">
-                <strong>
-                  A clear and structured commit history is required.
-                </strong>
-              </li>
-              <li className="mb-2">
-                <strong>A detailed README file is mandatory</strong> (must
-                include project setup, features, and implementation details).
-              </li>
-              <li className="mb-2">
-                <strong>Bonus points for hosting the project</strong> on
-                platforms like Vercel, Netlify, or GitHub Pages.
-              </li>
-            </ul>
-
-            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              📌 Task Levels
-            </h2>
-            <p className="mb-4 text-white">
-              The challenge is divided into <strong>three levels</strong>, based
-              on the implementation depth. You are free to use{" "}
-              <strong>any front-end tech stack</strong> of your choice.
+            <p className="mb-3 text-white text-sm md:text-base">
+              You are free to clone as much as you can within the timeframe.
+              Whether you complete just the <strong>Hero Section</strong> perfectly or build
+              the <strong>Entire Landing Page</strong>, we will judge based on quality over
+              quantity.
             </p>
-
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-              👟 Level 0 - Static Component Clone
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Simple clone of navbar, footer, and one the ideas page of the website.
-https://www.rocketair.com/ideas
-
-                </li>
-              </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 Extra Points:
-              </p>
-              <ul className="pl-2 text-white list-none">
-                <li className="mb-1">
-                • Responsive design
-
-                </li>
-                <li className="mb-1">
-                • Try adding simple transitions using CSS when opening the navbar.
-                </li>
-                <li className="mb-1">
-                • Simple hover effect using CSS for cards of idea page
-
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-                🔰 Level 1 - Navbar & Footer with Animations
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Implement the <strong>navbar & footer</strong> with smooth
-                  animations (refer the website)
-                </li>
-                <li className="mb-1">
-                  ✅ Ensure the design is <strong>responsive</strong> across
-                  different screen sizes.
-                </li>
-                <li className="mb-1">
-                  ✅ Clone <strong>any one page</strong>, maintaining the
-                  correct layout & styling but{" "}
-                  <strong>without animations.</strong>
-                </li>
-              </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 Extra Points:
-              </p>
-              <ul className="pl-2 text-white list-none">
-                <li className="mb-1">
-                  • Try using <strong>animation libraries</strong> like
-                  framer-motion, GSAP, AOS, etc for cleaner animations.
-                </li>
-                <li className="mb-1">
-                  • Use{" "}
-                  <strong>proper file structure and semantic HTML.</strong>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-                ⚡ Level 2 - Interactive Page Clone
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Everything from <strong>Level 1</strong>
-                </li>
-                <li className="mb-1">
-                  ✅ Add <strong>animations</strong> to elements on the page
-                  (e.g., fade-ins, smooth scrolling effects)
-                </li>
-                <li className="mb-1">
-                  ✅ Integrate a <strong>mock/dummy API</strong> to fetch &
-                  display dynamic data, api can be of your choice, add a section
-                  to the page and show data with clean UI.
-                </li>
-              </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 Extra Points:
-              </p>
-              <ul className="pl-2 text-white list-none">
-                <li className="mb-1">
-                  • Optimize <strong>performance & accessibility</strong>
-                </li>
-                <li className="mb-1">
-                  • Implement{" "}
-                  <strong>
-                    lazy loading for images and loading for api calls.
-                  </strong>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-                🚀 Level 3 - Full Page Clone with Complete Animations
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Clone <strong>any one page end-to-end</strong>, ensuring
-                  all design elements, layouts, and interactions are accurately
-                  replicated
-                </li>
-                <li className="mb-1">
-                  ✅ Implement <strong>all animations & responsiveness</strong>{" "}
-                  as seen on the original page
-                </li>
-                <li className="mb-1">
-                  ✅ Apply <strong>performance optimizations</strong> (lazy
-                  loading images, reducing unused CSS, etc.)
-                </li>
-              </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 Extra Points:
-              </p>
-              <ul className="pl-2 text-white list-none">
-                <li className="mb-1">
-                  • Use <strong>advanced animations</strong> (GSAP, Framer
-                  Motion, etc.)
-                </li>
-                <li className="mb-1">
-                  • Optimize <strong>page load speed</strong> following best
-                  practices
-                </li>
-              </ul>
-            </div>
-
-            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              📍 General Guidelines
-            </h2>
-            <ul className="pl-2 mb-4 text-white list-none">
+            <ul className="pl-4 md:pl-6 mb-4 text-white list-disc text-sm md:text-base">
               <li className="mb-2">
-                ✅ <strong>Tech Stack:</strong> You are free to use{" "}
-                <strong>any frontend technologies</strong>
+                <strong>Visual Fidelity:</strong> Try to match the fonts, colors, and spacing as closely as possible.
               </li>
               <li className="mb-2">
-                ✅ <strong>Commit History:</strong> Maintain a{" "}
-                <strong>clear and structured commit history</strong>
+                <strong>Responsiveness:</strong> The site must look good on mobile, tablet, and desktop.
               </li>
               <li className="mb-2">
-                ✅ <strong>Code Readability:</strong> Follow{" "}
-                <strong>clean and modular coding practices</strong>
-              </li>
-              <li className="mb-2">
-                ✅ <strong>Mobile-Friendly:</strong> Ensure{" "}
-                <strong>responsive design</strong> across devices
-              </li>
-              <li className="mb-2">
-                ✅ <strong>README File:</strong> A well-documented README.md is
-                mandatory, including:
-                <ul className="pl-6 mt-2 text-white list-disc">
-                  <li>Features implemented</li>
-                  <li>Tech stack used</li>
-                  <li>Steps to run the project</li>
-                  <li>Level completed + any additional enhancements</li>
-                  <li>Hosted link (if applicable)</li>
-                </ul>
+                <strong>Code Quality:</strong> We value clean, modular, and semantic code.
               </li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              📝 Submission Guidelines
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
+              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
+                <FaMagic /> Animations & Interactions
+              </h3>
+              <p className="mb-3 text-white text-sm md:text-base">
+                The target website features smooth reveal animations and transitions.
+                To replicate this feel, we recommend exploring the following libraries:
+              </p>
+              <ul className="list-none pl-0 mb-2 text-white text-sm md:text-base space-y-2">
+                <li className="flex items-center gap-2">
+                  <FaWind className="text-blue-400" /> <strong>Framer Motion</strong> (Great for React-based animations)
+                </li>
+                <li className="flex items-center gap-2">
+                  <FaRocket className="text-red-400" /> <strong>GSAP</strong> (Industry standard for complex timelines)
+                </li>
+                <li className="flex items-center gap-2">
+                  <FaTheaterMasks className="text-purple-400" /> <strong>React Spring</strong> (Physics-based animations)
+                </li>
+                <li className="flex items-center gap-2">
+                  <FaPaintBrush className="text-pink-400" /> <strong>Tailwind Animate</strong> (Simple utility-based animations)
+                </li>
+              </ul>
+              <p className="text-xs md:text-sm mt-2 text-gray-300 italic">
+                *You don't have to implement every complex 3D element, but try to capture the "feel" of the motion.*
+              </p>
+            </div>
+
+            <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3 flex items-center gap-2">
+              <FaMapMarkerAlt /> General Guidelines
             </h2>
-            <ol className="pl-6 mb-4 text-white list-decimal">
+            <ul className="list-none pl-0 mb-4 text-white text-sm md:text-base space-y-2">
+              <li className="flex items-start gap-2">
+                <FaCheckCircle className="text-green-400 mt-1" />
+                <span><strong>Tech Stack:</strong> You are free to use <strong>any frontend framework</strong> (React, Next.js, Vue, or plain HTML/CSS).</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <FaCheckCircle className="text-green-400 mt-1" />
+                <span><strong>Asset Handling:</strong> You can inspect the website to grab SVG icons or use similar placeholders.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <FaCheckCircle className="text-green-400 mt-1" />
+                <span><strong>Commit History:</strong> Maintain a <strong>clear and structured commit history</strong>.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <FaCheckCircle className="text-green-400 mt-1" />
+                <span><strong>README File:</strong> A well-documented README.md is mandatory. Tell us what you built, what tools you used, and how to run it.</span>
+              </li>
+            </ul>
+
+            <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3 flex items-center gap-2">
+              <FaClipboardList /> Submission Guidelines
+            </h2>
+            <ol className="pl-4 md:pl-6 mb-4 text-white list-decimal text-sm md:text-base">
               <li className="mb-2">
-                <strong>Host the project</strong> (if possible) and share the
-                live link
+                <strong>Host the project</strong> (Vercel, Netlify, GitHub Pages) and share the
+                live link.
               </li>
               <li className="mb-2">
-                Upload your code to <strong>GitHub (public repository)</strong>
+                Upload your code to a <strong>Public GitHub Repository</strong>.
               </li>
               <li className="mb-2">
-                Ensure a <strong>descriptive README</strong> and{" "}
-                <strong>proper commit history</strong>
-              </li>
-              <li className="mb-2">
-                Submit your <strong>GitHub repo link & hosted site link</strong>
+                Submit both your <strong>GitHub repo link & hosted site link</strong>.
               </li>
             </ol>
+
+            <p className="text-center text-[#F8B95A] font-bold mt-8 text-sm md:text-base flex items-center justify-center gap-2">
+              Good luck! Show us what you've got. <FaRocket />
+            </p>
           </div>
         </div>
       </div>
