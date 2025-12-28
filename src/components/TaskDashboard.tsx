@@ -14,8 +14,14 @@ interface Quiz {
 interface DashboardData {
   pending: Quiz[];
   completed: Quiz[];
-  slots: Record<string, any>[]; // Use a more specific type if possible
+  slots: Record<string, any>[];
 }
+
+// Hardcoded Calendly Links for PnM and Events
+const CALENDLY_LINKS: Record<string, string> = {
+  PNM: "https://calendly.com/ieee-computersocietyvit",
+  EVENTS: "https://calendly.com/ieee-computer-society-vit",
+};
 
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
@@ -26,9 +32,13 @@ export default function Dashboard(): JSX.Element {
     slots: [],
   });
   const [showPopup, setShowPopup] = useState(false);
+
   const [showDeadlineModal, setShowDeadlineModal] = useState(false);
   const [blockedTaskModal, setBlockedTaskModal] = useState(false);
   const [blockedTaskName, setBlockedTaskName] = useState("");
+
+  // New state for CC selection modal
+  const [showCCModal, setShowCCModal] = useState(false);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -55,62 +65,56 @@ export default function Dashboard(): JSX.Element {
     setShowPopup(false);
   };
 
-  const getSlotInfo = (subDomain: string) => {
-    if (
-      !quizData ||
-      !Array.isArray(quizData.slots) ||
-      quizData.slots.length === 0 ||
-      !subDomain
-    ) {
-      return null;
-    }
-
-    const slotObj = quizData.slots.find((slot) => {
-      if (typeof slot === "object" && slot !== null) {
-        return subDomain in slot && slot.Panel;
-      }
-      return false;
-    });
-
-    if (!slotObj) return null;
-
-    return {
-      panel: slotObj.Panel,
-      timing: slotObj[subDomain],
-    };
+  const isInterviewDomain = (domain: string, subDomain?: string) => {
+    const target = subDomain || domain;
+    return ["PNM", "EVENTS"].includes(target);
   };
 
-  const interviews = quizData?.completed.filter(
-    (quiz) =>
-      (quiz.subDomain && getSlotInfo(quiz.subDomain) !== null) ||
-      quiz.subDomain === "IOT"
+  const interviews = quizData?.completed.filter((quiz) =>
+    isInterviewDomain(quiz.domain, quiz.subDomain)
   );
 
   const tasks = quizData?.completed.filter(
-    (quiz) =>
-      !quiz.subDomain ||
-      (getSlotInfo(quiz.subDomain) === null && quiz.subDomain !== "IOT")
+    (quiz) => !isInterviewDomain(quiz.domain, quiz.subDomain)
   );
 
   const handleTaskClick = (subDomain: string | undefined) => {
-    const blockedTasks = [
-      "GRAPHIC DESIGN",
-      "UI/UX",
-      "VIDEO EDITING",
-      "CC",
-      "AI/ML",
-      "WEB",
-      "APP",
-      "EVENTS",
-      "RND",
-      "PNM"
+  
+    const blockedTasks: string[] = [
+      // "GRAPHIC DESIGN",
+      // "UI/UX",
+      // "VIDEO EDITING",
+      // "CC",
+      // "AI/ML",
+      // "WEB",
+      // "APP",
+      // "EVENTS",
+      // "PNM"
     ];
+
+    // Special handling for CC domain
+    if (subDomain === "CC") {
+      setShowCCModal(true);
+      return;
+    }
+
     if (subDomain && blockedTasks.includes(subDomain)) {
       setBlockedTaskName(subDomain);
       setBlockedTaskModal(true);
     } else {
-      console.log(subDomain);
+      console.log("Navigating to task:", subDomain);
       navigate("/task", { state: { subDomain } });
+    }
+  };
+
+  const handleInterviewClick = (domain: string, subDomain?: string) => {
+    const key = subDomain || domain;
+    const link = CALENDLY_LINKS[key];
+
+    if (link) {
+      window.open(link, "_blank");
+    } else {
+      showToastWarning("Link not available yet.");
     }
   };
 
@@ -124,10 +128,7 @@ export default function Dashboard(): JSX.Element {
             <p>
               We're thrilled to see your interest in joining IEEE-CS! The tasks
               might look a bit intense, but don't worry — it's all about{" "}
-              <strong>learning and effort</strong>, not just completion. Even
-              finishing <strong>Level 1</strong> of any track is impressive and
-              shows curiosity and dedication. Take your time, ask questions, and
-              most importantly, enjoy the process. Let's grow and learn
+              <strong>learning and effort</strong>. Let's grow and learn
               together!
             </p>
             <button
@@ -139,11 +140,12 @@ export default function Dashboard(): JSX.Element {
           </div>
         </div>
       )}
+
       {showDeadlineModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
           <div className="bg-black text-white p-6 text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
             <h2 className="font-bold mb-4">Deadline Over</h2>
-            <p>The deadline for task submission for Graphic Design is over.</p>
+            <p>The deadline for this task submission is over.</p>
             <button
               className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
               onClick={() => setShowDeadlineModal(false)}
@@ -153,6 +155,7 @@ export default function Dashboard(): JSX.Element {
           </div>
         </div>
       )}
+
       {blockedTaskModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
           <div className="bg-black text-white p-6 text-xl md:text-3xl border-white border-2 rounded-3xl w-[80%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center">
@@ -160,7 +163,6 @@ export default function Dashboard(): JSX.Element {
             <p>
               The deadline for submitting the task of {blockedTaskName} is over.
             </p>
-
             <button
               className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600"
               onClick={() => setBlockedTaskModal(false)}
@@ -170,6 +172,49 @@ export default function Dashboard(): JSX.Element {
           </div>
         </div>
       )}
+
+      {/* CC Selection Modal */}
+      {showCCModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
+          <div className="bg-black text-white p-6 text-xl md:text-2xl border-white border-2 rounded-3xl w-[90%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center flex flex-col gap-6">
+            <h2 className="font-bold text-[#F8B95A] text-2xl md:text-4xl font-playmegames tracking-widest">
+              COMPETITIVE CODING
+            </h2>
+            <p className="text-gray-300 text-sm md:text-lg">
+              Round 2 will be conducted in batches. <br />
+              Please <strong>book a slot</strong> before logging in.
+            </p>
+
+            <div className="flex flex-col gap-4 w-full px-4 md:px-12">
+              <button
+                className="w-full px-6 py-3 border-2 border-[#F8B95A] text-[#F8B95A] rounded-xl hover:bg-[#F8B95A] hover:text-black transition-all font-bold tracking-wide"
+                onClick={() =>
+                  window.open("https://calendly.com/cc-ieeecsvit", "_blank")
+                }
+              >
+                📅 Book Slot (Calendly)
+              </button>
+
+              <button
+                className="w-full px-6 py-3 bg-[#F8B95A] text-black border-2 border-[#F8B95A] rounded-xl hover:bg-orange-600 hover:border-orange-600 hover:text-white transition-all font-bold tracking-wide"
+                onClick={() =>
+                  window.open("https://battlecode.ieeecsvit.com", "_blank")
+                }
+              >
+                ⚔️ Login to BattleCode
+              </button>
+            </div>
+
+            <button
+              className="mt-2 text-gray-400 underline text-sm hover:text-white"
+              onClick={() => setShowCCModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="relative flex items-center justify-center min-h-screen">
         <div className="absolute w-full pointer-events-none">
           <Treecloud />
@@ -182,24 +227,23 @@ export default function Dashboard(): JSX.Element {
         )}
 
         <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[75%] sm:h-[75vh] h-[75vh] flex flex-col items-center p-4">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center w-full h-full overflow-y-auto">
             {!loading && quizData?.completed.length === 0 ? (
-              <div className="mb-4 text-center px-14">
-                <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl text-center">
-                  Tasks are only visible for people who made it to the next
-                  round! <br /> Better luck next time.{" "}
-                </span>
+              <div className="mb-4 text-center px-14 mt-10">
+                <span className="w-full text-lg tracking-wide text-yellow-400 md:text-xl text-center">
+  We appreciate your participation! <br />
+  Although you didn't make it to the next round this time, And stay connected with us to attend our future events. 
+</span>
               </div>
             ) : (
               <>
                 {quizData && quizData.completed.length > 0 && (
                   <div className="mb-4 text-center px-14">
-                    <span className="w-full font-sans text-lg tracking-wide text-yellow-400 md:text-xl">
+                    <span className="w-full text-lg tracking-wide text-yellow-400 md:text-xl">
                       <p>
-                        Round-2 is live. Interactions will be scheduled soon.
-                        Join{" "}
+                        Round-2 is live. Join{" "}
                         <a
-                          href="https://discord.gg/j2Pt6A4YNK"
+                          href="https://discord.gg/nZyPnb7jtG"
                           target="_blank"
                           rel="noreferrer"
                           className="font-bold underline"
@@ -211,81 +255,61 @@ export default function Dashboard(): JSX.Element {
                     </span>
                   </div>
                 )}
-                {quizData && quizData.completed.length > 0 && (
+
+                {tasks && tasks.length > 0 && (
                   <>
-                    {tasks && tasks.length > 0 && (
-                      <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl ">
-                        TASKS
-                      </h2>
-                    )}
-                    <div className="flex flex-col gap-4 md:flex-row">
-                      {tasks &&
-                        tasks.map((quiz, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col items-center justify-center px-4 py-2 text-white transition duration-200 border-2 cursor-pointer md:px-8 md:py-4 rounded-3xl hover:border-orange-500"
-                            onClick={() => handleTaskClick(quiz.subDomain)}
-                          >
-                            <h3 className="text-lg sm:text-xl">
-                              {quiz.domain}
-                            </h3>
-                            {quiz.subDomain && (
-                              <p className="text-gray-400 text-md sm:text-xl text-center">
-                                {quiz.subDomain}
-                              </p>
-                            )}
-                          </div>
-                        ))}
+                    <h2 className="mb-2 text-xl md:mb-4 sm:text-4xl text-center">
+                      TASKS
+                    </h2>
+                    <div className="flex flex-wrap items-center justify-center gap-4 md:flex-row">
+                      {tasks.map((quiz, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center justify-center px-4 py-2 text-white transition duration-200 border-2 cursor-pointer md:px-8 md:py-4 rounded-3xl hover:border-orange-500 min-w-[150px]"
+                          onClick={() =>
+                            handleTaskClick(quiz.subDomain || quiz.domain)
+                          }
+                        >
+                          <h3 className="text-lg sm:text-xl">
+                            {/* FIX: Replaced 'Other' with 'DESIGN' dynamically */}
+                            {quiz.domain === "Other" ? "DESIGN" : quiz.domain}
+                          </h3>
+                          {quiz.subDomain && (
+                            <p className="text-gray-400 text-md sm:text-xl text-center">
+                              {quiz.subDomain}
+                            </p>
+                          )}
+                        </div>
+                      ))}
                     </div>
+                  </>
+                )}
 
-                    {interviews && interviews.length > 0 && (
-                      <h2 className="mt-4 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-8">
-                        INTERACTIONS
-                      </h2>
-                    )}
-
-                    <div className="flex flex-col gap-4 md:flex-row">
-                      {interviews &&
-                        interviews.map((quiz, index) => {
-                          const slotInfo = quiz.subDomain
-                            ? getSlotInfo(quiz.subDomain)
-                            : null;
-
-                          return (
-                            <div
-                              key={index}
-                              className="flex flex-col items-center justify-center px-4 py-2 text-white border-2 md:px-8 md:py-4 rounded-3xl"
-                            >
-                              <h3 className="text-lg sm:text-xl">
-                                {quiz.domain}
-                              </h3>
-                              {quiz.subDomain && (
-                                <p className="text-gray-400 text-md sm:text-xl text-center">
-                                  {quiz.subDomain}
-                                </p>
-                              )}
-                              {slotInfo ? (
-                                <>
-                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold text-center">
-                                    {slotInfo.timing}
-                                  </p>
-                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
-                                    {/* Panel-{slotInfo.panel} */}
-                                  </p>
-                                </>
-                              ) : (
-                                <>
-                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
-                                    Scheduling soon
-                                  </p>
-                                  <p className="text-[#F8B95A] text-md sm:text-lg font-sans font-bold">
-                                    Check Discord
-                                  </p>
-                                </>
-                              )}
-                            </div>
-                          );
-                        })}
+                {interviews && interviews.length > 0 && (
+                  <>
+                    <h2 className="mt-8 mb-2 text-xl md:mb-4 sm:text-4xl md:mt-12 text-center">
+                      INTERACTIONS
+                    </h2>
+                    <div className="flex flex-wrap items-center justify-center gap-4 md:flex-row">
+                      {interviews.map((quiz, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center justify-center px-4 py-2 text-white transition duration-200 border-2 cursor-pointer md:px-8 md:py-4 rounded-3xl hover:border-orange-500 min-w-[150px]"
+                          onClick={() =>
+                            handleInterviewClick(quiz.domain, quiz.subDomain)
+                          }
+                        >
+                          <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
+                          {quiz.subDomain && (
+                            <p className="text-gray-400 text-md sm:text-xl text-center">
+                              {quiz.subDomain}
+                            </p>
+                          )}
+                          <p className="text-[#F8B95A] text-sm sm:text-md font-sans font-bold mt-2">
+                            Schedule GD
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </>
                 )}

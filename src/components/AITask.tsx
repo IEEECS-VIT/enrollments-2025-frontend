@@ -1,137 +1,127 @@
 export default function AITask() {
   return (
     <>
-      <div className="relative w-full h-full bg-transparent max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
+      <div className="relative w-full h-full bg-transparent max-h-[50vh] md:max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
         {/* ML Task Content - With scroll container */}
-        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[65vh]">
-          <div className="w-full px-2 prose markdown-content prose-invert max-w-none">
-            <h1 className="text-2xl font-bold text-[#F8B95A] mb-4">
-              🤖 AI/ML Task: Image Classification Challenge
+        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
+          <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
+            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4">
+              🤖 AI & Machine Learning Tasks
             </h1>
 
-            <p className="mb-4 text-white">
-              Check out this dataset which contains{" "}
-              <strong>70,000 grayscale images</strong> of 28x28 pixels each,
-              representing <strong>10 categories of fashion items</strong>.
-            </p>
+            <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
+              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2">
+                ⚠️ Choose Your Path
+              </h4>
+              <p className="text-sm text-gray-300">
+                You can attempt <strong>Task 1</strong> (Data Science) OR <strong>Task 2</strong> (GenAI), or <strong>both</strong>. 
+                Feel free to complete as many levels as you can in your chosen track.
+              </p>
+            </div>
 
-            <p className="mb-4 text-white">
+            {/* TASK 1: Customer Churn Prediction */}
+            <h2 className="text-lg md:text-2xl font-bold text-[#F8B95A] mt-8 mb-4 border-b border-[#F8B95A] pb-2">
+              📉 Task 1: Customer Churn Prediction
+            </h2>
+            
+            <p className="mb-3 text-white text-sm md:text-base">
+              <strong>Objective:</strong> Analyze customer data to predict who will leave the service.
+            </p>
+            
+            <p className="mb-4 text-white text-sm md:text-base">
+              📂 <strong>Dataset:</strong>{" "}
               <a
-                href="https://drive.google.com/file/d/1byxncPUl2aeKFZ0voFAQ7WbyjBSvLhNA/view?usp=sharing"
-                className="text-[#F8B95A] hover:text-[#F8B95A]"
+                href="https://drive.google.com/file/d/1mjMDsOSHlbj5A_d27vXVaVIAS46Xc1e1/view?usp=sharing"
+                className="text-[#F8B95A] hover:underline"
                 target="_blank"
+                rel="noreferrer"
               >
-                https://drive.google.com/file/d/1byxncPUl2aeKFZ0voFAQ7WbyjBSvLhNA/view?usp=sharing
+                Download Here
               </a>
             </p>
 
-            <p className="mb-4 text-white">
-              Use it to perform the following tasks. Markdown documentation is
-              encouraged.
-            </p>
+            <div className="space-y-4">
+              {/* Level 1 */}
+              <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-blue-500">
+                <h3 className="text-base md:text-lg font-bold text-blue-400 mb-2">
+                  Level 1: Data Understanding & EDA
+                </h3>
+                <ul className="list-disc pl-5 text-sm md:text-base text-gray-300">
+                  <li><strong>Clean & Load:</strong> Load the dataset and handle missing values.</li>
+                  <li><strong>EDA:</strong> Visualize relationships between Churn and features like Tenure or Contract Type.</li>
+                  <li><strong>Output:</strong> A basic feature set and visualization plots.</li>
+                </ul>
+              </div>
 
-            <h2 className="text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              📌 Task Levels
+              {/* Level 2 */}
+              <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-blue-500">
+                <h3 className="text-base md:text-lg font-bold text-blue-400 mb-2">
+                  Level 2: Classical Machine Learning
+                </h3>
+                <ul className="list-disc pl-5 text-sm md:text-base text-gray-300">
+                  <li><strong>Train:</strong> Use Logistic Regression, Random Forest, or SVM.</li>
+                  <li><strong>Evaluate:</strong> Calculate Accuracy, Precision, Recall, and F1-Score.</li>
+                  <li><strong>Analysis:</strong> Identify the most influential features driving churn.</li>
+                </ul>
+              </div>
+
+              {/* Level 3 */}
+              <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-blue-500">
+                <h3 className="text-base md:text-lg font-bold text-blue-400 mb-2">
+                  Level 3: Neural Networks & Advanced Modeling
+                </h3>
+                <ul className="list-disc pl-5 text-sm md:text-base text-gray-300">
+                  <li><strong>Deep Learning:</strong> Implement a Neural Network classifier.</li>
+                  <li><strong>Compare:</strong> Benchmark NN performance against your classical models.</li>
+                  <li><strong>Explainability:</strong> Use techniques to explain model behavior (e.g., SHAP).</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* TASK 2: AI Campus Assistant */}
+            <h2 className="text-lg md:text-2xl font-bold text-[#F8B95A] mt-12 mb-4 border-b border-[#F8B95A] pb-2">
+              🎓 Task 2: AI Campus Assistant
             </h2>
-            <p className="mb-4 text-white">
-              The challenge is divided into <strong>three levels</strong> of
-              increasing complexity.
+
+            <p className="mb-4 text-white text-sm md:text-base">
+              <strong>Objective:</strong> Build an intelligent assistant to help students navigate campus life.
             </p>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-              👞 Level 0: Data Loading and Initial Inspection
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅  Load the dataset using pandas/numpy.
-                </li>
-                <li className="mb-1">
-                Check the dataset shape and print it.
-                </li>
-                <li className="mb-1">
-                Display a few of the images using matplotlib with their labels.
-                </li>
-                <li className="mb-1">
-                Verify grayscale format by checking a single image. 
-                </li>
-              </ul>
-            </div>
+            <div className="space-y-4">
+              {/* Level 1 */}
+              <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-purple-500">
+                <h3 className="text-base md:text-lg font-bold text-purple-400 mb-2">
+                  Level 1: Basic AI Assistant (Foundation)
+                </h3>
+                <ul className="list-disc pl-5 text-sm md:text-base text-gray-300">
+                  <li><strong>Goal:</strong> Simple Q&A using a pre-trained LLM.</li>
+                  <li><strong>Flow:</strong> User Input → LLM → Natural Language Response.</li>
+                </ul>
+              </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-                🔰 Level 1: Exploratory Data Analysis
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Load the dataset and perform{" "}
-                  <strong>exploratory data analysis (EDA)</strong>.
-                </li>
-                <li className="mb-1">
-                  Utilize libraries like <strong>Pandas and Matplotlib</strong>{" "}
-                  to load and visualize the dataset.
-                </li>
-                <li className="mb-1">
-                  Display <strong>sample images from each category</strong> to
-                  understand the data distribution.
-                </li>
-                <li className="mb-1">
-                  Generate <strong>summary statistics</strong> for pixel values
-                  to comprehend data characteristics.
-                </li>
-              </ul>
-            </div>
+              {/* Level 2 */}
+              <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-purple-500">
+                <h3 className="text-base md:text-lg font-bold text-purple-400 mb-2">
+                  Level 2: Knowledge-Aware Assistant (RAG)
+                </h3>
+                <ul className="list-disc pl-5 text-sm md:text-base text-gray-300">
+                  <li><strong>Ingest:</strong> Process documents (FAQs, Rules, Schedules).</li>
+                  <li><strong>Vector DB:</strong> Store chunks in a vector store (e.g., Chroma, Pinecone).</li>
+                  <li><strong>Retrieve:</strong> Fetch relevant context based on user query before answering.</li>
+                </ul>
+              </div>
 
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-                ⚡ Level 2: Basic Classification Model
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Develop a{" "}
-                  <strong>classifier using Logistic Regression</strong> to
-                  predict the category of clothing items.
-                </li>
-                <li className="mb-1">Preprocess and normalize the data</li>
-                <li className="mb-1">
-                  Split the dataset into test and training subsets
-                </li>
-                <li className="mb-1">
-                  Implement algorithm using a library of your choice
-                </li>
-                <li className="mb-1">
-                  Train the model and evaluate accuracy and loss metrics
-                </li>
-                <li className="mb-1">
-                  Implement <strong>Explainable AI techniques</strong> to
-                  interpret model decisions and feature importance
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-lg font-bold text-[#F8B95A] mb-2">
-                🚀 Level 3: Neural Network Implementation
-              </h3>
-              <ul className="pl-2 mb-2 text-white list-none">
-                <li className="mb-1">
-                  ✅ Construct and train a{" "}
-                  <strong>simple neural network</strong> to classify images into
-                  different types of clothing
-                </li>
-                <li className="mb-1">
-                  Design a neural network architecture with{" "}
-                  <strong>input, hidden, and output layers</strong>
-                </li>
-                <li className="mb-1">
-                  Utilize <strong>appropriate activation functions</strong>
-                </li>
-                <li className="mb-1">
-                  Train the model on the training dataset and validate it on a
-                  separate validation set.
-                </li>
-                <li className="mb-1">Evaluate accuracy and loss metrics</li>
-              </ul>
+              {/* Level 3 */}
+              <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-purple-500">
+                <h3 className="text-base md:text-lg font-bold text-purple-400 mb-2">
+                  Level 3: Agentic Campus Assistant (Autonomous)
+                </h3>
+                <ul className="list-disc pl-5 text-sm md:text-base text-gray-300">
+                  <li><strong>Agentic Behavior:</strong> Break complex goals into steps.</li>
+                  <li><strong>Tools:</strong> Decide when to retrieve docs or ask follow-up questions.</li>
+                  <li><strong>Memory:</strong> Maintain short-term conversational context.</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
