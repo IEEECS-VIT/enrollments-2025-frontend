@@ -30,7 +30,7 @@ export default function Navbar() {
     { name: "HOME", path: "/" },
     //{ name: "DOMAINS", path: "/domain" },
     { name: "DASHBOARD", path: "/dashboard" },
-    { name: "DISCORD", path: "https://discord.gg/8bjXRSH4" },
+    { name: "DISCORD", path: "https://discord.gg/9ZhvDdgS" },
     { name: "FAQS", path: "/faqs" },
   ];
 
@@ -38,7 +38,7 @@ export default function Navbar() {
     { name: "HOME", path: "/" },
     //{ name: "DOMAINS", path: "/domain" },
     { name: "DASHBOARD", path: "/dashboard" },
-    { name: "DISCORD", path: "https://discord.gg/8bjXRSH4" },
+    { name: "DISCORD", path: "https://discord.gg/9ZhvDdgS" },
     { name: "PROFILE", path: "/profile" },
     { name: "FAQS", path: "/faqs" },
   ];
