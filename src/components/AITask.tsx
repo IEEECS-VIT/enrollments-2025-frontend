@@ -1,3 +1,5 @@
+import { FaRobot, FaExclamationTriangle, FaChartLine, FaFolderOpen, FaGraduationCap } from "react-icons/fa";
+
 export default function AITask() {
   return (
     <>
@@ -5,31 +7,31 @@ export default function AITask() {
         {/* ML Task Content - With scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
           <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
-            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4">
-              🤖 AI & Machine Learning Tasks
+            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4 flex items-center gap-3">
+              <FaRobot className="text-2xl" /> AI & Machine Learning Tasks
             </h1>
 
             <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2">
-                ⚠️ Choose Your Path
+              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
+                <FaExclamationTriangle /> Choose Your Path
               </h4>
               <p className="text-sm text-gray-300">
-                You can attempt <strong>Task 1</strong> (Data Science) OR <strong>Task 2</strong> (GenAI), or <strong>both</strong>. 
+                You can attempt <strong>Task 1</strong> (Data Science) OR <strong>Task 2</strong> (GenAI), or <strong>both</strong>.
                 Feel free to complete as many levels as you can in your chosen track.
               </p>
             </div>
 
             {/* TASK 1: Customer Churn Prediction */}
-            <h2 className="text-lg md:text-2xl font-bold text-[#F8B95A] mt-8 mb-4 border-b border-[#F8B95A] pb-2">
-              📉 Task 1: Customer Churn Prediction
+            <h2 className="text-lg md:text-2xl font-bold text-[#F8B95A] mt-8 mb-4 border-b border-[#F8B95A] pb-2 flex items-center gap-2">
+              <FaChartLine /> Task 1: Customer Churn Prediction
             </h2>
-            
+
             <p className="mb-3 text-white text-sm md:text-base">
               <strong>Objective:</strong> Analyze customer data to predict who will leave the service.
             </p>
-            
-            <p className="mb-4 text-white text-sm md:text-base">
-              📂 <strong>Dataset:</strong>{" "}
+
+            <p className="mb-4 text-white text-sm md:text-base flex items-center gap-2">
+              <FaFolderOpen className="text-[#F8B95A]" /> <strong>Dataset:</strong>{" "}
               <a
                 href="https://drive.google.com/file/d/1mjMDsOSHlbj5A_d27vXVaVIAS46Xc1e1/view?usp=sharing"
                 className="text-[#F8B95A] hover:underline"
@@ -79,8 +81,8 @@ export default function AITask() {
             </div>
 
             {/* TASK 2: AI Campus Assistant */}
-            <h2 className="text-lg md:text-2xl font-bold text-[#F8B95A] mt-12 mb-4 border-b border-[#F8B95A] pb-2">
-              🎓 Task 2: AI Campus Assistant
+            <h2 className="text-lg md:text-2xl font-bold text-[#F8B95A] mt-12 mb-4 border-b border-[#F8B95A] pb-2 flex items-center gap-2">
+              <FaGraduationCap /> Task 2: AI Campus Assistant
             </h2>
 
             <p className="mb-4 text-white text-sm md:text-base">

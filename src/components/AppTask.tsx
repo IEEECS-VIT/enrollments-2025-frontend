@@ -1,3 +1,5 @@
+import { FaShoppingBag, FaMobileAlt, FaPalette, FaCheckCircle, FaLightbulb, FaLock, FaRocket, FaClipboardList } from "react-icons/fa";
+
 export default function AppTask() {
   return (
     <>
@@ -5,34 +7,34 @@ export default function AppTask() {
         {/* App Task Content - With scroll container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
           <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
-            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4">
-              🛍️ App Development Task: Shopping Application
+            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4 flex items-center gap-3">
+              <FaShoppingBag className="text-2xl" /> App Development Task: Shopping Application
             </h1>
 
             <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2">
-                📱 Tech Stack & Platform
+              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
+                <FaMobileAlt /> Tech Stack & Platform
               </h4>
               <p className="text-sm text-gray-300">
                 Candidates are free to use <strong>any mobile tech stack</strong>:
                 Flutter, React Native, Kotlin Multiplatform (KMP), or Native Swift/Kotlin.
               </p>
             </div>
-            
+
             <p className="mb-4 text-white text-sm md:text-base">
-               Your goal is to build a scalable shopping application. The task is broken down into three levels of increasing complexity.
+              Your goal is to build a scalable shopping application. The task is broken down into three levels of increasing complexity.
             </p>
 
             {/* Level 1 */}
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2">
-                🎨 Level 1: Mini Shopping App (UI Only)
+              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
+                <FaPalette /> Level 1: Mini Shopping App (UI Only)
               </h3>
               <p className="text-white mb-2 text-sm md:text-base">
                 <strong>Objective:</strong> Build the static UI and navigation flow. No backend or state logic required.
               </p>
-              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1">
-                ✅ Screens to Implement:
+              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1 flex items-center gap-2">
+                <FaCheckCircle className="text-green-400" /> Screens to Implement:
               </h4>
               <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
                 <li className="mb-1">
@@ -48,8 +50,8 @@ export default function AppTask() {
                   <strong>Checkout Screen:</strong> Static order summary and basic address form.
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 UI Expectations:
+              <p className="text-sm font-bold mt-2 text-[#F8B95A] flex items-center gap-2">
+                <FaLightbulb /> UI Expectations:
               </p>
               <ul className="list-none pl-2 text-gray-300 text-sm md:text-base">
                 <li>• Clean typography and spacing.</li>
@@ -59,14 +61,14 @@ export default function AppTask() {
 
             {/* Level 2 */}
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2">
-                🔐 Level 2: Auth & API Integration
+              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
+                <FaLock /> Level 2: Auth & API Integration
               </h3>
               <p className="text-white mb-2 text-sm md:text-base">
                 <strong>Objective:</strong> Fetch data from an external API (e.g., FakeStore API) and implement user authentication.
               </p>
-              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1">
-                ✅ Core Requirements:
+              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1 flex items-center gap-2">
+                <FaCheckCircle className="text-green-400" /> Core Requirements:
               </h4>
               <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
                 <li className="mb-1">
@@ -89,14 +91,14 @@ export default function AppTask() {
 
             {/* Level 3 */}
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2">
-                🚀 Level 3: Feature-Rich (Pagination & Logic)
+              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
+                <FaRocket /> Level 3: Feature-Rich (Pagination & Logic)
               </h3>
               <p className="text-white mb-2 text-sm md:text-base">
                 <strong>Objective:</strong> Advanced features including pagination, filtering, complex state management, and theming.
               </p>
-              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1">
-                ✅ Advanced Features:
+              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1 flex items-center gap-2">
+                <FaCheckCircle className="text-green-400" /> Advanced Features:
               </h4>
               <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
                 <li className="mb-1">
@@ -112,16 +114,16 @@ export default function AppTask() {
                   <strong>Checkout Logic:</strong> On "Place Order", clear cart and show confirmation (Toast/Success Screen).
                 </li>
               </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A]">
-                💡 UI Bonus:
+              <p className="text-sm font-bold mt-2 text-[#F8B95A] flex items-center gap-2">
+                <FaLightbulb /> UI Bonus:
               </p>
               <ul className="list-none pl-2 text-gray-300 text-sm md:text-base">
                 <li>• Implement a <strong>Dark Theme Toggle</strong> that works uniformly across all pages.</li>
               </ul>
             </div>
 
-            <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3">
-              📝 Submission Guidelines
+            <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3 flex items-center gap-2">
+              <FaClipboardList /> Submission Guidelines
             </h2>
             <ol className="list-decimal pl-6 mb-4 text-white text-sm md:text-base">
               <li className="mb-2">
@@ -135,8 +137,8 @@ export default function AppTask() {
               </li>
             </ol>
 
-            <p className="mt-6 mb-4 text-white text-sm md:text-base">
-              Good luck! Focus on functional correctness, clean code, and a smooth user experience. 🚀
+            <p className="mt-6 mb-4 text-white text-sm md:text-base flex items-center gap-2">
+              Good luck! Focus on functional correctness, clean code, and a smooth user experience. <FaRocket />
             </p>
           </div>
         </div>
