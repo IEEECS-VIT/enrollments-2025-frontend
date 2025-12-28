@@ -6,12 +6,14 @@ interface LinkSubmissionModalProps {
   onClose: () => void;
   subdomain: string;
   tech: boolean;
+  subcategory?: string | null; // Added prop to interface
 }
 
 const LinkSubmissionModal: React.FC<LinkSubmissionModalProps> = ({
   onClose,
   subdomain,
   tech,
+  subcategory, // Added destructuring
 }) => {
   const [githubLink, setGithubLink] = useState("");
   const [otherLinks, setOtherLinks] = useState("");
@@ -58,7 +60,8 @@ const githubRepoRegex =
       linksArray.push(...separatedLinks);
     }
     try {
-      const response = await SubmitTask(2, subdomain, linksArray);
+      // Passed subcategory to SubmitTask
+      const response = await SubmitTask(2, subdomain, subcategory, linksArray);
       if (response.status === 200) {
         showToastSuccess("Task submitted successfully!");
 

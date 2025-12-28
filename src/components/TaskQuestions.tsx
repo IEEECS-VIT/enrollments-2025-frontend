@@ -6,15 +6,13 @@ import AppTask from "./AppTask";
 import AITask from "./AITask";
 import BackendTask from "./BackendTask";
 import UITask from "./UITask";
-// import CCTask from "./CCTask"; // FIX: Commented out because we are using a redirect now
+// import CCTask from "./CCTask"; 
 //import GraphicTask from "./GraphicTask";
 import VideoTask from "./VideoTask";
 import { useNavigate, useLocation } from "react-router-dom";
-//import { GoArrowLeft, GoDownload } from "react-icons/go"; //commented out as removed the download button
 import { GoArrowLeft } from "react-icons/go";
 import LinkSubmissionModal from "./LinkSubmissionModal";
 import { ToastContainer } from "react-toastify";
-//import RNDTask from "./RNDTask";
 import Loader from "./Loader";
 
 export default function TaskQuestions() {
@@ -59,16 +57,9 @@ export default function TaskQuestions() {
         );
       case "UI/UX":
         return <UITask />;
-      // case "GRAPHIC DESIGN":
-      //   return <GraphicTask />;
-
-      // FIX: Added "VIDEO" case to match the dashboard subdomain, resolving the issue where it showed Frontend task
       case "VIDEO":
       case "VIDEO EDITING":
         return <VideoTask />;
-
-      // case "RND":
-      //   return <RNDTask />;
       default:
         return <WebTask />;
     }
@@ -78,30 +69,39 @@ export default function TaskQuestions() {
     initialDomain === "WEB" || initialDomain === "BACKEND" ? "WEB" : activeTask;
 
   const getSubmissionDomain = () => {
-    // Mapping based on backend python dictionary requirements
     const domainMapping: { [key: string]: string } = {
       "UI/UX": "UI/UX",
       "VIDEO EDITING": "VIDEO EDITING",
       "VIDEO": "VIDEO EDITING",
       "EVENTS": "EVENTS",
       "PNM": "PNM",
-      "WEB": "WEB",
-      "FRONTEND": "WEB",
-      "BACKEND": "WEB",
+      
+      "WEB": "WEB",       
+      "FRONTEND": "WEB",  
+      "BACKEND": "WEB",   
+      
       "APP": "APP",
       "AI/ML": "AI/ML",
       "CC": "CC",
-      // "GRAPHIC DESIGN": "graphic", 
-      // "IOT": "iot",
-      // "RND": "rnd",
     };
 
-    // Return the mapped key, or fallback to activeTask (safeguard)
     return domainMapping[activeTask] || activeTask;
   };
 
+  // Subcategory Logic: Only returns a value for WEB/BACKEND tasks
+  const getSubmissionSubcategory = () => {
+    if (activeTask === "WEB" || activeTask === "FRONTEND") {
+      return "FRONTEND";
+    }
+    if (activeTask === "BACKEND") {
+      return "BACKEND";
+    }
+    return null; // Returns null for APP, AI/ML, UI/UX etc.
+  };
+
   const handleOpenModal = () => {
-    console.log("Submitting for Domain:", getSubmissionDomain()); // Debugging Log
+    console.log("Submitting Domain:", getSubmissionDomain());
+    console.log("Submitting Subcategory:", getSubmissionSubcategory());
     setIsModalOpen(true);
   };
 
@@ -181,6 +181,7 @@ export default function TaskQuestions() {
           }
           onClose={() => setIsModalOpen(false)}
           subdomain={getSubmissionDomain()}
+          subcategory={getSubmissionSubcategory()} // Pass the subcategory 
         />
       )}
     </div>
