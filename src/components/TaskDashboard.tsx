@@ -20,7 +20,7 @@ interface DashboardData {
 // Hardcoded Calendly Links for PnM and Events
 const CALENDLY_LINKS: Record<string, string> = {
   PNM: "https://calendly.com/ieee-computersocietyvit",
-  EVENTS: "https://calendly.com/ieee-computer-society-vit",
+  EVENTS: "https://calendly.com/ieee_cs_vit",
 };
 
 export default function Dashboard(): JSX.Element {
