@@ -134,7 +134,7 @@ export default function Domains() {
         showToastSuccess("Domains selected successfully");
         
         setTimeout(() => {
-          navigate("/profile");
+          navigate("/dashboard");
         }, 1000);
       }
     }

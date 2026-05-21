@@ -15,14 +15,15 @@ import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-//import Quiz1 from "./components/Quiz1";
+import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
-//import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/Dashboard";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
 import { Navigate } from "react-router-dom";
+import QuizComplete from "./components/QuizCompleted";
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.98 },
@@ -83,12 +84,10 @@ const AppContent = () => {
                 <Route path="management" element={<Management />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="username" element={<UsernameSection />} />
-                <Route path="dashboard" element={<Navigate to="/domain" replace />} />
-                <Route path="task" element={<Navigate to="/domain" replace />} />
-                <Route
-                  path="quiz-complete"
-                  element={<Navigate to="/domain" replace />}
-                />
+                <Route path="quiz" element={<Quiz1 />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="task" element={<Navigate to="/dashboard" replace />} />
+                <Route path="quiz-complete" element={<QuizComplete />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

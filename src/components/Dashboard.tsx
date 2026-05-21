@@ -1,11 +1,12 @@
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Treecloud from "./Treecloud";
 import { LoadDashboard } from "../api/user";
 import Loader from "./Loader";
-//import Cookies from "js-cookie";
-//import CryptoJS from "crypto-js";
 import { ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
+import { showToastWarning } from "../Toast";
 
 interface Quiz {
   domain: string;
@@ -17,37 +18,27 @@ interface QuizData {
   completed: Quiz[];
 }
 
-//CONTROLLER: Change this to enable Quiz functionality
-// const QUIZ_ENABLED = true;
+const SUBDOMAIN_DURATIONS: Record<string, number> = {
+  CC: 15,
+  WEB: 20,
+  APP: 20,
+  "AI/ML": 15,
+  EVENTS: 10,
+  PNM: 25,
+  "UI/UX": 10,
+  "VIDEO EDITING": 10,
+};
 
-// Map of subdomains to their durations in minutes
-// const SUBDOMAIN_DURATIONS: Record<string, number> = {
-//   CC: 15,
-//   WEB: 20,
-//   EVENTS: 10,
-//   "UI/UX": 10,
-//   "GRAPHIC DESIGN": 10,
-//   "VIDEO EDITING": 10,
-//   "AI/ML": 15,
-//   APP: 20,
-//   IOT: 10,
-//   PNM: 25,
-//   RND: 15,
-// };
-
-// Default duration if subdomain isn't found in the map
-// const DEFAULT_DURATION = 20;
+const DEFAULT_DURATION = 20;
+const SECRET_KEY = "your-secret-key";
 
 export default function Dashboard(): JSX.Element {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  
-  // COMMENTED OUT INTERACTIVE STATE
-  // const [showModal, setShowModal] = useState(false);
-  // const [permissionModal, setPermissionModal] = useState(false);
-  // const [deviceWarningModal, setDeviceWarningModal] = useState(false);
-  // const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-  
+  const [showModal, setShowModal] = useState(false);
+  const [permissionModal, setPermissionModal] = useState(false);
+  const [deviceWarningModal, setDeviceWarningModal] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizData, setQuizData] = useState<QuizData>({
     pending: [],
     completed: [],
@@ -58,7 +49,8 @@ export default function Dashboard(): JSX.Element {
       try {
         const response = await LoadDashboard(1);
         setQuizData(response);
-      } catch (error) {
+      } catch {
+        showToastWarning("Unable to load quiz dashboard");
       } finally {
         setLoading(false);
       }
@@ -67,23 +59,20 @@ export default function Dashboard(): JSX.Element {
     fetchQuizData();
   }, []);
 
-  // COMMENTED OUT ALL QUIZ STARTING LOGIC
-  /*
-  const handleStartQuiz = (quiz: Quiz) => {
-    // If quiz is disabled, stop here
-    if (!QUIZ_ENABLED) return;
+  const getQuizTarget = (quiz: Quiz) => (quiz.subDomain?.trim() || quiz.domain.trim());
 
+  const handleStartQuiz = (quiz: Quiz) => {
     const isMobileDevice =
       /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
       window.innerWidth < 1024;
 
     if (isMobileDevice) {
       setDeviceWarningModal(true);
-      return; // Prevent quiz start on mobile
-    } else {
-      setSelectedQuiz(quiz);
-      setPermissionModal(true);
-    } // Show permission request modal first
+      return;
+    }
+
+    setSelectedQuiz(quiz);
+    setPermissionModal(true);
   };
 
   const requestPermissions = async () => {
@@ -94,83 +83,79 @@ export default function Dashboard(): JSX.Element {
       });
 
       if (stream) {
-        setPermissionModal(false); // Hide modal if permissions are granted
+        setPermissionModal(false);
         setShowModal(true);
       }
-    } catch (error) {
-      alert("Camera and microphone access is required to continue.");
+    } catch {
+      showToastWarning("Camera and microphone access is required.");
     }
   };
-
-  const secretKey = "your-secret-key";
 
   const confirmStartQuiz = () => {
-    if (selectedQuiz) {
-      const subdomain = selectedQuiz.subDomain?.trim();
-      if (subdomain) {
-        Cookies.set("subdomain", subdomain, {
-          secure: true,
-          sameSite: "Strict",
-        });
-      }
-
-      const dbRequest = indexedDB.open("secureDB", 1);
-
-      dbRequest.onupgradeneeded = function (event) {
-        const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains("cookies")) {
-          db.createObjectStore("cookies", { keyPath: "key" });
-        }
-      };
-
-      dbRequest.onsuccess = function (event) {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction("cookies", "readwrite");
-        const store = transaction.objectStore("cookies");
-
-        // Get duration based on subdomain
-        let duration = DEFAULT_DURATION; // Default 30 minutes
-        if (subdomain && SUBDOMAIN_DURATIONS[subdomain]) {
-          duration = SUBDOMAIN_DURATIONS[subdomain];
-        }
-
-        // Check if expiry time already exists for the quiz domain
-        const getRequest = store.get(`${selectedQuiz.subDomain}Expiry`);
-
-        getRequest.onsuccess = function () {
-          let expiryTime = getRequest.result?.value;
-          if (!expiryTime) {
-            // Set expiry time based on the subdomain-specific duration
-            expiryTime = String(new Date().getTime() + duration * 60 * 1000);
-            const signature = CryptoJS.HmacSHA256(
-              expiryTime,
-              secretKey
-            ).toString(CryptoJS.enc.Hex);
-            const cookieValue = `${expiryTime}.${signature}`;
-            store.put({
-              key: `${selectedQuiz.subDomain}Expiry`,
-              value: cookieValue,
-            });
-          }
-
-          if (document.documentElement.requestFullscreen) {
-            document.documentElement
-              .requestFullscreen()
-              .then(() => {
-                navigate("/quiz", { state: { quiz: selectedQuiz } });
-              })
-              .catch(() => {
-                navigate("/quiz", { state: { quiz: selectedQuiz } }); // Navigate even if fullscreen fails
-              });
-          } else {
-            navigate("/quiz", { state: { quiz: selectedQuiz } }); // Fallback if fullscreen isn't supported
-          }
-        };
-      };
+    if (!selectedQuiz) {
+      setShowModal(false);
+      return;
     }
+
+    const subdomain = getQuizTarget(selectedQuiz);
+
+    Cookies.set("subdomain", subdomain, {
+      secure: true,
+      sameSite: "Strict",
+    });
+    localStorage.setItem("active_quiz_subdomain", subdomain);
+
+    const dbRequest = indexedDB.open("secureDB", 1);
+
+    dbRequest.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains("cookies")) {
+        db.createObjectStore("cookies", { keyPath: "key" });
+      }
+    };
+
+    dbRequest.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction("cookies", "readwrite");
+      const store = transaction.objectStore("cookies");
+
+      const duration = SUBDOMAIN_DURATIONS[subdomain] || DEFAULT_DURATION;
+      const getRequest = store.get(`${subdomain}Expiry`);
+
+      getRequest.onsuccess = () => {
+        let expiryTime = getRequest.result?.value;
+        if (!expiryTime) {
+          const rawExpiry = String(new Date().getTime() + duration * 60 * 1000);
+          const signature = CryptoJS.HmacSHA256(
+            rawExpiry,
+            SECRET_KEY
+          ).toString(CryptoJS.enc.Hex);
+          expiryTime = `${rawExpiry}.${signature}`;
+          store.put({
+            key: `${subdomain}Expiry`,
+            value: expiryTime,
+          });
+        }
+
+        const quizState = {
+          quiz: {
+            ...selectedQuiz,
+            subDomain: subdomain,
+          },
+        };
+
+        const goToQuiz = () => navigate("/quiz", { state: quizState });
+
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().then(goToQuiz).catch(goToQuiz);
+        } else {
+          goToQuiz();
+        }
+      };
+    };
+
     setShowModal(false);
   };
-  */
 
   return (
     <>
@@ -186,117 +171,69 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
 
-        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:h-[62vh] h-[80vh] flex flex-col items-center p-4">
-          
-          {/* PENDING QUIZZES SECTION - COMMENTED OUT */}
-          {/* <div className="flex flex-col items-center justify-center">
-            <div className="mb:4 text-center">
-              <h2 className="text-xl text-center mb-4 sm:text-4xl">
-                PENDING QUIZZES
-              </h2>
+        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[70%] sm:min-h-[62vh] min-h-[80vh] flex flex-col items-center p-4">
+          <div className="flex flex-col items-center justify-center w-full gap-10 py-6">
+            <div className="text-center">
+              <h2 className="text-xl sm:text-4xl">ROUND 1</h2>
+              <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
+                Attempt your pending quizzes below.
+              </p>
             </div>
 
-            <div className="flex flex-col gap-4 md:flex-row">
-              {quizData.pending.length > 0 ? (
-                quizData.pending.map((quiz, index) => (
-                  <div
-                    key={index}
-                    className={`flex flex-col items-center justify-center h-16 px-8 py-4 text-white transition duration-300 border-2 rounded-3xl md:h-24 ${
-                      QUIZ_ENABLED
-                        ? "cursor-pointer hover:border-orange-500 border-white"
-                        : "cursor-not-allowed border-gray-600 bg-gray-800 opacity-60"
-                    }`}
-                    onClick={() => !deviceWarningModal && handleStartQuiz(quiz)}
-                  >
-                    <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
-                    {quiz.subDomain && (
-                      <p
-                        className={`text-md sm:text-xl ${
-                          QUIZ_ENABLED ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      >
-                        {quiz.subDomain}
-                      </p>
-                    )}
-                    
-                    {!QUIZ_ENABLED && (
-                      <p className="mt-1 text-xs font-bold tracking-wider text-yellow-400 sm:text-sm">
-                        COMING SOON
-                      </p>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400 sm:text-2xl">No pending tasks</p>
-              )}
-            </div>
-          </div> 
-          */}
-
-          <div className="flex flex-col items-center">
-            <h2 className="mb-2 md:mb-4 text-xl sm:text-4xl md:mt-12">
-              ATTEMPTED QUIZZES
-            </h2>
-            <div className="flex flex-col gap-4 md:flex-row">
-              {quizData.completed.length > 0 ? (
-                quizData.completed.map((quiz, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center justify-center px-4 md:px-8 py-2 md:py-4 text-white transition duration-300 border-2 rounded-3xl hover:border-white"
-                  >
-                    <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
-                    {quiz.subDomain && (
-                      <p className="text-gray-400 text-md sm:text-xl">
-                        {quiz.subDomain}
-                      </p>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400 sm:text-2xl">No completed tasks</p>
-              )}
-            </div>
-            
-            {/* Round-1 Notification */}
-            <div className="text-center mt-8 md:mt-12">
-              <span className="font-pixeboy tracking-wide text-lg md:text-2xl w-full text-yellow-400 font-bold">
-                Round-1 results will be announced. Keep checking{" "}
-                <a
-                  href="https://discord.gg/nZyPnb7jtG"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-bold underline hover:text-white transition-colors"
-                >
-                  Discord
-                </a>
-                !
-              </span>
+            <div className="flex flex-col items-center w-full">
+              <h3 className="mb-4 text-lg text-center sm:text-3xl">PENDING QUIZZES</h3>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {quizData.pending.length > 0 ? (
+                  quizData.pending.map((quiz, index) => (
+                    <button
+                      key={`${quiz.domain}-${quiz.subDomain || index}`}
+                      className="flex flex-col items-center justify-center min-w-[180px] px-6 py-4 text-white transition duration-300 border-2 border-white rounded-3xl hover:border-orange-500"
+                      onClick={() => handleStartQuiz(quiz)}
+                    >
+                      <h4 className="text-lg sm:text-xl">{quiz.domain}</h4>
+                      {quiz.subDomain && (
+                        <p className="text-sm text-gray-400 sm:text-lg">
+                          {quiz.subDomain}
+                        </p>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-gray-400 sm:text-2xl">No pending quizzes</p>
+                )}
+              </div>
             </div>
 
-            {/* OLD COMMENTED OUT CODE - OF ENROLLMENTS 2025 */}
-            {/* <div className="text-center mt-4 md:mt-24">
-              <span className="font-pixeboy tracking-wide text-lg md:text-3xl w-full text-yellow-400">
-                *Round-1 is over! Results will be declared Soon. Join{" "}
-                <a
-                  href="https://discord.gg/j2Pt6A4YNK"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-bold underline"
-                >
-                  Discord
-                </a>{" "}
-                for updates.
-              </span>
-            </div> */}
+            <div className="flex flex-col items-center w-full">
+              <h3 className="mb-4 text-lg text-center sm:text-3xl">ATTEMPTED QUIZZES</h3>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {quizData.completed.length > 0 ? (
+                  quizData.completed.map((quiz, index) => (
+                    <div
+                      key={`${quiz.domain}-${quiz.subDomain || index}`}
+                      className="flex flex-col items-center justify-center min-w-[180px] px-6 py-4 text-white border-2 rounded-3xl"
+                    >
+                      <h4 className="text-lg sm:text-xl">{quiz.domain}</h4>
+                      {quiz.subDomain && (
+                        <p className="text-sm text-gray-400 sm:text-lg">
+                          {quiz.subDomain}
+                        </p>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-400 sm:text-2xl">No completed quizzes</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* MODALS COMMENTED OUT */}
-        {/* {deviceWarningModal && (
+        {deviceWarningModal && (
           <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
             <div className="p-6 text-center bg-black border-2 border-red-500 shadow-lg rounded-xl w-80">
               <p className="text-lg font-semibold tracking-wider text-red-500">
-                ⚠️ Quiz can only be taken on a laptop or desktop.
+                Quiz can only be taken on a laptop or desktop.
               </p>
               <p className="mt-2">Please switch to a laptop to continue.</p>
               <button
@@ -307,10 +244,9 @@ export default function Dashboard(): JSX.Element {
               </button>
             </div>
           </div>
-        )} */}
+        )}
 
-        {/* Camera & Microphone Permission Modal */}
-        {/* {permissionModal && (
+        {permissionModal && (
           <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
             <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
               <p className="text-lg font-semibold tracking-wider">
@@ -333,29 +269,23 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        )} */}
+        )}
 
-        {/* Confirmation Modal */}
-        {/* {showModal && (
+        {showModal && (
           <div className="fixed inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 backdrop-blur-sm font-retro-gaming">
             <div className="p-6 text-center bg-black border-2 border-white shadow-lg rounded-xl">
               <p className="text-lg font-semibold">
                 Are you sure you want to start the quiz?
               </p>
               <p className="mt-2">
-                {selectedQuiz?.subDomain &&
-                SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()] ? (
-                  <>
-                    You will have{" "}
-                    <span className="text-[#F8B95A] font-bold">
-                      {SUBDOMAIN_DURATIONS[selectedQuiz.subDomain.trim()]}{" "}
-                      minutes
-                    </span>{" "}
-                    to finish it.
-                  </>
-                ) : (
-                  "You will have 20 minutes to finish it."
-                )}
+                You will have{" "}
+                <span className="font-bold text-[#F8B95A]">
+                  {selectedQuiz
+                    ? SUBDOMAIN_DURATIONS[getQuizTarget(selectedQuiz)] || DEFAULT_DURATION
+                    : DEFAULT_DURATION}{" "}
+                  minutes
+                </span>{" "}
+                to finish it.
               </p>
               <div className="flex justify-center mt-4">
                 <button
@@ -373,7 +303,7 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        )} */}
+        )}
       </div>
     </>
   );
