@@ -6,10 +6,10 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-//import Domainselection from "./components/Domainselection";
-//import Designdomain from "./components/Designdomain";
-//import Technicaldomain from "./components/Technicaldomain";
-//import Managementdomain from "./components/Managementdomain";
+import Domainselection from "./components/Domainselection";
+import Design from "./components/Design";
+import Technical from "./components/Technical";
+import Management from "./components/Management";
 import Bg from "./components/bg";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
@@ -19,13 +19,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 //import Dashboard from "./components/Dashboard";
-import Tasks from "./components/Tasks";
-import QuizComplete from "./components/QuizCompleted";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
 import { Navigate } from "react-router-dom";
-import TaskDashboard from "./components/TaskDashboard";
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.98 },
@@ -80,21 +77,17 @@ const AppContent = () => {
               <Route path="faqs" element={<Faq />} />
 
               <Route element={<ProtectedRoute />}>
-                {/* <Route path="domain" element={<Domainselection />} />
-                <Route path="design" element={<Designdomain />} />
-                <Route path="technical" element={<Technicaldomain />} />
-                <Route path="management" element={<Managementdomain />} /> */}
+                <Route path="domain" element={<Domainselection />} />
+                <Route path="design" element={<Design />} />
+                <Route path="technical" element={<Technical />} />
+                <Route path="management" element={<Management />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="username" element={<UsernameSection />} />
-                {/* <Route path="quiz" element={<Quiz1 />} /> */}
-                <Route path="dashboard" element={<TaskDashboard />} />
-                <Route path="task" element={<Tasks />} />
-                <Route path="quiz-complete" element={<QuizComplete />} />
+                <Route path="dashboard" element={<Navigate to="/domain" replace />} />
+                <Route path="task" element={<Navigate to="/domain" replace />} />
                 <Route
-                  path="domain"
-                  element={(() => {
-                    return <Navigate to="/dashboard" />;
-                  })()}
+                  path="quiz-complete"
+                  element={<Navigate to="/domain" replace />}
                 />
               </Route>
 
