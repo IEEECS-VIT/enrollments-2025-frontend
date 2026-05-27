@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
 import { auth, provider } from "../firebaseConfig";
 import { showToastWarning } from "../Toast";
-import { hasQuizDBKeys } from "../utils/indexedDb";
+// import { hasQuizDBKeys } from "../utils/indexedDb";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
