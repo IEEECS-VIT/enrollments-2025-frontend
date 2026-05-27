@@ -176,10 +176,10 @@ export async function SubmitUsername(
 type Domain = { [key: string]: string[] };
 
 export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
-  if (await hasQuizDBKeys()) {
-    showToastWarning("Quiz already started, cannot change domains");
-    return { status: 400 };
-  }
+  // if (await hasQuizDBKeys()) {
+  //   showToastWarning("Quiz already started, cannot change domains");
+  //   return { status: 400 };
+  // }
 
   const response = await ProtectedRequest<DomainResponse>(
     "POST",
