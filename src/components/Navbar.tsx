@@ -29,14 +29,14 @@ export default function Navbar() {
   const navLinks = [
     { name: "HOME", path: "/" },
     { name: "DOMAINS", path: "/domain" },
-    { name: "DISCORD", path: "https://discord.gg/9ZhvDdgS" },
+    { name: "DISCORD", path: "https://discord.gg/brq4bFGdVE" },
     { name: "FAQS", path: "/faqs" },
   ];
 
   const navLinksMobile = [
     { name: "HOME", path: "/" },
     { name: "DOMAINS", path: "/domain" },
-    { name: "DISCORD", path: "https://discord.gg/9ZhvDdgS" },
+    { name: "DISCORD", path: "https://discord.gg/brq4bFGdVE" },
     { name: "PROFILE", path: "/profile" },
     { name: "FAQS", path: "/faqs" },
   ];

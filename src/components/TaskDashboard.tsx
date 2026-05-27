@@ -243,7 +243,7 @@ export default function Dashboard(): JSX.Element {
                       <p>
                         Round-2 is live. Join{" "}
                         <a
-                          href="https://discord.gg/nZyPnb7jtG"
+                          href="https://discord.gg/brq4bFGdVE"
                           target="_blank"
                           rel="noreferrer"
                           className="font-bold underline"
