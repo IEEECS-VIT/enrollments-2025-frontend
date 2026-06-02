@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
 import { auth, provider } from "../firebaseConfig";
 import { showToastWarning } from "../Toast";
-import { hasQuizDBKeys } from "../utils/indexedDb";
+// import { hasQuizDBKeys } from "../utils/indexedDb";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -176,10 +176,10 @@ export async function SubmitUsername(
 type Domain = { [key: string]: string[] };
 
 export async function SubmitDomains(domain: Domain): Promise<DomainResponse> {
-  if (await hasQuizDBKeys()) {
-    showToastWarning("Quiz already started, cannot change domains");
-    return { status: 400 };
-  }
+  // if (await hasQuizDBKeys()) {
+  //   showToastWarning("Quiz already started, cannot change domains");
+  //   return { status: 400 };
+  // }
 
   const response = await ProtectedRequest<DomainResponse>(
     "POST",
