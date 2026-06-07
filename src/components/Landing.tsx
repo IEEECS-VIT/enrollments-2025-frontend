@@ -4,7 +4,7 @@ import Loader from "./Loader";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import Cookies from "js-cookie";
-import { Login } from "../api/user";
+import { LoadProfile, Login } from "../api/user";
 import { showToastSuccess, showToastWarning } from "../Toast";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
@@ -15,6 +15,7 @@ const Landing: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [user, setUser] = useState<{ name: string } | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -47,6 +48,40 @@ const Landing: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+
+    let isMounted = true;
+
+    const checkUsername = async () => {
+      try {
+        const profile = await LoadProfile();
+
+        if (!isMounted) {
+          return;
+        }
+
+        if (!profile.username?.trim()) {
+          setRedirecting(true);
+          setTimeout(() => navigate("/username", { replace: true }), 150);
+          return;
+        }
+      } catch {
+        if (isMounted) {
+          setRedirecting(true);
+          setTimeout(() => navigate("/username", { replace: true }), 150);
+          return;
+        }
+      }
+    };
+
+    checkUsername();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate, user]);
+
   const handleLogin = async () => {
     if (loading) return;
     setLoading(true);
@@ -60,7 +95,8 @@ const Landing: React.FC = () => {
         }, 1500);
         showToastSuccess("Successfully signed In");
       } else if (response.status === 201) {
-        navigate("/username");
+        setRedirecting(true);
+        setTimeout(() => navigate("/username"), 150);
       } else if (response.status === 204) {
         setError("User not registered on VTOP");
         Cookies.remove("authToken");
@@ -74,7 +110,13 @@ const Landing: React.FC = () => {
   };
 
   return (
-    <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-6 relative z-10">
+    <>
+      {redirecting ? (
+        <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+          <Loader />
+        </div>
+      ) : (
+        <div className="w-[100vw] h-[100vh] overflow-hidden font-press-start flex items-center justify-center flex-col gap-y-6 relative z-10">
       <motion.h1
         className="text-[#e8b974] mt-4 md:mt-16 xl:text-8xl lg:text-6xl text-shadow-glow hidden lg:block"
         initial={{ opacity: 0, y: -50 }}
@@ -229,7 +271,9 @@ const Landing: React.FC = () => {
           <Loader />
         </div>
       )}
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
