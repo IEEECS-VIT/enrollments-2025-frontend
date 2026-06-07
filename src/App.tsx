@@ -19,10 +19,10 @@ import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
 import Dashboard from "./components/Dashboard";
+import Task from "./components/Tasks";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
 import NotFound from "./components/NotFound";
-import { Navigate } from "react-router-dom";
 import QuizComplete from "./components/QuizCompleted";
 
 const pageVariants = {
@@ -86,7 +86,7 @@ const AppContent = () => {
                 <Route path="username" element={<UsernameSection />} />
                 <Route path="quiz" element={<Quiz1 />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="task" element={<Navigate to="/dashboard" replace />} />
+                <Route path="task" element={<Task />} />
                 <Route path="quiz-complete" element={<QuizComplete />} />
               </Route>
 

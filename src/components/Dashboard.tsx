@@ -62,6 +62,13 @@ export default function Dashboard(): JSX.Element {
   const getQuizTarget = (quiz: Quiz) => (quiz.subDomain?.trim() || quiz.domain.trim());
 
   const handleStartQuiz = (quiz: Quiz) => {
+    const target = getQuizTarget(quiz);
+
+    if (target === "APP") {
+      navigate("/task", { state: { subDomain: "APP" } });
+      return;
+    }
+
     const isMobileDevice =
       /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
       window.innerWidth < 1024;
@@ -98,6 +105,13 @@ export default function Dashboard(): JSX.Element {
     }
 
     const subdomain = getQuizTarget(selectedQuiz);
+
+    if (subdomain === "APP") {
+      setPermissionModal(false);
+      setShowModal(false);
+      navigate("/task", { state: { subDomain: "APP" } });
+      return;
+    }
 
     Cookies.set("subdomain", subdomain, {
       secure: true,
@@ -157,6 +171,17 @@ export default function Dashboard(): JSX.Element {
     setShowModal(false);
   };
 
+  const appTaskCard: Quiz = { domain: "APP", subDomain: "APP" };
+  const hasAppTask = quizData.pending.some(
+    (quiz) => getQuizTarget(quiz) === "APP"
+  );
+  const pendingTaskItems = hasAppTask
+    ? quizData.pending.filter((quiz) => getQuizTarget(quiz) === "APP")
+    : [appTaskCard];
+  const pendingQuizItems = quizData.pending.filter(
+    (quiz) => getQuizTarget(quiz) !== "APP"
+  );
+
   return (
     <>
       <ToastContainer />
@@ -176,15 +201,39 @@ export default function Dashboard(): JSX.Element {
             <div className="text-center">
               <h2 className="text-xl sm:text-4xl">ROUND 1</h2>
               <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
-                Attempt your pending quizzes below.
+                Attempt your pending tasks and quizzes below.
               </p>
+            </div>
+
+            <div className="flex flex-col items-center w-full">
+              <h3 className="mb-4 text-lg text-center sm:text-3xl">PENDING TASKS</h3>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {pendingTaskItems.length > 0 ? (
+                  pendingTaskItems.map((quiz, index) => (
+                    <button
+                      key={`${quiz.domain}-${quiz.subDomain || index}`}
+                      className="flex flex-col items-center justify-center min-w-[180px] px-6 py-4 text-white transition duration-300 border-2 border-white rounded-3xl hover:border-orange-500"
+                      onClick={() => handleStartQuiz(quiz)}
+                    >
+                      <h4 className="text-lg sm:text-xl">{quiz.domain}</h4>
+                      {quiz.subDomain && (
+                        <p className="text-sm text-gray-400 sm:text-lg">
+                          {quiz.subDomain}
+                        </p>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-gray-400 sm:text-2xl">No pending tasks</p>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col items-center w-full">
               <h3 className="mb-4 text-lg text-center sm:text-3xl">PENDING QUIZZES</h3>
               <div className="flex flex-wrap items-center justify-center gap-4">
-                {quizData.pending.length > 0 ? (
-                  quizData.pending.map((quiz, index) => (
+                {pendingQuizItems.length > 0 ? (
+                  pendingQuizItems.map((quiz, index) => (
                     <button
                       key={`${quiz.domain}-${quiz.subDomain || index}`}
                       className="flex flex-col items-center justify-center min-w-[180px] px-6 py-4 text-white transition duration-300 border-2 border-white rounded-3xl hover:border-orange-500"
