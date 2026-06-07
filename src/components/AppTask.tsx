@@ -1,148 +1,263 @@
-import { FaShoppingBag, FaMobileAlt, FaPalette, FaCheckCircle, FaLightbulb, FaLock, FaRocket, FaClipboardList } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaClipboardList,
+  FaExternalLinkAlt,
+  FaFigma,
+  FaGithub,
+  FaLayerGroup,
+  FaMobileAlt,
+  FaPalette,
+  FaRocket,
+  FaTasks,
+  FaThLarge,
+} from "react-icons/fa";
+
+const figmaUrl =
+  "https://www.figma.com/design/vI4dn2Qw94MsZFRbJgHxVc/Design-Reference?node-id=0-1&t=cyyBxWA5VMRmlQwk-1";
+
+const referenceRepos = [
+  {
+    label: "React Native Github Repo",
+    url: "https://github.com/gk-dev10/ieeecs-app-task1",
+  },
+  {
+    label: "Flutter Github Repo",
+    url: "https://github.com/bhargavmahanta/ieeecs-flutter-app-task1",
+  },
+];
+
+const appChoices = [
+  "To Do Application with deadlines, reminders, and Habit Tracker",
+  "Quiz Application with CRUD pages and admin dashboard",
+  "Payment Platform Clone with wallet, transactions, and UPI flow",
+  "Expense Tracker with day-wise and category-wise reports",
+  "UNO Game Application with proper rules and turn-based gameplay",
+];
+
+const fitnessLevels = [
+  {
+    title: "Level 0: UI/UX Design",
+    points: [
+      "Clone and run the provided repository successfully",
+      "Redesign every screen with a fitness-oriented visual language",
+      "Improve typography, spacing, alignment, cards, inputs, and feedback states",
+      "Add empty states, loading placeholders, and toasts for convenience",
+    ],
+  },
+  {
+    title: "Level 1: Navigation and Flow",
+    points: [
+      "Implement Home -> Workout List -> Workout Detail -> Start Workout",
+      "Support Home -> Profile with clear back navigation everywhere",
+      "Reflect state changes in the UI after starting or completing workouts",
+      "Add goal tracking, schedule-aware prompts, and progress visuals",
+    ],
+  },
+  {
+    title: "Level 1: Graphs and Insights",
+    points: [
+      "Include at least one visual representation of fitness data",
+      "You can use bar charts, line graphs, or circular progress indicators",
+      "Show daily activity, weekly consistency, or calories burned trends",
+    ],
+  },
+];
 
 export default function AppTask() {
   return (
-    <>
-      <div className="relative w-full h-full bg-transparent max-h-[50vh] md:max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
-        {/* App Task Content - With scroll container */}
-        <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
-          <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
-            <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4 flex items-center gap-3">
-              <FaShoppingBag className="text-2xl" /> App Development Task: Shopping Application
-            </h1>
+    <div className="relative w-full h-full max-h-[50vh] md:max-h-[65vh] text-white outline-none border-none">
+      <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
+        <div className="w-full px-4 md:px-2 prose prose-invert max-w-none break-words">
+          <h1 className="mb-4 flex items-center gap-3 text-xl md:text-2xl font-bold text-[#F8B95A]">
+            <FaMobileAlt className="text-2xl" />
+            App Enrollment Task
+          </h1>
 
-            <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
-                <FaMobileAlt /> Tech Stack & Platform
-              </h4>
-              <p className="text-sm text-gray-300">
-                Candidates are free to use <strong>any mobile tech stack</strong>:
-                Flutter, React Native, Kotlin Multiplatform (KMP), or Native Swift/Kotlin.
-              </p>
-            </div>
+          <p className="mb-4 text-sm md:text-base text-gray-200">
+            For the APP domain in this branch, there is no quiz. The round-2
+            task is live directly, and participants are expected to submit the
+            completed app work using the task submission flow.
+          </p>
 
-            <p className="mb-4 text-white text-sm md:text-base">
-              Your goal is to build a scalable shopping application. The task is broken down into three levels of increasing complexity.
-            </p>
-
-            {/* Level 1 */}
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
-                <FaPalette /> Level 1: Mini Shopping App (UI Only)
-              </h3>
-              <p className="text-white mb-2 text-sm md:text-base">
-                <strong>Objective:</strong> Build the static UI and navigation flow. No backend or state logic required.
-              </p>
-              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1 flex items-center gap-2">
-                <FaCheckCircle className="text-green-400" /> Screens to Implement:
-              </h4>
-              <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
-                <li className="mb-1">
-                  <strong>Product List:</strong> Grid/List of products (Image, Name, Price). Click to navigate to details.
-                </li>
-                <li className="mb-1">
-                  <strong>Product Detail:</strong> Large image, description, "Add to Cart" button (non-functional).
-                </li>
-                <li className="mb-1">
-                  <strong>Cart Screen:</strong> Static list of items with a subtotal section.
-                </li>
-                <li className="mb-1">
-                  <strong>Checkout Screen:</strong> Static order summary and basic address form.
-                </li>
-              </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A] flex items-center gap-2">
-                <FaLightbulb /> UI Expectations:
-              </p>
-              <ul className="list-none pl-2 text-gray-300 text-sm md:text-base">
-                <li>• Clean typography and spacing.</li>
-                <li>• Responsive layout (works on small & large screens).</li>
-              </ul>
-            </div>
-
-            {/* Level 2 */}
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
-                <FaLock /> Level 2: Auth & API Integration
-              </h3>
-              <p className="text-white mb-2 text-sm md:text-base">
-                <strong>Objective:</strong> Fetch data from an external API (e.g., FakeStore API) and implement user authentication.
-              </p>
-              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1 flex items-center gap-2">
-                <FaCheckCircle className="text-green-400" /> Core Requirements:
-              </h4>
-              <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
-                <li className="mb-1">
-                  <strong>Splash Screen:</strong> Check auth state. Redirect to Login or Product List.
-                </li>
-                <li className="mb-1">
-                  <strong>Authentication:</strong> Login/Signup via Firebase or Custom Backend (Email or Social Auth).
-                </li>
-                <li className="mb-1">
-                  <strong>Dynamic Product List:</strong> Fetch from API. Include a <strong>Search Bar</strong> (Client or API side).
-                </li>
-                <li className="mb-1">
-                  <strong>Cart (Local):</strong> Show items added from detail screen. Show subtotal.
-                </li>
-                <li className="mb-1">
-                  <strong>Profile:</strong> Display user info and a <strong>Logout</strong> button.
-                </li>
-              </ul>
-            </div>
-
-            {/* Level 3 */}
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <h3 className="text-base md:text-lg font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
-                <FaRocket /> Level 3: Feature-Rich (Pagination & Logic)
-              </h3>
-              <p className="text-white mb-2 text-sm md:text-base">
-                <strong>Objective:</strong> Advanced features including pagination, filtering, complex state management, and theming.
-              </p>
-              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1 flex items-center gap-2">
-                <FaCheckCircle className="text-green-400" /> Advanced Features:
-              </h4>
-              <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
-                <li className="mb-1">
-                  <strong>Pagination / Infinite Scroll:</strong> Load products in batches. Handle loading states gracefully.
-                </li>
-                <li className="mb-1">
-                  <strong>Category Filtering:</strong> Filter product list by category. Must work with pagination.
-                </li>
-                <li className="mb-1">
-                  <strong>Full Cart Logic:</strong> Increase/Decrease quantity, remove items, dynamic total calculation.
-                </li>
-                <li className="mb-1">
-                  <strong>Checkout Logic:</strong> On "Place Order", clear cart and show confirmation (Toast/Success Screen).
-                </li>
-              </ul>
-              <p className="text-sm font-bold mt-2 text-[#F8B95A] flex items-center gap-2">
-                <FaLightbulb /> UI Bonus:
-              </p>
-              <ul className="list-none pl-2 text-gray-300 text-sm md:text-base">
-                <li>• Implement a <strong>Dark Theme Toggle</strong> that works uniformly across all pages.</li>
-              </ul>
-            </div>
-
-            <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3 flex items-center gap-2">
-              <FaClipboardList /> Submission Guidelines
+          <section className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <h2 className="mb-3 flex items-center gap-2 text-base md:text-lg font-bold text-[#F8B95A]">
+              <FaPalette /> Task 1: UI/UX Redesign and Frontend Flow
             </h2>
-            <ol className="list-decimal pl-6 mb-4 text-white text-sm md:text-base">
-              <li className="mb-2">
-                Upload your code to <strong>GitHub (public repository)</strong>.
-              </li>
-              <li className="mb-2">
-                Provide a <strong>Video Walkthrough</strong> or an <strong>APK/Build</strong> for testing.
-              </li>
-              <li className="mb-2">
-                Ensure a <strong>README.md</strong> is present with setup instructions and screenshots.
-              </li>
-            </ol>
-
-            <p className="mt-6 mb-4 text-white text-sm md:text-base flex items-center gap-2">
-              Good luck! Focus on functional correctness, clean code, and a smooth user experience. <FaRocket />
+            <p className="mb-3 text-sm md:text-base text-gray-300">
+              Participants must customize, redesign, and enhance a pre-built
+              mobile fitness application provided through a GitHub repository.
+              The focus is on UI/UX quality, detail, and a strong front-end app
+              flow.
             </p>
-          </div>
+            <div className="grid gap-3 lg:grid-cols-2">
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-white">
+                  <FaThLarge className="text-[#F8B95A]" /> Base project
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Pre-configured project setup and basic screen structure
+                  </li>
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Placeholder fitness data such as workouts and stats
+                  </li>
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Limited or no navigation between screens
+                  </li>
+                </ul>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-white">
+                  <FaTasks className="text-[#F8B95A]" /> Core screens
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Home or Dashboard for activity, goals, and stats
+                  </li>
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Workout List and Workout Detail or Start Workout screens
+                  </li>
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Profile or Progress with optional onboarding and insights
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <h2 className="mb-3 flex items-center gap-2 text-base md:text-lg font-bold text-[#F8B95A]">
+              <FaLayerGroup /> Level breakdown
+            </h2>
+
+            <div className="grid gap-4 lg:grid-cols-3">
+              {fitnessLevels.map((level) => (
+                <div
+                  key={level.title}
+                  className="rounded-xl border-l-4 border-[#F8B95A] bg-black/20 p-4"
+                >
+                  <h3 className="mb-2 text-sm font-bold text-[#F8B95A]">
+                    {level.title}
+                  </h3>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    {level.points.map((point) => (
+                      <li key={point} className="flex gap-2">
+                        <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-6 rounded-2xl border border-white/10 bg-[#232334]/80 p-4">
+            <h2 className="mb-3 flex items-center gap-2 text-base md:text-lg font-bold text-[#F8B95A]">
+              <FaClipboardList /> Task 2: App enrollment choices
+            </h2>
+            <p className="mb-3 text-sm md:text-base text-gray-300">
+              Participants can pick any one mobile application from the list
+              below. UI development is mandatory for all choices, while backend
+              integration is optional but recommended.
+            </p>
+            <div className="grid gap-3 md:grid-cols-2">
+              {appChoices.map((choice) => (
+                <div
+                  key={choice}
+                  className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-white"
+                >
+                  <div className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    <span>{choice}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <h2 className="mb-3 flex items-center gap-2 text-base md:text-lg font-bold text-[#F8B95A]">
+              <FaRocket /> Submission and references
+            </h2>
+            <div className="grid gap-3 lg:grid-cols-2">
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-white">
+                  <FaGithub className="text-[#F8B95A]" /> Reference repositories
+                </h3>
+                <div className="space-y-3">
+                  {referenceRepos.map((repo) => (
+                    <a
+                      key={repo.url}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 break-all text-sm text-[#F8B95A] underline underline-offset-4 hover:text-[#f8d79b]"
+                    >
+                      <FaExternalLinkAlt className="shrink-0 text-xs" />
+                      {repo.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-white">
+                  <FaClipboardList className="text-[#F8B95A]" /> Submission flow
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Use the <strong>SUBMIT TASK</strong> button on the task
+                    page.
+                  </li>
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Submit your public GitHub repository link and any supporting
+                    live/demo links.
+                  </li>
+                  <li className="flex gap-2">
+                    <FaCheckCircle className="mt-1 shrink-0 text-emerald-400" />
+                    Include screenshots or a screen recording in your README or
+                    submission notes if available.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <h2 className="mb-3 flex items-center gap-2 text-base md:text-lg font-bold text-[#F8B95A]">
+              <FaFigma /> Reference design
+            </h2>
+            <p className="text-sm text-gray-300">
+              Use the provided Figma design reference while implementing the UI.
+            </p>
+            <a
+              href={figmaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-flex items-center gap-2 break-all text-sm text-[#F8B95A] underline underline-offset-4 hover:text-[#f8d79b]"
+            >
+              <FaExternalLinkAlt className="shrink-0 text-xs" />
+              {figmaUrl}
+            </a>
+          </section>
+
+          <p className="mb-2 flex items-center gap-2 text-sm md:text-base text-white">
+            <FaMobileAlt className="text-[#F8B95A]" />
+            The submission flow is already wired in the top-right of the task
+            page, so this screen is the live round-2 brief for APP.
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 }

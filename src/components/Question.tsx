@@ -112,6 +112,11 @@ export default function Questions() {
     const fetchQuizData = async () => {
       setLoading(true);
 
+      if (subdomainRaw.toUpperCase() === "APP") {
+        navigate("/task", { state: { subDomain: "APP" }, replace: true });
+        return;
+      }
+
       if (subdomainRaw) {
         localStorage.setItem("active_quiz_subdomain", subdomainRaw);
       }
@@ -182,7 +187,7 @@ export default function Questions() {
       setShowFullScreenModal
     );
     return cleanupBackButtonWarning;
-  }, [subdomainRaw]);
+  }, [subdomainRaw, navigate]);
 
   useEffect(() => {
     const handlePermissionChange = async () => {
