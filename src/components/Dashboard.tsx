@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Treecloud from "./Treecloud";
-import { LoadDashboard } from "../api/user";
+import { LoadDashboard, LoadProfile } from "../api/user";
 import Loader from "./Loader";
 import { ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
@@ -16,6 +16,10 @@ interface Quiz {
 interface QuizData {
   pending: Quiz[];
   completed: Quiz[];
+}
+
+interface ProfileData {
+  domain: { [key: string]: string[] };
 }
 
 const SUBDOMAIN_DURATIONS: Record<string, number> = {
@@ -59,6 +63,7 @@ export default function Dashboard(): JSX.Element {
     pending: [],
     completed: [],
   });
+  const [hasAppDomainSelected, setHasAppDomainSelected] = useState(false);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -73,6 +78,35 @@ export default function Dashboard(): JSX.Element {
     };
 
     fetchQuizData();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const profile = (await LoadProfile()) as ProfileData;
+        const technicalDomains = Object.entries(profile.domain || {})
+          .filter(([key]) => key.toLowerCase() === "technical")
+          .flatMap(([, domains]) =>
+            domains.map((domain) => domain.trim().toUpperCase())
+          );
+
+        setHasAppDomainSelected(technicalDomains.includes("APP"));
+      } catch {
+        try {
+          const storedValue = localStorage.getItem("technical");
+          const technicalDomains = storedValue
+            ? (JSON.parse(storedValue) as string[]).map((domain) =>
+                domain.trim().toUpperCase()
+              )
+            : [];
+          setHasAppDomainSelected(technicalDomains.includes("APP"));
+        } catch {
+          setHasAppDomainSelected(false);
+        }
+      }
+    };
+
+    fetchProfileData();
   }, []);
 
   useEffect(() => {
@@ -96,6 +130,10 @@ export default function Dashboard(): JSX.Element {
     const target = getQuizTarget(quiz);
 
     if (target === "APP") {
+      if (!hasAppDomainSelected) {
+        showToastWarning("APP task is only available after selecting APP in Technical.");
+        return;
+      }
       navigate("/task", { state: { subDomain: "APP" } });
       return;
     }
@@ -203,12 +241,14 @@ export default function Dashboard(): JSX.Element {
   };
 
   const appTaskCard: Quiz = { domain: "APP", subDomain: "APP" };
-  const hasAppTask = quizData.pending.some(
+  const appPendingItems = quizData.pending.filter(
     (quiz) => getQuizTarget(quiz) === "APP"
   );
-  const pendingTaskItems = hasAppTask
-    ? quizData.pending.filter((quiz) => getQuizTarget(quiz) === "APP")
-    : [appTaskCard];
+  const pendingTaskItems = hasAppDomainSelected
+    ? appPendingItems.length > 0
+      ? appPendingItems
+      : [appTaskCard]
+    : [];
   const pendingQuizItems = quizData.pending.filter(
     (quiz) => getQuizTarget(quiz) !== "APP"
   );
