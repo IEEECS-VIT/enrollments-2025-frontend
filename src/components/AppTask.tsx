@@ -41,7 +41,7 @@ const task1Levels = [
   {
     title: "Level 0: UI/UX Design",
     points: [
-      "Clone and run the provided repository successfully.",
+      "Clone and run any one of the provided repositories successfully.",
       "Redesign every screen with a fitness-oriented visual language.",
       "Improve typography, spacing, alignment, cards, inputs, and feedback states.",
       "Add empty states, loading placeholders, and toasts for convenience.",
@@ -174,7 +174,9 @@ function TaskOne() {
         <p className="mb-3 text-sm md:text-base text-gray-300">
           Participants must customize, redesign, and enhance a pre-built mobile
           fitness application provided through a GitHub repository. The focus is
-          on UI/UX quality, detail, and a strong front-end app flow.
+          on UI/UX quality, detail, and a strong front-end app flow. 
+          
+          You are free to pick any one of the languages based on your preferred tech stack. 
         </p>
 
         <div className="grid gap-3 lg:grid-cols-2">
@@ -442,6 +444,9 @@ export default function AppTask() {
           </h1>
 
           <p className="mb-4 text-sm md:text-base text-gray-200">
+            For App Domain, Round 1 and Round 2 are part of a continuous process. Participants will not be eliminated in Round 1, and no submission is required during Round 1. Only the submissions at the end of round 2 will be evaluated
+            <br></br>
+            <br></br>
             Participants must complete one of the two tasks offered as part of the competition. However, if they prefer, they are welcome to take on both tasks, though this remains entirely voluntary.
           </p>
 
