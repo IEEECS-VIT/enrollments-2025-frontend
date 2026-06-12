@@ -36,25 +36,9 @@ const SUBDOMAIN_DURATIONS: Record<string, number> = {
 const DEFAULT_DURATION = 20;
 const SECRET_KEY = "your-secret-key";
 
-function getRound1OpenTime() {
-  const openTime = new Date();
-  openTime.setHours(9, 0, 0, 0);
-  return openTime;
-}
-
-function formatCountdown(ms: number) {
-  const totalSeconds = Math.floor(ms / 1000);
-  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
-  const seconds = String(totalSeconds % 60).padStart(2, "0");
-  return `${hours}:${minutes}:${seconds}`;
-}
-
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [isRound1Open, setIsRound1Open] = useState(() => new Date() >= getRound1OpenTime());
-  const [round1Countdown, setRound1Countdown] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
@@ -107,21 +91,6 @@ export default function Dashboard(): JSX.Element {
     };
 
     fetchProfileData();
-  }, []);
-
-  useEffect(() => {
-    const syncRoundState = () => {
-      const now = new Date();
-      const openTime = getRound1OpenTime();
-      const timeLeft = openTime.getTime() - now.getTime();
-
-      setIsRound1Open(timeLeft <= 0);
-      setRound1Countdown(formatCountdown(Math.max(0, timeLeft)));
-    };
-
-    syncRoundState();
-    const interval = window.setInterval(syncRoundState, 1000);
-    return () => window.clearInterval(interval);
   }, []);
 
   const getQuizTarget = (quiz: Quiz) => (quiz.subDomain?.trim() || quiz.domain.trim());
@@ -249,10 +218,7 @@ export default function Dashboard(): JSX.Element {
       ? appPendingItems
       : [appTaskCard]
     : [];
-  const pendingQuizItems = quizData.pending.filter(
-    (quiz) => getQuizTarget(quiz) !== "APP"
-  );
-  const round1LockedMessage = "Round 1 opens at 9:00 AM today.";
+  const discordUrl = "https://discord.gg/8UhAsYmf";
 
   return (
     <>
@@ -271,32 +237,29 @@ export default function Dashboard(): JSX.Element {
         <div className="border-2 mt-[4vh] rounded-3xl w-[88%] sm:w-[82%] md:w-[76%] lg:w-[64%] h-[74vh] backdrop-blur-[4.5px] text-white flex flex-col items-center p-3 sm:p-4 overflow-hidden">
           <div className="flex flex-col items-center w-full h-full gap-6 sm:gap-8 py-2 sm:py-3 overflow-y-auto pr-1 sm:pr-2">
             <div className="text-center">
-              <h2 className="text-lg sm:text-3xl">ROUND 1</h2>
               <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
-                {isRound1Open
-                  ? "Attempt your pending tasks and quizzes below."
-                  : round1LockedMessage}
+                Round 1 has ended. The result will be declared soon. Keep checking{" "}
+                <a
+                  href={discordUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-4 hover:text-white"
+                >
+                  Discord
+                </a>
+                . The APP domain has only one task round, so you can continue
+                working on the task.
               </p>
-              {!isRound1Open && (
-                <p className="mt-3 text-[11px] sm:text-sm tracking-[0.2em] text-white/70 uppercase">
-                  Starts in {round1Countdown}
-                </p>
-              )}
             </div>
 
             <div className="flex flex-col items-center w-full">
-              <h3 className="mb-3 text-base text-center sm:text-2xl">PENDING TASKS</h3>
+              <h3 className="mb-3 text-base text-center sm:text-2xl">LIVE TASK</h3>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {pendingTaskItems.length > 0 ? (
                   pendingTaskItems.map((quiz, index) => (
                     <button
                       key={`${quiz.domain}-${quiz.subDomain || index}`}
-                      disabled={!isRound1Open}
-                      className={`flex flex-col items-center justify-center min-w-[150px] px-4 py-3 text-white transition duration-300 border-2 rounded-3xl ${
-                        isRound1Open
-                          ? "border-white hover:border-orange-500"
-                          : "border-white/30 opacity-60 cursor-not-allowed"
-                      }`}
+                      className="flex flex-col items-center justify-center min-w-[150px] px-4 py-3 text-white transition duration-300 border-2 rounded-3xl border-white hover:border-orange-500"
                       onClick={() => handleStartQuiz(quiz)}
                     >
                       <h4 className="text-base sm:text-lg">{quiz.domain}</h4>
@@ -313,6 +276,7 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
 
+            {/*
             <div className="flex flex-col items-center w-full">
               <h3 className="mb-3 text-base text-center sm:text-2xl">PENDING QUIZZES</h3>
               <div className="flex flex-wrap items-center justify-center gap-3">
@@ -341,6 +305,7 @@ export default function Dashboard(): JSX.Element {
                 )}
               </div>
             </div>
+            */}
 
             <div className="flex flex-col items-center w-full">
               <h3 className="mb-3 text-base text-center sm:text-2xl">ATTEMPTED QUIZZES</h3>
