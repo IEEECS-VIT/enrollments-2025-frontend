@@ -36,25 +36,10 @@ const SUBDOMAIN_DURATIONS: Record<string, number> = {
 const DEFAULT_DURATION = 20;
 const SECRET_KEY = "your-secret-key";
 
-function getRound1OpenTime() {
-  const openTime = new Date();
-  openTime.setHours(9, 0, 0, 0);
-  return openTime;
-}
-
-function formatCountdown(ms: number) {
-  const totalSeconds = Math.floor(ms / 1000);
-  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
-  const seconds = String(totalSeconds % 60).padStart(2, "0");
-  return `${hours}:${minutes}:${seconds}`;
-}
-
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [isRound1Open, setIsRound1Open] = useState(() => new Date() >= getRound1OpenTime());
-  const [round1Countdown, setRound1Countdown] = useState("");
+  const isRound1Open = true;
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
@@ -107,21 +92,6 @@ export default function Dashboard(): JSX.Element {
     };
 
     fetchProfileData();
-  }, []);
-
-  useEffect(() => {
-    const syncRoundState = () => {
-      const now = new Date();
-      const openTime = getRound1OpenTime();
-      const timeLeft = openTime.getTime() - now.getTime();
-
-      setIsRound1Open(timeLeft <= 0);
-      setRound1Countdown(formatCountdown(Math.max(0, timeLeft)));
-    };
-
-    syncRoundState();
-    const interval = window.setInterval(syncRoundState, 1000);
-    return () => window.clearInterval(interval);
   }, []);
 
   const getQuizTarget = (quiz: Quiz) => (quiz.subDomain?.trim() || quiz.domain.trim());
@@ -252,7 +222,6 @@ export default function Dashboard(): JSX.Element {
   const pendingQuizItems = quizData.pending.filter(
     (quiz) => getQuizTarget(quiz) !== "APP"
   );
-  const round1LockedMessage = "Round 1 opens at 9:00 AM today.";
 
   return (
     <>
@@ -273,15 +242,8 @@ export default function Dashboard(): JSX.Element {
             <div className="text-center">
               <h2 className="text-lg sm:text-3xl">ROUND 1</h2>
               <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
-                {isRound1Open
-                  ? "Attempt your pending tasks and quizzes below."
-                  : round1LockedMessage}
+                Attempt your pending tasks and quizzes below.
               </p>
-              {!isRound1Open && (
-                <p className="mt-3 text-[11px] sm:text-sm tracking-[0.2em] text-white/70 uppercase">
-                  Starts in {round1Countdown}
-                </p>
-              )}
             </div>
 
             <div className="flex flex-col items-center w-full">
