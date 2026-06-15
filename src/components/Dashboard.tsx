@@ -35,11 +35,11 @@ const SUBDOMAIN_DURATIONS: Record<string, number> = {
 
 const DEFAULT_DURATION = 20;
 const SECRET_KEY = "your-secret-key";
+const DISCORD_URL = "https://discord.gg/8UhAsYmf";
 
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const isRound1Open = true;
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
@@ -219,9 +219,6 @@ export default function Dashboard(): JSX.Element {
       ? appPendingItems
       : [appTaskCard]
     : [];
-  const pendingQuizItems = quizData.pending.filter(
-    (quiz) => getQuizTarget(quiz) !== "APP"
-  );
 
   return (
     <>
@@ -241,7 +238,17 @@ export default function Dashboard(): JSX.Element {
           <div className="flex flex-col items-center w-full h-full gap-6 sm:gap-8 py-2 sm:py-3 overflow-y-auto pr-1 sm:pr-2">
             <div className="text-center">
               <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
-                Attempt your pending tasks and quizzes below.
+                Round 1 has ended. The result will be declared soon. Keep checking{" "}
+                <a
+                  href={DISCORD_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-4 hover:text-white"
+                >
+                  Discord
+                </a>
+                . The APP domain has only one task round, so you can continue
+                working on the task.
               </p>
             </div>
 
@@ -269,6 +276,7 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
 
+            {/*
             {/*
             <div className="flex flex-col items-center w-full">
               <h3 className="mb-3 text-base text-center sm:text-2xl">PENDING QUIZZES</h3>
