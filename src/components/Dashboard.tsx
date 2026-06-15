@@ -39,6 +39,7 @@ const SECRET_KEY = "your-secret-key";
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const isRound1Open = true;
   const [showModal, setShowModal] = useState(false);
   const [permissionModal, setPermissionModal] = useState(false);
   const [deviceWarningModal, setDeviceWarningModal] = useState(false);
@@ -218,7 +219,9 @@ export default function Dashboard(): JSX.Element {
       ? appPendingItems
       : [appTaskCard]
     : [];
-  const discordUrl = "https://discord.gg/8UhAsYmf";
+  const pendingQuizItems = quizData.pending.filter(
+    (quiz) => getQuizTarget(quiz) !== "APP"
+  );
 
   return (
     <>
@@ -238,17 +241,7 @@ export default function Dashboard(): JSX.Element {
           <div className="flex flex-col items-center w-full h-full gap-6 sm:gap-8 py-2 sm:py-3 overflow-y-auto pr-1 sm:pr-2">
             <div className="text-center">
               <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
-                Round 1 has ended. The result will be declared soon. Keep checking{" "}
-                <a
-                  href={discordUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-4 hover:text-white"
-                >
-                  Discord
-                </a>
-                . The APP domain has only one task round, so you can continue
-                working on the task.
+                Attempt your pending tasks and quizzes below.
               </p>
             </div>
 
