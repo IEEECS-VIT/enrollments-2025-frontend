@@ -240,25 +240,19 @@ export default function Dashboard(): JSX.Element {
         <div className="border-2 mt-[4vh] rounded-3xl w-[88%] sm:w-[82%] md:w-[76%] lg:w-[64%] h-[74vh] backdrop-blur-[4.5px] text-white flex flex-col items-center p-3 sm:p-4 overflow-hidden">
           <div className="flex flex-col items-center w-full h-full gap-6 sm:gap-8 py-2 sm:py-3 overflow-y-auto pr-1 sm:pr-2">
             <div className="text-center">
-              <h2 className="text-lg sm:text-3xl">ROUND 1</h2>
               <p className="mt-4 text-sm tracking-wide text-yellow-400 sm:text-xl">
                 Attempt your pending tasks and quizzes below.
               </p>
             </div>
 
             <div className="flex flex-col items-center w-full">
-              <h3 className="mb-3 text-base text-center sm:text-2xl">PENDING TASKS</h3>
+              <h3 className="mb-3 text-base text-center sm:text-2xl">LIVE TASK</h3>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {pendingTaskItems.length > 0 ? (
                   pendingTaskItems.map((quiz, index) => (
                     <button
                       key={`${quiz.domain}-${quiz.subDomain || index}`}
-                      disabled={!isRound1Open}
-                      className={`flex flex-col items-center justify-center min-w-[150px] px-4 py-3 text-white transition duration-300 border-2 rounded-3xl ${
-                        isRound1Open
-                          ? "border-white hover:border-orange-500"
-                          : "border-white/30 opacity-60 cursor-not-allowed"
-                      }`}
+                      className="flex flex-col items-center justify-center min-w-[150px] px-4 py-3 text-white transition duration-300 border-2 rounded-3xl border-white hover:border-orange-500"
                       onClick={() => handleStartQuiz(quiz)}
                     >
                       <h4 className="text-base sm:text-lg">{quiz.domain}</h4>
@@ -275,6 +269,7 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
 
+            {/*
             <div className="flex flex-col items-center w-full">
               <h3 className="mb-3 text-base text-center sm:text-2xl">PENDING QUIZZES</h3>
               <div className="flex flex-wrap items-center justify-center gap-3">
@@ -303,6 +298,7 @@ export default function Dashboard(): JSX.Element {
                 )}
               </div>
             </div>
+            */}
 
             <div className="flex flex-col items-center w-full">
               <h3 className="mb-3 text-base text-center sm:text-2xl">ATTEMPTED QUIZZES</h3>
