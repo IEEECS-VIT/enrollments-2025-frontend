@@ -17,12 +17,7 @@ interface DashboardData {
   slots: Record<string, any>[];
 }
 
-// Hardcoded Calendly Links for PnM and Events
-const CALENDLY_LINKS: Record<string, string> = {
-  PNM: "https://calendly.com/ieee-computersocietyvit",
-  EVENTS: "https://calendly.com/ieee_cs_vit",
-};
-
+// Hardcoded Calendly Links for PnM and Events removed as they are unused
 export default function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -107,16 +102,7 @@ export default function Dashboard(): JSX.Element {
     }
   };
 
-  const handleInterviewClick = (domain: string, subDomain?: string) => {
-    const key = subDomain || domain;
-    const link = CALENDLY_LINKS[key];
-
-    if (link) {
-      window.open(link, "_blank");
-    } else {
-      showToastWarning("Link not available yet.");
-    }
-  };
+  // handleInterviewClick removed as it is unused
 
   return (
     <>

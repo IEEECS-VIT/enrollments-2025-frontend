@@ -1,4 +1,4 @@
-import { FaRocket, FaBullseye, FaMagic, FaWind, FaTheaterMasks, FaPaintBrush, FaCheckCircle, FaClipboardList, FaMapMarkerAlt } from "react-icons/fa";
+import { FaRocket, FaBullseye, FaMagic, FaCheckCircle, FaClipboardList, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function WebTask() {
   return (
