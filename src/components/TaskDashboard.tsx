@@ -38,7 +38,7 @@ export default function Dashboard(): JSX.Element {
   const [blockedTaskName, setBlockedTaskName] = useState("");
 
   // New state for CC selection modal
-  const [showCCModal, setShowCCModal] = useState(false);
+  // const [showCCModal, setShowCCModal] = useState(false);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -67,7 +67,7 @@ export default function Dashboard(): JSX.Element {
 
   const isInterviewDomain = (domain: string, subDomain?: string) => {
     const target = subDomain || domain;
-    return ["PNM", "EVENTS"].includes(target);
+    return ["PNM", "EVENTS", "CC"].includes(target);
   };
 
   const interviews = quizData?.completed.filter((quiz) =>
@@ -93,10 +93,10 @@ export default function Dashboard(): JSX.Element {
     ];
 
     // Special handling for CC domain
-    if (subDomain === "CC") {
-      setShowCCModal(true);
-      return;
-    }
+    // if (subDomain === "CC") {
+    //   setShowCCModal(true);
+    //   return;
+    // }
 
     if (subDomain && blockedTasks.includes(subDomain)) {
       setBlockedTaskName(subDomain);
@@ -174,7 +174,7 @@ export default function Dashboard(): JSX.Element {
       )}
 
       {/* CC Selection Modal */}
-      {showCCModal && (
+      {/* showCCModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
           <div className="bg-black text-white p-6 text-xl md:text-2xl border-white border-2 rounded-3xl w-[90%] sm:w-[60%] md:w-[50%] lg:w-[40%] text-center flex flex-col gap-6">
             <h2 className="font-bold text-[#F8B95A] text-2xl md:text-4xl font-playmegames tracking-widest">
@@ -213,7 +213,7 @@ export default function Dashboard(): JSX.Element {
             </button>
           </div>
         </div>
-      )}
+      ) */}
 
       <div className="relative flex items-center justify-center min-h-screen">
         <div className="absolute w-full pointer-events-none">
@@ -226,8 +226,8 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
 
-        <div className="border-2 mt-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[75%] sm:h-[75vh] h-[75vh] flex flex-col items-center p-4">
-          <div className="flex flex-col items-center justify-center w-full h-full overflow-y-auto">
+        <div className="border-2 mt-[5vh] mb-[5vh] rounded-3xl w-[80%] justify-center backdrop-blur-[4.5px] text-white sm:w-[80%] md:w-[80%] lg:w-[75%] h-auto min-h-[60vh] max-h-[85vh] flex flex-col items-center p-4">
+          <div className="flex flex-col items-center w-full h-full overflow-y-auto pb-6">
             {!loading && quizData?.completed.length === 0 ? (
               <div className="mb-4 text-center px-14 mt-10">
                 <span className="w-full text-lg tracking-wide text-yellow-400 md:text-xl text-center">
@@ -294,10 +294,7 @@ export default function Dashboard(): JSX.Element {
                       {interviews.map((quiz, index) => (
                         <div
                           key={index}
-                          className="flex flex-col items-center justify-center px-4 py-2 text-white transition duration-200 border-2 cursor-pointer md:px-8 md:py-4 rounded-3xl hover:border-orange-500 min-w-[150px]"
-                          onClick={() =>
-                            handleInterviewClick(quiz.domain, quiz.subDomain)
-                          }
+                          className="flex flex-col items-center justify-center px-4 py-3 text-white transition duration-200 border-2 border-white/50 md:px-8 md:py-4 rounded-3xl min-w-[200px] max-w-[250px]"
                         >
                           <h3 className="text-lg sm:text-xl">{quiz.domain}</h3>
                           {quiz.subDomain && (
@@ -305,8 +302,8 @@ export default function Dashboard(): JSX.Element {
                               {quiz.subDomain}
                             </p>
                           )}
-                          <p className="text-[#F8B95A] text-sm sm:text-md font-sans font-bold mt-2">
-                            Schedule GD
+                          <p className="text-[#F8B95A] text-xs sm:text-sm font-sans font-bold mt-3 text-center leading-relaxed">
+                            Shortlisted candidates will be contacted directly.
                           </p>
                         </div>
                       ))}

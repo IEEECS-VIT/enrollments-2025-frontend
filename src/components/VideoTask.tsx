@@ -1,10 +1,9 @@
-import { FaVideo, FaExclamationTriangle, FaTheaterMasks, FaCheckCircle, FaPen, FaMobileAlt, FaMagic } from "react-icons/fa";
+import { FaVideo, FaTheaterMasks, FaCamera, FaCheckCircle } from "react-icons/fa";
 
 export default function VideoTask() {
   return (
     <>
       <div className="relative w-full h-full bg-transparent max-h-[50vh] md:max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
-        {/* Video Task Content - Scrollable container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
           <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
             <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4 flex items-center gap-3">
@@ -12,121 +11,48 @@ export default function VideoTask() {
             </h1>
 
             <p className="mb-4 text-white text-sm md:text-base">
-              This module is designed to test both your storytelling fundamentals
-              and your stylistic adaptability.
+              Please choose <strong>ONE</strong> of the following tasks and submit your video.
             </p>
 
-            <div className="mb-6 p-3 bg-white/5 border border-white/10 rounded-lg">
-              <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-1 flex items-center gap-2">
-                <FaExclamationTriangle /> Submission Requirement
-              </h4>
-              <p className="text-sm text-gray-300">
-                You must submit <strong>TWO</strong> final outputs:
-                <br />
-                1. The mandatory task from <strong>Section 1</strong>.
-                <br />
-                2. <strong>One</strong> selected task from <strong>Section 2</strong>.
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+              <h3 className="text-base md:text-lg font-bold text-blue-400 mb-2 flex items-center gap-2">
+                <FaTheaterMasks /> 1. Create a Cinematic Travel Montage
+              </h3>
+              <p className="text-sm md:text-base text-gray-300 mb-2">
+                <strong>Task:</strong> Make a 30–60 second montage video using clips from a trip, your city, college, or even random phone footage.
               </p>
-            </div>
-
-            {/* SECTION 1 - MANDATORY */}
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-base md:text-lg font-bold text-[#F8B95A]">
-                  SECTION 1: Creative Foundations
-                </h3>
-                <span className="text-xs font-bold bg-[#F8B95A] text-black px-2 py-1 rounded">
-                  MANDATORY
-                </span>
-              </div>
-
-              <h4 className="text-sm md:text-md font-bold text-white mb-2 flex items-center gap-2">
-                <FaTheaterMasks className="text-[#F8B95A]" /> Task 1.1 – "Same Clip, Two Moods"
-              </h4>
-
-              <p className="text-white mb-3 text-sm md:text-base">
-                <strong>Objective:</strong> Take a single source clip and produce
-                two contrasting edits to demonstrate how editing shapes emotion.
-              </p>
-
-              <ul className="list-none pl-0 mb-3 text-white text-sm md:text-base space-y-3">
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-green-400 mt-1 flex-shrink-0" />
-                  <span>
-                    <strong>The Output:</strong> Create one short video (20–60 seconds) showing both versions.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-green-400 mt-1 flex-shrink-0" />
-                  <div className="flex-1">
-                    <strong>The Contrast:</strong>
-                    <ul className="pl-4 mt-1 list-disc text-gray-300">
-                      <li>
-                        <em>Edit A:</em> Positive, calm, or uplifting.
-                      </li>
-                      <li>
-                        <em>Edit B:</em> Tense, dramatic, or chaotic.
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-green-400 mt-1 flex-shrink-0" />
-                  <span>
-                    <strong>The Tools:</strong> Alter background music, color grading, pacing, and cut duration to achieve the effect.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <FaPen className="text-blue-400 mt-1 flex-shrink-0" />
-                  <span>
-                    <strong>Write-up:</strong> You must include a brief 3–4 line explanation describing your editing approach.
-                  </span>
-                </li>
+              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1">Requirements</h4>
+              <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
+                <li className="mb-1">Use at least 5–8 clips</li>
+                <li className="mb-1">Add background music</li>
+                <li className="mb-1">Use simple cuts and 1–2 smooth transitions</li>
+                <li className="mb-1">Sync some cuts with the beat of the music</li>
+                <li className="mb-1">Add a title at the beginning</li>
+                <li className="mb-1">Color adjust the clips slightly for a consistent look</li>
               </ul>
             </div>
 
-            {/* SECTION 2 - CHOICE */}
-            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-base md:text-lg font-bold text-[#F8B95A]">
-                  SECTION 2: Theme-Based Tasks
-                </h3>
-                <span className="text-xs font-bold bg-white/20 text-white px-2 py-1 rounded">
-                  CHOOSE ONE
-                </span>
-              </div>
+            <div className="flex items-center justify-center mb-6">
+              <span className="h-px bg-white/20 w-full"></span>
+              <span className="px-4 text-[#F8B95A] font-bold whitespace-nowrap text-xs md:text-sm">OR</span>
+              <span className="h-px bg-white/20 w-full"></span>
+            </div>
 
-              {/* Option 2.1 */}
-              <div className="mb-6 border-b border-white/10 pb-4 last:border-0 last:pb-0">
-                <h4 className="text-sm md:text-md font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
-                  <FaMobileAlt /> Option A: Social Media Cut
-                </h4>
-                <p className="text-white text-sm md:text-base mb-2">
-                  Edit a video tailored for <strong>Reels/Shorts</strong>. Focus
-                  on retention and platform relevance.
-                </p>
-                <ul className="list-disc pl-5 text-gray-300 text-sm md:text-base">
-                  <li>Format must be <strong>Vertical (9:16)</strong>.</li>
-                  <li>Must capture attention within the <strong>first 3 seconds</strong>.</li>
-                  <li>Provide a clear, purposeful ending.</li>
-                </ul>
-              </div>
-
-              {/* Option 2.2 */}
-              <div className="pt-2">
-                <h4 className="text-sm md:text-md font-bold text-[#F8B95A] mb-2 flex items-center gap-2">
-                  <FaMagic /> Option B: Logo Reveal (Simple Edition)
-                </h4>
-                <p className="text-white text-sm md:text-base mb-2">
-                  Create a refined brand animation. Prioritize subtlety over heavy
-                  effects.
-                </p>
-                <ul className="list-disc pl-5 text-gray-300 text-sm md:text-base">
-                  <li><strong>Duration:</strong> 5–7 seconds.</li>
-                  <li>Avoid exaggerated transitions; keep it polished.</li>
-                  <li>Must conclude on a <strong>still version</strong> of the logo.</li>
-                </ul>
-              </div>
+            <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-purple-500 mb-6">
+              <h3 className="text-base md:text-lg font-bold text-purple-400 mb-2 flex items-center gap-2">
+                <FaCamera /> 2. Edit a Talking-Head YouTube/Interview Style Video
+              </h3>
+              <p className="text-sm md:text-base text-gray-300 mb-2">
+                <strong>Task:</strong> Record yourself (or use any raw footage) speaking for 1–2 minutes and edit it into a clean, engaging video.
+              </p>
+              <h4 className="text-sm md:text-md font-bold text-white mt-3 mb-1">Requirements</h4>
+              <ul className="list-disc pl-5 mb-2 text-white text-sm md:text-base">
+                <li className="mb-1">Remove pauses and mistakes using jump cuts</li>
+                <li className="mb-1">Add subtitles/captions</li>
+                <li className="mb-1">Include background music at low volume</li>
+                <li className="mb-1">Add zoom-ins or simple motion effects occasionally</li>
+                <li className="mb-1">Add an intro text and ending screen</li>
+              </ul>
             </div>
 
             <h2 className="text-lg md:text-xl font-bold text-[#F8B95A] mt-6 mb-3">
@@ -134,15 +60,13 @@ export default function VideoTask() {
             </h2>
             <ul className="list-none pl-0 mb-4 text-white text-sm md:text-base space-y-2">
               <li className="flex items-center gap-2">
-                <FaCheckCircle className="text-green-400" /> Upload your videos to <strong>Google Drive</strong> (ensure access is public).
+                <FaCheckCircle className="text-green-400" /> Upload your video to <strong>Google Drive</strong> (ensure access is public).
               </li>
               <li className="flex items-center gap-2">
-                <FaCheckCircle className="text-green-400" /> Include your <strong>3-4 line write-up</strong> for Section 1.
-              </li>
-              <li className="flex items-center gap-2">
-                <FaCheckCircle className="text-green-400" /> Submit the links clearly labeled (e.g., "Task 1.1" and "Task 2.1").
+                <FaCheckCircle className="text-green-400" /> Submit the link clearly labeled with the task you chose.
               </li>
             </ul>
+
           </div>
         </div>
       </div>

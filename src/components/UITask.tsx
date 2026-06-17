@@ -4,20 +4,18 @@ export default function UIUXTask() {
   return (
     <>
       <div className="relative w-full h-full bg-transparent max-h-[50vh] md:max-h-[65vh] text-white outline-none border-none focus:outline-none focus:ring-0 resize-none">
-        {/* UI/UX Task Content - Scrollable container */}
         <div className="w-full flex justify-center items-start overflow-y-auto h-full max-h-[50vh] md:max-h-[65vh] touch-pan-y">
           <div className="w-full px-4 md:px-2 prose markdown-content prose-invert max-w-none break-words">
             <h1 className="text-xl md:text-2xl font-bold text-[#F8B95A] mb-4 flex items-center gap-3">
-              <FaPalette className="text-2xl" /> UI/UX & Design Task
+              <FaPalette className="text-2xl" /> Design / UI/UX / Graphic Design
             </h1>
 
-            {/* Submission Logic Guide */}
             <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
               <h4 className="text-[#F8B95A] font-bold text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
                 <FaExclamationTriangle /> Submission Path
               </h4>
               <p className="text-sm text-gray-300">
-                You must submit a total of <strong>2 or 3 outputs</strong> depending on the tasks.
+                You must submit a total of <strong>2 outputs</strong>.
               </p>
               <div className="flex flex-col md:flex-row gap-2 mt-2 text-xs font-mono text-white">
                 <div className="flex-1 bg-green-900/30 border border-green-500/30 p-2 rounded">
@@ -34,7 +32,6 @@ export default function UIUXTask() {
               </div>
             </div>
 
-            {/* SECTION 1 - MANDATORY */}
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-[#F8B95A] mb-8">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-base md:text-xl font-bold text-[#F8B95A]">
@@ -45,33 +42,32 @@ export default function UIUXTask() {
                 </span>
               </div>
               <p className="text-sm md:text-base text-gray-300 mb-4">
-                Focus: Exploring visual emotion and invisible interaction design.
+                This section focuses on translating abstract ideas into immersive visual experiences.
               </p>
 
               <div className="space-y-6">
                 <div>
                   <h4 className="text-sm md:text-md font-bold text-white mb-1 flex items-center gap-2">
-                    <FaCircle className="text-xs" /> Task 1.1 – Designing an Emotion
+                    <FaCircle className="text-xs" /> Task 1.1 – Visualizing a Memory
                   </h4>
                   <p className="text-sm md:text-base text-gray-300 mb-2">
-                    Develop a visual representation that translates an emotion into design through color, layout, motion, and composition.
+                    Create a design piece that transforms a memory or moment into a visual system using color, spacing, typography, rhythm, and motion. Instead of directly illustrating the event, communicate the emotional atmosphere surrounding it.
                   </p>
                   <ul className="list-disc pl-5 text-sm md:text-base text-white">
-                    <li>Interpret cues like <strong>Joy</strong> (bright, dynamic), <strong>Anxiety</strong> (glitch, restricted space), or <strong>Calm</strong> (soft blues, whitespace).</li>
-                    <li><strong>References:</strong> Spotify, Headspace, Apple Health.</li>
+                    <li>For example, nostalgia may use faded tones and layered textures, isolation may rely on empty space and muted palettes, while excitement could be represented through sharp contrast and energetic movement.</li>
+                    <li><strong>References:</strong> Cinematic title sequences, interactive storytelling platforms, and emotionally driven interfaces such as Netflix, Calm, and Notion.</li>
                   </ul>
                 </div>
 
                 <div>
                   <h4 className="text-sm md:text-md font-bold text-white mb-1 flex items-center gap-2">
-                    <FaCircle className="text-xs" /> Task 1.2 – Invisible UI
+                    <FaCircle className="text-xs" /> Task 1.2 – Interface Without Buttons
                   </h4>
                   <p className="text-sm md:text-base text-gray-300 mb-2">
-                    Create an interface where meaning is communicated via ambient behaviors (color, motion, sound) rather than buttons.
+                    Design a digital experience that communicates interaction without relying on visible buttons, menus, or navigation bars. Instead, use environmental cues such as animation, lighting, sound feedback, gesture-driven responses, or contextual transitions to guide the user.
                   </p>
                   <ul className="list-disc pl-5 text-sm md:text-base text-white">
-                    <li>Rely on <strong>Zero-Interface principles</strong>.</li>
-                    <li><strong>References:</strong> Tesla minimal dashboards, Google Nest, Apple AirPods interactions.</li>
+                    <li><strong>References:</strong> Spatial computing, smart home ecosystems, and seamless interaction principles found in products like Sonos, Dyson, and Meta’s mixed reality concepts.</li>
                   </ul>
                 </div>
               </div>
@@ -83,7 +79,6 @@ export default function UIUXTask() {
               <span className="h-px bg-white/20 w-full"></span>
             </div>
 
-            {/* SECTION 2 - OPTION A */}
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-base md:text-lg font-bold text-blue-400">
@@ -99,32 +94,45 @@ export default function UIUXTask() {
 
               <div className="mb-6 border-b border-white/10 pb-4">
                 <h4 className="text-sm md:text-md font-bold text-white mb-2 flex items-center gap-2">
-                  <FaClock /> Task 2.1 – Time Travel Interface
+                  <FaClock /> Task 2.1 – Parallel Universe Operating System
                 </h4>
                 <p className="text-sm md:text-base text-gray-300 mb-2">
-                  Conceptualize a UI that visually transitions across eras.
+                  Design a fictional operating system interface from an alternate reality where technology evolved differently.
                 </p>
                 <ul className="list-disc pl-5 text-sm md:text-base text-white">
-                  <li><strong>Deliverable:</strong> 4 Screens (Landing, Hero, Dashboard, Settings).</li>
-                  <li><strong>Style:</strong> From Retro 90s (Windows 95) to Speculative Future 2050 (Holographic).</li>
+                  <li><strong>Deliverable:</strong> Create four connected screens:
+                    <ol className="list-decimal pl-5 mt-1 text-gray-400 text-sm">
+                      <li>A welcome or boot-up screen introducing the world</li>
+                      <li>A main experience page establishing the system’s visual language</li>
+                      <li>A productivity or communication dashboard showing core interaction patterns</li>
+                      <li>A system preferences/control interface reflecting the universe’s technological culture</li>
+                    </ol>
+                  </li>
+                  <li><strong>Style:</strong> Analog computing, cyberpunk terminals, bio-organic interfaces, or speculative AI ecosystems. Reference visual languages ranging from vintage arcade systems and monochrome terminals to futuristic mixed-reality environments and adaptive holographic displays.</li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="text-sm md:text-md font-bold text-white mb-2 flex items-center gap-2">
-                  <FaStopCircle /> Task 2.2 – Interface That Resists
+                  <FaStopCircle /> Task 2.2 – An Interface That Questions the User
                 </h4>
                 <p className="text-sm md:text-base text-gray-300 mb-2">
-                  Design a multi-step interface that applies intentional friction to slow down a critical action.
+                  Create a multi-stage interface designed to make users reconsider an impulsive or harmful decision.
                 </p>
                 <ul className="list-disc pl-5 text-sm md:text-base text-white">
-                  <li><strong>Deliverable:</strong> 4 Screens (Landing/Moral, Action, Confirmation/Challenge, Reflection).</li>
-                  <li><strong>Style:</strong> Ethical UX, iOS Screen Time, Futuristic HUD.</li>
+                  <li><strong>Deliverable:</strong> Develop four screens:
+                    <ol className="list-decimal pl-5 mt-1 text-gray-400 text-sm">
+                      <li>An introduction page establishing the context and emotional stakes</li>
+                      <li>An interaction page where the user begins the action</li>
+                      <li>A pause or interruption stage that introduces doubt or reflection</li>
+                      <li>A final outcome page revealing emotional, social, or long-term consequences</li>
+                    </ol>
+                  </li>
+                  <li><strong>Focus:</strong> Intentional pacing, emotional design, behavioral friction, and persuasive interaction techniques. Draw inspiration from digital wellbeing systems, mindful interaction patterns, and cinematic sci-fi interface aesthetics.</li>
                 </ul>
               </div>
             </div>
 
-            {/* SECTION 3 - OPTION B */}
             <div className="bg-[#232334] bg-opacity-50 p-4 rounded-lg border-l-4 border-purple-500 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-base md:text-lg font-bold text-purple-400">
@@ -140,27 +148,29 @@ export default function UIUXTask() {
 
               <div className="mb-6 border-b border-white/10 pb-4">
                 <h4 className="text-sm md:text-md font-bold text-white mb-2 flex items-center gap-2">
-                  <FaMusic /> Task 3.1 – Album Cover
+                  <FaMusic /> Task 3.1 – Movie Poster for an Imaginary Film
                 </h4>
                 <p className="text-sm md:text-base text-gray-300 mb-2">
-                  Craft a conceptual album artwork aligned with a specific genre.
+                  Design a cinematic poster for a fictional movie of your chosen genre.
                 </p>
                 <ul className="list-disc pl-5 text-sm md:text-base text-white">
-                  <li><strong>Styles:</strong> Abstract (Jazz), Grainy (Lo-fi), Bold (Rock).</li>
-                  <li>Draw influence from futuristic music-based visual design.</li>
+                  <li>Build a visual identity that captures the tone of the story through composition, typography, texture, lighting, and symbolism.</li>
+                  <li>A psychological thriller might use distorted imagery and shadow-heavy contrast, while a sci-fi drama could explore neon gradients, futuristic architecture, and atmospheric depth.</li>
+                  <li><strong>References:</strong> Modern streaming platform visuals, experimental poster art, and contemporary entertainment branding.</li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="text-sm md:text-md font-bold text-white mb-2 flex items-center gap-2">
-                  <FaPenNib /> Task 3.2 – Brand Personality Logo
+                  <FaPenNib /> Task 3.2 – Identity Symbol for a Fictional Company
                 </h4>
                 <p className="text-sm md:text-base text-gray-300 mb-2">
-                  Develop a logo that communicates personality through shape and typography.
+                  Create a visual identity mark for an imaginary brand, startup, or organization.
                 </p>
                 <ul className="list-disc pl-5 text-sm md:text-base text-white">
-                  <li><strong>Directions:</strong> Premium Elegance, Playful Character, or Geometric Precision.</li>
-                  <li><strong>Ref:</strong> Apple, Duolingo, Chanel.</li>
+                  <li>The logo should communicate the company’s personality, values, and target audience through form, typography, spacing, and color psychology.</li>
+                  <li><strong>Themes:</strong> Luxury minimalism, futuristic innovation, eco-conscious sustainability, or playful accessibility.</li>
+                  <li><strong>References:</strong> Branding systems used by companies such as Nike, Spotify, and Airbnb while developing a distinct visual voice.</li>
                 </ul>
               </div>
             </div>

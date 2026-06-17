@@ -18,7 +18,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Quiz1 from "./components/Quiz1";
 import Faq from "./components/Faq";
 import UsernameSection from "./components/UsernameSection";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/TaskDashboard";
 import Task from "./components/Tasks";
 import { disableDevTools, disableRightClick } from "./utils/SecurityUtils";
 import { initGA, logPageView } from "./analytics";
